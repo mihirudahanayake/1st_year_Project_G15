@@ -61,9 +61,8 @@ h1{
     color: white;
     font-size: 20px;
     text-align: center;
+    margin-left: 10px;
 }
-
-
 
 .search-bar {
     display: flex;
