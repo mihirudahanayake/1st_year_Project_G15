@@ -1,4 +1,18 @@
 <?php
+session_start(); // Start the session
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to login page if the user is not logged in
+    header('Location: login.html');
+    exit();
+}
+
+// If you want to check user roles (optional)
+if ($_SESSION['user_type'] !== 'admin') {
+    echo "<p>You do not have permission to access this page.</p>";
+    exit();
+}
 include('config.php');
 
 // Handle form submission to add a new destination

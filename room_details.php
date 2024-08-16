@@ -111,7 +111,7 @@ if (isset($_POST['check_availability'])) {
             <?php endif; ?>
         <?php endif; ?>
 
-        <a href="index.php">Back to Home</a>
+        <button onclick="location.href='room_list.php'">Back to Hotels</button>
     </div>
 </body>
 </html>

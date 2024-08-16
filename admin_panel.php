@@ -25,8 +25,13 @@ $hotels_stmt->execute();
 $hotels = $hotels_stmt->get_result();
 $hotels_stmt->close();
 
-// Fetch all users
-$users_stmt = $conn->prepare("SELECT * FROM users WHERE user_type != 'admin'");
+// Fetch all users, including user_type and associated hotels if user_type is hotel_admin
+$users_stmt = $conn->prepare("
+    SELECT users.*, hotels.hotel_name 
+    FROM users 
+    LEFT JOIN hotels ON users.hotel_id = hotels.hotel_id
+    WHERE users.user_type != 'admin'
+");
 $users_stmt->execute();
 $users = $users_stmt->get_result();
 $users_stmt->close();
@@ -95,14 +100,24 @@ $users_stmt->close();
             <tr>
                 <th>Username</th>
                 <th>Email</th>
+                <th>User Type</th> <!-- New column for user type -->
+                <th>Hotel Name</th> <!-- New column for hotel name -->
                 <th>Actions</th>
             </tr>
             <?php while ($user = $users->fetch_assoc()): ?>
             <tr>
                 <td><?php echo htmlspecialchars($user['username']); ?></td>
                 <td><?php echo htmlspecialchars($user['email']); ?></td>
+                <td><?php echo htmlspecialchars($user['user_type']); ?></td> <!-- Display user type -->
                 <td>
-                    <a href="admin_view_user_bookings.php?id=<?php echo $user['user_id']; ?>">View Booking History</a>
+                    <?php echo $user['user_type'] === 'hotel_admin' ? htmlspecialchars($user['hotel_name']) : 'N/A'; ?>
+                </td>
+                <td>
+                    <?php if ($user['user_type'] === 'hotel_admin'): ?>
+                        <a href="view_hotel_details.php?id=<?php echo $user['hotel_id']; ?>">View Hotel Details</a>
+                    <?php else: ?>
+                        <a href="admin_view_user_bookings.php?id=<?php echo $user['user_id']; ?>">View Booking Details</a>
+                    <?php endif; ?>
                     <a href="admin_delete_user.php?id=<?php echo $user['user_id']; ?>" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
                 </td>
             </tr>
