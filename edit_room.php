@@ -17,19 +17,37 @@ $room = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 // Handle room update
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $room_id = $_POST['room_id']; // Assuming you're passing the room_id to identify the room being updated
+    $hotel_id = $_SESSION['hotel_id']; // Assuming the admin's ID is linked to hotel ID
+    $room_number = $_POST['room_number'];
     $room_name = $_POST['room_name'];
-    $room_description = $_POST['room_description'];
-    $price_per_night = $_POST['price_per_night'];
-    $max_adults = $_POST['max_adults'];
-    $max_children = $_POST['max_children'];
     $availability = $_POST['availability'];
+    $capacity_adults = $_POST['max_adults'];
+    $capacity_children = $_POST['max_children'];
+    $facilities = $_POST['facilities'];
+    $price_per_night = $_POST['price_per_night'];
 
-    $stmt = $conn->prepare("UPDATE rooms SET room_name = ?, room_description = ?, price_per_night = ?, max_adults = ?, max_children = ?, availability = ? WHERE room_id = ?");
-    $stmt->bind_param("ssdiisi", $room_name, $room_description, $price_per_night, $max_adults, $max_children, $availability, $room_id);
+    // Prepare the SQL statement for updating the room details
+    $stmt = $conn->prepare("
+        UPDATE rooms 
+        SET 
+            room_number = ?, 
+            room_name = ?, 
+            max_adults = ?, 
+            max_children = ?, 
+            facilities = ?, 
+            price_per_night = ?, 
+            availability = ?
+        WHERE room_id = ? AND hotel_id = ?
+    ");
+
+    // Bind the parameters to the statement
+    $stmt->bind_param("ssiisssii", $room_number, $room_name, $capacity_adults, $capacity_children, $facilities, $price_per_night, $availability, $room_id, $hotel_id);
     $stmt->execute();
     $stmt->close();
 
+    echo "Room updated successfully!";
     header("Location: hotel_dashboard.php");
     exit();
 }
@@ -44,29 +62,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <h2>Edit Room</h2>
-    <form action="edit_room.php?room_id=<?php echo $room_id; ?>" method="POST">
-        <label for="room_number">Room Number</label>
-        <input type="text" id="room_number" name="room_number" value="<?php echo htmlspecialchars($room['room_number']); ?>" required>
+    <form method="POST" action="edit_room.php">
+    <input type="hidden" name="room_id" value="<?php echo $room['room_id']; ?>">
+    <label for="room_number">Room Number:</label>
+    <input type="text" name="room_number" value="<?php echo $room['room_number']; ?>">
 
-        <label for="room_name">Room Name</label>
-        <input type="text" id="room_name" name="room_name" value="<?php echo htmlspecialchars($room['room_name']); ?>" required>
+    <label for="room_name">Room Name:</label>
+    <input type="text" name="room_name" value="<?php echo $room['room_name']; ?>">
 
-        <label for="facilities">Room Description</label>
-        <textarea id="facilities" name="facilities" required><?php echo htmlspecialchars($room['facilities']); ?></textarea>
+    <label for="max_adults">Maximum Adults:</label>
+    <input type="number" name="max_adults" value="<?php echo $room['max_adults']; ?>">
 
-        <label for="price_per_night">Price per Night</label>
-        <input type="number" id="price_per_night" name="price_per_night" value="<?php echo htmlspecialchars($room['price_per_night']); ?>" required>
+    <label for="max_children">Maximum Children:</label>
+    <input type="number" name="max_children" value="<?php echo $room['max_children']; ?>">
 
-        <label for="max_adults">Max Adults</label>
-        <input type="number" id="max_adults" name="max_adults" value="<?php echo htmlspecialchars($room['max_adults']); ?>" required>
+    <label for="facilities">Facilities:</label>
+    <textarea name="facilities"><?php echo $room['facilities']; ?></textarea>
 
-        <label for="max_children">Max Children</label>
-        <input type="number" id="max_children" name="max_children" value="<?php echo htmlspecialchars($room['max_children']); ?>" required>
+    <label for="price_per_night">Price Per Night:</label>
+    <input type="text" name="price_per_night" value="<?php echo $room['price_per_night']; ?>">
 
-        <label for="availability">Availability</label>
-        <input type="text" id="availability" name="availability" value="<?php echo htmlspecialchars($room['availability']); ?>" required>
+    <label for="availability">Availability:</label>
+    <select name="availability">
+        <option value="available" <?php if ($room['availability'] == 'available') echo 'selected'; ?>>Available</option>
+        <option value="unavailable" <?php if ($room['availability'] == 'unavailable') echo 'selected'; ?>>Unavailable</option>
+    </select>
 
-        <button type="submit">Update Room</button>
-    </form>
+    <button type="submit">Update Room</button>
+</form>
+
 </body>
 </html>

@@ -255,10 +255,13 @@ $assigned_destinations_stmt->close();
 
             <label for="max_children">Max Children</label>
             <input type="number" id="max_children" name="max_children" required>
-
+            
             <label for="availability">Availability</label>
-            <input type="text" id="availability" name="availability" required>
-
+            <select id="availability" name="availability" required>
+                <option value="Available">Available</option>
+                <option value="Not Available">Not Available</option>
+            </select>
+                
             <button type="submit" name="add_room">Add Room</button>
         </form>
 

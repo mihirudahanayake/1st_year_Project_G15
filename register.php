@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
-    $user_type = $_POST['user_type'];
 
     // Validate passwords
     if ($password !== $confirm_password) {
@@ -28,6 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Hash the password
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+    // Set default user type
+    $user_type = 'user';
 
     // Insert the new user into the database
     $stmt = $conn->prepare("INSERT INTO users (username, email, password, user_type) VALUES (?, ?, ?, ?)");

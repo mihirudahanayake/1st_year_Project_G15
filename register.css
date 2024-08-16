@@ -20,6 +20,8 @@ body,html{
 }
 
 
+
+
 label{
     text-shadow: 2px 2px #070707;
     font-size: 20px;
@@ -43,6 +45,7 @@ label{
     padding: 0px 30px;
     text-align: left;
 }
+
 
 h2 {
     margin-bottom: 1px;
@@ -68,6 +71,7 @@ h2 {
     border-radius: 20px;
     width: 100%;
 }
+
 input[type=text] {
     width: 100%;
     padding: 12px 20px;
@@ -157,9 +161,13 @@ select#user_type {
     background: #3b8fd8;
 }
 
+
+
 .signup-link {
     margin-top: 10px;
 }
+
+
 .signup-link a {
     color: #6cea42;
     text-decoration: none;
@@ -167,3 +175,51 @@ select#user_type {
 .signup-link a:hover {
     text-decoration: underline;
 }
+
+
+@media(max-width: 768px) {
+    .signup-box {
+        width: 80%;
+        padding: 20px;
+    }
+
+    .sign-up {
+        font-size: 48px;
+        width: auto;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    h2 {
+        font-size: 28px;
+    }
+
+    .btn {
+        font-size: 20px;
+    }
+}
+
+@media(max-width: 480px) {
+    .signup-box {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .sign-up {
+        font-size: 36px;
+        top: 70px;
+        width: auto;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    .btn {
+        font-size: 18px;
+        padding: 8px;
+    }
+}
+

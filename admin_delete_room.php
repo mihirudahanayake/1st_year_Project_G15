@@ -45,7 +45,7 @@ if (isset($_GET['id'])) {
         $stmt->close();
 
         // Redirect back to the admin panel
-        header("Location: admin_panel.php");
+        header("Location: admin_hotel_details.php");
         exit();
     }
 

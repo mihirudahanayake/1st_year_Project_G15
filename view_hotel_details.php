@@ -46,8 +46,6 @@ if (!$hotel) {
         <p><strong>Hotel Name:</strong> <?php echo htmlspecialchars($hotel['hotel_name']); ?></p>
         <p><strong>Location:</strong> <?php echo htmlspecialchars($hotel['location']); ?></p>
         <p><strong>Description:</strong> <?php echo htmlspecialchars($hotel['description']); ?></p>
-        <p><strong>Contact:</strong> <?php echo htmlspecialchars($hotel['contact']); ?></p>
-
         <a href="admin_panel.php">Back to Admin Panel</a>
     </div>
 </body>

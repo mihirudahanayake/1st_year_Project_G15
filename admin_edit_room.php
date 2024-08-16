@@ -3,7 +3,7 @@ session_start();
 include('config.php');
 
 // Check if the user is logged in and is a hotel admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin' ) {
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
     header("Location: login.html");
     exit();
 }
@@ -18,19 +18,20 @@ $stmt->close();
 
 // Handle room update
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $room_number = $_POST['room_number'];
     $room_name = $_POST['room_name'];
-    $room_description = $_POST['room_description'];
+    $facilities = $_POST['facilities'];
     $price_per_night = $_POST['price_per_night'];
     $max_adults = $_POST['max_adults'];
     $max_children = $_POST['max_children'];
     $availability = $_POST['availability'];
 
-    $stmt = $conn->prepare("UPDATE rooms SET room_name = ?, room_description = ?, price_per_night = ?, max_adults = ?, max_children = ?, availability = ? WHERE room_id = ?");
-    $stmt->bind_param("ssdiisi", $room_name, $room_description, $price_per_night, $max_adults, $max_children, $availability, $room_id);
+    $stmt = $conn->prepare("UPDATE rooms SET room_number = ?, room_name = ?, facilities = ?, price_per_night = ?, max_adults = ?, max_children = ?, availability = ? WHERE room_id = ?");
+    $stmt->bind_param("sssdiisi", $room_number, $room_name, $facilities, $price_per_night, $max_adults, $max_children, $availability, $room_id);
     $stmt->execute();
     $stmt->close();
 
-    header("Location: admin_panel.php");
+    header("Location: admin_hotel_details.php");
     exit();
 }
 ?>
@@ -64,7 +65,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="number" id="max_children" name="max_children" value="<?php echo htmlspecialchars($room['max_children']); ?>" required>
 
         <label for="availability">Availability</label>
-        <input type="text" id="availability" name="availability" value="<?php echo htmlspecialchars($room['availability']); ?>" required>
+        <select name="availability">
+            <option value="available" <?php if ($room['availability'] == 'available') echo 'selected'; ?>>Available</option>
+            <option value="unavailable" <?php if ($room['availability'] == 'unavailable') echo 'selected'; ?>>Unavailable</option>
+        </select>
 
         <button type="submit">Update Room</button>
     </form>
