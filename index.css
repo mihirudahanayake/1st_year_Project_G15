@@ -245,7 +245,7 @@ ul li a.active {
     width: 50%;
     left: 2%;
 }
-
+ 
 .head {
     color: white;
     margin-bottom: 20px;
@@ -345,6 +345,10 @@ ul li a.active {
     .home {
         display: flex;
         align-items: flex-start;
+    }
+
+    .body{
+    height: 100vh;
     }
 
     .content {

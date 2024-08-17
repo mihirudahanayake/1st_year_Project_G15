@@ -3,13 +3,13 @@ session_start();
 include('config.php');
 
 // Check if the user is logged in and is a hotel admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'hotel_admin' ) {
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'hotel_admin') {
     header("Location: login.html");
     exit();
 }
 
 // Fetch room details
-$room_id = $_GET['room_id'];
+$room_id = isset($_GET['room_id']) ? $_GET['room_id'] : 0;
 $stmt = $conn->prepare("SELECT * FROM rooms WHERE room_id = ?");
 $stmt->bind_param("i", $room_id);
 $stmt->execute();
@@ -17,7 +17,7 @@ $room = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 // Handle room update
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_room'])) {
     $room_id = $_POST['room_id']; // Assuming you're passing the room_id to identify the room being updated
     $hotel_id = $_SESSION['hotel_id']; // Assuming the admin's ID is linked to hotel ID
     $room_number = $_POST['room_number'];
@@ -47,10 +47,109 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute();
     $stmt->close();
 
-    echo "Room updated successfully!";
-    header("Location: hotel_dashboard.php");
+    echo "<script>alert('Room updated successfully!');</script>";
+    header("Location: edit_room.php?room_id=$room_id");
     exit();
 }
+
+// Handle image upload
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_image'])) {
+    $room_id = $_POST['room_id']; // Ensure room_id is present
+
+    // Check if the room_id exists in the rooms table
+    $stmt = $conn->prepare("SELECT room_id FROM rooms WHERE room_id = ?");
+    $stmt->bind_param("i", $room_id);
+    $stmt->execute();
+    $roomExists = $stmt->get_result()->num_rows > 0;
+    $stmt->close();
+
+    if (!$roomExists) {
+        echo "<script>alert('Invalid room ID.');</script>";
+        exit();
+    }
+
+    if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["image"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // Check if image file is a real image
+        $check = getimagesize($_FILES["image"]["tmp_name"]);
+        if ($check === false) {
+            echo "<script>alert('File is not an image.');</script>";
+            $uploadOk = 0;
+        }
+
+        // Check file size
+        if ($_FILES["image"]["size"] > 500000) {
+            echo "<script>alert('Sorry, your file is too large.');</script>";
+            $uploadOk = 0;
+        }
+
+        // Allow certain file formats
+        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
+            echo "<script>alert('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');</script>";
+            $uploadOk = 0;
+        }
+
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "<script>alert('Sorry, your file was not uploaded.');</script>";
+        } else {
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                // Insert image info into database
+                $stmt = $conn->prepare("INSERT INTO room_images (room_id, image_path) VALUES (?, ?)");
+                $stmt->bind_param("is", $room_id, $target_file);
+                $stmt->execute();
+                $stmt->close();
+                echo "<script>alert('The file " . htmlspecialchars(basename($_FILES["image"]["name"])) . " has been uploaded.');</script>";
+                header("Location: edit_room.php?room_id=$room_id");
+            } else {
+                echo "<script>alert('Sorry, there was an error uploading your file.');</script>";
+            }
+        }
+    } else {
+        echo "<script>alert('No file uploaded or file upload error.');</script>";
+    }
+}
+
+
+// Handle image deletion
+if (isset($_GET['delete_image_id'])) {
+    $image_id = $_GET['delete_image_id'];
+    // Fetch the image path to delete the file from the server
+    $stmt = $conn->prepare("SELECT image_path FROM room_images WHERE image_id = ?");
+    $stmt->bind_param("i", $image_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $image = $result->fetch_assoc();
+    $stmt->close();
+
+    if ($image && !empty($image['image_path'])) {
+        // Delete the image file from the server
+        if (file_exists($image['image_path'])) {
+            unlink($image['image_path']);
+        }
+        // Delete the image record from the database
+        $stmt = $conn->prepare("DELETE FROM room_images WHERE image_id = ?");
+        $stmt->bind_param("i", $image_id);
+        $stmt->execute();
+        $stmt->close();
+        echo "<script>alert('Image deleted successfully!');</script>";
+        header("Location: edit_room.php?room_id=$room_id");
+        exit();
+    } else {
+        echo "<script>alert('Image not found.');</script>";
+    }
+}
+
+// Fetch room images
+$imageStmt = $conn->prepare("SELECT * FROM room_images WHERE room_id = ?");
+$imageStmt->bind_param("i", $room_id);
+$imageStmt->execute();
+$images = $imageStmt->get_result();
+$imageStmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -63,33 +162,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <h2>Edit Room</h2>
     <form method="POST" action="edit_room.php">
-    <input type="hidden" name="room_id" value="<?php echo $room['room_id']; ?>">
-    <label for="room_number">Room Number:</label>
-    <input type="text" name="room_number" value="<?php echo $room['room_number']; ?>">
+        <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room['room_id'] ?? ''); ?>">
+        <label for="room_number">Room Number:</label>
+        <input type="text" name="room_number" value="<?php echo htmlspecialchars($room['room_number'] ?? ''); ?>">
 
-    <label for="room_name">Room Name:</label>
-    <input type="text" name="room_name" value="<?php echo $room['room_name']; ?>">
+        <label for="room_name">Room Name:</label>
+        <input type="text" name="room_name" value="<?php echo htmlspecialchars($room['room_name'] ?? ''); ?>">
 
-    <label for="max_adults">Maximum Adults:</label>
-    <input type="number" name="max_adults" value="<?php echo $room['max_adults']; ?>">
+        <label for="max_adults">Maximum Adults:</label>
+        <input type="number" name="max_adults" value="<?php echo htmlspecialchars($room['max_adults'] ?? ''); ?>">
 
-    <label for="max_children">Maximum Children:</label>
-    <input type="number" name="max_children" value="<?php echo $room['max_children']; ?>">
+        <label for="max_children">Maximum Children:</label>
+        <input type="number" name="max_children" value="<?php echo htmlspecialchars($room['max_children'] ?? ''); ?>">
 
-    <label for="facilities">Facilities:</label>
-    <textarea name="facilities"><?php echo $room['facilities']; ?></textarea>
+        <label for="facilities">Facilities:</label>
+        <textarea name="facilities"><?php echo htmlspecialchars($room['facilities'] ?? ''); ?></textarea>
 
-    <label for="price_per_night">Price Per Night:</label>
-    <input type="text" name="price_per_night" value="<?php echo $room['price_per_night']; ?>">
+        <label for="price_per_night">Price Per Night:</label>
+        <input type="text" name="price_per_night" value="<?php echo htmlspecialchars($room['price_per_night'] ?? ''); ?>">
 
-    <label for="availability">Availability:</label>
-    <select name="availability">
-        <option value="available" <?php if ($room['availability'] == 'available') echo 'selected'; ?>>Available</option>
-        <option value="unavailable" <?php if ($room['availability'] == 'unavailable') echo 'selected'; ?>>Unavailable</option>
-    </select>
+        <label for="availability">Availability:</label>
+        <select name="availability">
+            <option value="available" <?php if (($room['availability'] ?? '') == 'available') echo 'selected'; ?>>Available</option>
+            <option value="unavailable" <?php if (($room['availability'] ?? '') == 'unavailable') echo 'selected'; ?>>Unavailable</option>
+        </select>
 
-    <button type="submit">Update Room</button>
-</form>
+        <button type="submit" name="update_room">Update Room</button>
+    </form>
+
+    <!-- Back to Dashboard Button -->
+    <button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
+
+    <h2>Room Images</h2>
+    <form method="POST" action="edit_room.php" enctype="multipart/form-data">
+        <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room['room_id'] ?? ''); ?>">
+        <label for="image">Upload New Image:</label>
+        <input type="file" name="image" id="image" accept="image/*">
+        <button type="submit" name="upload_image">Upload Image</button>
+    </form>
+
+    <div class="image-gallery">
+        <?php if ($images && $images->num_rows > 0) {
+            while ($image = $images->fetch_assoc()) { ?>
+                <div class="image-item">
+                    <img src="<?php echo htmlspecialchars($image['image_path']); ?>" alt="Room Image" style="width: 100px; height: auto;">
+                    <a href="edit_room.php?room_id=<?php echo htmlspecialchars($room['room_id']); ?>&delete_image_id=<?php echo htmlspecialchars($image['image_id']); ?>" onclick="return confirm('Are you sure you want to delete this image?');">Delete</a>
+                </div>
+            <?php }
+        } else {
+            echo "No images found for this room.";
+        } ?>
+    </div>
 
 </body>
 </html>

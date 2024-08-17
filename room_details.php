@@ -33,6 +33,17 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         }
     }
 
+    // Fetch room images
+    $imgQuery = "SELECT image_path FROM room_images WHERE room_id = $room_id";
+    $imgResult = $conn->query($imgQuery);
+
+    $images = [];
+    if ($imgResult->num_rows > 0) {
+        while ($row = $imgResult->fetch_assoc()) {
+            $images[] = $row['image_path'];
+        }
+    }
+
 } else {
     echo "<p>No room specified.</p>";
     exit;
@@ -77,6 +88,18 @@ if (isset($_POST['check_availability'])) {
         <p><strong>Price per Night:</strong> $<?php echo $room['price_per_night']; ?></p>
         <p><strong>Max Adults:</strong> <?php echo $room['max_adults']; ?></p>
         <p><strong>Max Children:</strong> <?php echo $room['max_children']; ?></p>
+
+        <!-- Display room images -->
+        <h2>Room Images</h2>
+        <?php if (!empty($images)): ?>
+            <div class="room-images">
+                <?php foreach ($images as $image): ?>
+                    <img src="<?php echo $image; ?>" alt="Room Image" class="room-image">
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p>No images available for this room.</p>
+        <?php endif; ?>
 
         <h2>Destinations</h2>
         <?php if (!empty($destinations)): ?>

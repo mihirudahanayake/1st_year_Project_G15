@@ -142,6 +142,8 @@ $assigned_destinations_stmt->close();
     <div class="dashboard-container">
         <h2>Hotel Dashboard</h2>
 
+        <button onclick="location.href='hadminprofile.php'">Profile</button>
+
         <!-- Message Display -->
         <?php if (!empty($message)): ?>
             <p><?php echo htmlspecialchars($message); ?></p>
@@ -237,7 +239,7 @@ $assigned_destinations_stmt->close();
         <?php endif; ?>
         <!-- Add a New Room Section -->
         <h3>Add a New Room</h3>
-        <form action="add_room.php" method="POST">
+        <form action="add_room.php" method="POST" enctype="multipart/form-data">
             <label for="room_number">Room Number</label>
             <input type="text" id="room_number" name="room_number" required>
 
@@ -261,9 +263,13 @@ $assigned_destinations_stmt->close();
                 <option value="Available">Available</option>
                 <option value="Not Available">Not Available</option>
             </select>
+            
+            <label for="room_images">Room Images (max 5)</label>
+            <input type="file" id="room_images" name="room_images[]" accept="image/*" multiple required>
                 
             <button type="submit" name="add_room">Add Room</button>
         </form>
+
 
         <!-- Manage Rooms Section -->
         <h3>Manage Rooms</h3>
