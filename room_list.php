@@ -59,73 +59,74 @@
         <button type="submit">Search</button>
     </form>
 
-    <?php
-    // Include database configuration
-    include('config.php');
+    <!-- Room Listing Section -->
+    <div class="room-container">
+        <?php
+        // Include database configuration
+        include('config.php');
 
-    // Base query to fetch rooms, hotel details, and the first image
-    $query = "SELECT rooms.room_id, rooms.room_name, rooms.room_description, rooms.price_per_night, 
-                     hotels.hotel_name, hotels.location, 
-                     (SELECT image_path FROM room_images WHERE room_images.room_id = rooms.room_id ORDER BY image_id ASC LIMIT 1) AS first_image 
-              FROM rooms 
-              JOIN hotels ON rooms.hotel_id = hotels.hotel_id
-              LEFT JOIN hotel_destinations ON hotels.hotel_id = hotel_destinations.hotel_id
-              LEFT JOIN destinations ON hotel_destinations.destination_id = destinations.destination_id
-              WHERE 1=1"; // Base query with filtering placeholder
+        // Base query to fetch rooms, hotel details, and the first image
+        $query = "SELECT DISTINCT rooms.room_id, rooms.room_name, rooms.room_description, rooms.price_per_night, 
+                 hotels.hotel_name, hotels.location, 
+                 (SELECT image_path FROM room_images WHERE room_images.room_id = rooms.room_id ORDER BY image_id ASC LIMIT 1) AS first_image 
+          FROM rooms 
+          JOIN hotels ON rooms.hotel_id = hotels.hotel_id
+          LEFT JOIN hotel_destinations ON hotels.hotel_id = hotel_destinations.hotel_id
+          LEFT JOIN destinations ON hotel_destinations.destination_id = destinations.destination_id
+          WHERE 1=1"; // Base query with filtering placeholder
 
-    // Add filtering criteria
-    if (isset($_GET['city']) && !empty($_GET['city'])) {
-        $city = $conn->real_escape_string($_GET['city']);
-        $query .= " AND hotels.location = '$city'";
-    }
-
-    if (isset($_GET['destination']) && !empty($_GET['destination'])) {
-        $destination = $conn->real_escape_string($_GET['destination']);
-        $query .= " AND destinations.desti_name = '$destination'";
-    }
-
-    if (isset($_GET['min_price']) && !empty($_GET['min_price'])) {
-        $min_price = $conn->real_escape_string($_GET['min_price']);
-        $query .= " AND rooms.price_per_night >= $min_price";
-    }
-
-    if (isset($_GET['max_price']) && !empty($_GET['max_price'])) {
-        $max_price = $conn->real_escape_string($_GET['max_price']);
-        $query .= " AND rooms.price_per_night <= $max_price";
-    }
-
-    $query .= " ORDER BY rooms.room_id";
-
-    // Output the query for debugging
-    echo "<!-- SQL Query: $query -->";
-
-    // Execute the query
-    $result = $conn->query($query);
-
-    if ($result === false) {
-        echo "<p>Error executing query: " . $conn->error . "</p>";
-    } else if ($result->num_rows > 0) {
-        while ($room = $result->fetch_assoc()) {
-            echo "<div class='room'>";
-            if ($room['first_image']) {
-                echo "<img src='" . $room['first_image'] . "' alt='Room Image' class='room-image'>";
-            } else {
-                echo "<p>No image available</p>";
-            }
-            echo "<h3>" . $room['hotel_name'] . "</h3>";
-            echo "<p>Description: " . $room['room_description'] . "</p>";
-            echo "<p>Price per Night: $" . $room['price_per_night'] . "</p>";
-            echo "<p>Hotel: " . $room['hotel_name'] . "</p>";
-            echo "<p>Location: " . $room['location'] . "</p>";
-            echo '<a href="room_details.php?id=' . $room['room_id'] . '" class="details-link">View Details</a>';
-            echo "</div>";
+        // Add filtering criteria
+        if (isset($_GET['city']) && !empty($_GET['city'])) {
+            $city = $conn->real_escape_string($_GET['city']);
+            $query .= " AND hotels.location = '$city'";
         }
-    } else {
-        echo "<p>No rooms available.</p>";
-    }
 
-    $conn->close();
-    ?>
+        if (isset($_GET['destination']) && !empty($_GET['destination'])) {
+            $destination = $conn->real_escape_string($_GET['destination']);
+            $query .= " AND destinations.desti_name = '$destination'";
+        }
+
+        if (isset($_GET['min_price']) && !empty($_GET['min_price'])) {
+            $min_price = $conn->real_escape_string($_GET['min_price']);
+            $query .= " AND rooms.price_per_night >= $min_price";
+        }
+
+        if (isset($_GET['max_price']) && !empty($_GET['max_price'])) {
+            $max_price = $conn->real_escape_string($_GET['max_price']);
+            $query .= " AND rooms.price_per_night <= $max_price";
+        }
+
+        $query .= " ORDER BY rooms.room_id";
+
+        // Output the query for debugging
+        echo "<!-- SQL Query: $query -->";
+
+        // Execute the query
+        $result = $conn->query($query);
+
+        if ($result === false) {
+            echo "<p>Error executing query: " . $conn->error . "</p>";
+        } else if ($result->num_rows > 0) {
+            while ($room = $result->fetch_assoc()) {
+                echo "<div class='room'>";
+                echo "<img src='" . $room['first_image'] . "' alt='Room Image' class='room-image'>";
+                echo "<div class='room-details'>";
+                echo "<h3>" . $room['hotel_name'] . "</h3>";
+                echo "<p>Description: " . $room['room_description'] . "</p>";
+                echo "<p>Price per Night: $" . $room['price_per_night'] . "</p>";
+                echo "<p>Hotel: " . $room['hotel_name'] . "</p>";
+                echo "<p>Location: " . $room['location'] . "</p>";
+                echo '<a href="room_details.php?id=' . $room['room_id'] . '" class="details-link">View Details</a>';
+                echo "</div>";
+                echo "</div>";
+            }
+        } else {
+            echo "<p>No rooms available.</p>";
+        }
+
+        $conn->close();
+        ?>
+    </div>
 
 </body>
 </html>

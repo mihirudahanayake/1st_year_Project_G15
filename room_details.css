@@ -1,0 +1,115 @@
+* {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+ }
+ 
+ body {
+     font-family: Arial, sans-serif;
+     background-color: #f4f4f4;
+     color: #333;
+ }
+ 
+ .container {
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: space-between;
+     gap: 5px;
+     padding: 20px;
+ }
+ 
+h2 {
+     color: #444;
+     margin-bottom: 10px;
+     text-align: center;
+ }
+
+ h1 {
+     text-align: center;
+     padding-top: 10px;
+ }
+ 
+ p {
+     margin-bottom: 10px;
+     line-height: 1.6;
+ }
+ 
+ strong {
+     font-weight: bold;
+ }
+ 
+ form {
+     margin-top: 20px;
+ }
+ 
+ label {
+     display: block;
+     margin-bottom: 5px;
+ }
+ 
+ input[type="date"], button {
+     padding: 10px;
+     font-size: 16px;
+     margin-bottom: 10px;
+     width: 100%;
+     border-radius: 5px;
+     border: 1px solid #ccc;
+ }
+ 
+ button {
+     background-color: #007bff;
+     color: #fff;
+     cursor: pointer;
+ }
+ 
+ button:hover {
+     background-color: #0056b3;
+ }
+
+.gallery {
+     width: 75%;
+     padding: 10px;
+     border: 3px solid #ccc;
+     border-radius: 8px;
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+     background-color: #fff;
+     margin: 0 auto 2vh ; 
+ }
+ 
+.gallery img{
+   width: 40vw;
+   height: auto;
+   border-radius: 8px;
+   object-fit: cover;
+   margin-bottom: 40px;
+   user-select: none;
+}
+
+.swiper-pagination-bullets.swiper-pagination-horizontal{
+   bottom: 0;
+}
+
+.availability {
+     width: 30vw;
+     padding: 10px;
+     border: 3px solid #ccc;
+     border-radius: 8px;
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+     margin: 10px 15vw;
+}
+
+.room-details {
+     display: block;
+     padding-left: 15vw;
+ }
+
+ .back {
+     margin-top: 20px;
+     width: 200px;
+ }
+
+ .destinations {
+     padding-top: 10px;
+     margin: 0 auto;
+     text-align: center;
+}

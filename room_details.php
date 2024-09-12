@@ -6,11 +6,13 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $room_id = $conn->real_escape_string($_GET['id']);
 
     // Fetch room details
-    $query = "SELECT rooms.*, hotels.hotel_name AS hotel_name, hotels.location
-              FROM rooms
-              JOIN hotels ON rooms.hotel_id = hotels.hotel_id
-              WHERE rooms.room_id = $room_id";
-    $result = $conn->query($query);
+    $stmt = $conn->prepare("SELECT rooms.*, hotels.hotel_name AS hotel_name, hotels.location
+                            FROM rooms
+                            JOIN hotels ON rooms.hotel_id = hotels.hotel_id
+                            WHERE rooms.room_id = ?");
+    $stmt->bind_param("i", $room_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $room = $result->fetch_assoc();
@@ -20,11 +22,13 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     }
 
     // Fetch all destinations associated with the room
-    $destQuery = "SELECT destinations.desti_name
-                  FROM hotel_destinations
-                  JOIN destinations ON hotel_destinations.destination_id = destinations.destination_id
-                  WHERE hotel_destinations.hotel_id = (SELECT hotel_id FROM rooms WHERE room_id = $room_id)";
-    $destResult = $conn->query($destQuery);
+    $stmt = $conn->prepare("SELECT destinations.desti_name
+                            FROM hotel_destinations
+                            JOIN destinations ON hotel_destinations.destination_id = destinations.destination_id
+                            WHERE hotel_destinations.hotel_id = (SELECT hotel_id FROM rooms WHERE room_id = ?)");
+    $stmt->bind_param("i", $room_id);
+    $stmt->execute();
+    $destResult = $stmt->get_result();
 
     $destinations = [];
     if ($destResult->num_rows > 0) {
@@ -34,8 +38,10 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     }
 
     // Fetch room images
-    $imgQuery = "SELECT image_path FROM room_images WHERE room_id = $room_id";
-    $imgResult = $conn->query($imgQuery);
+    $stmt = $conn->prepare("SELECT image_path FROM room_images WHERE room_id = ?");
+    $stmt->bind_param("i", $room_id);
+    $stmt->execute();
+    $imgResult = $stmt->get_result();
 
     $images = [];
     if ($imgResult->num_rows > 0) {
@@ -57,10 +63,12 @@ if (isset($_POST['check_availability'])) {
     // Validate the date range
     if ($start_date && $end_date && $start_date <= $end_date) {
         // Query to check availability
-        $query = "SELECT * FROM bookings
-                  WHERE room_id = $room_id
-                    AND (start_date <= '$end_date' AND end_date >= '$start_date')";
-        $result = $conn->query($query);
+        $stmt = $conn->prepare("SELECT * FROM bookings
+                                WHERE room_id = ?
+                                  AND (start_date <= ? AND end_date >= ?)");
+        $stmt->bind_param("iss", $room_id, $end_date, $start_date);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         $is_available = ($result->num_rows == 0);
     } else {
@@ -76,65 +84,76 @@ if (isset($_POST['check_availability'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Details</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="room_details.css">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+
 </head>
 <body>
+<h1>Room no : <?php echo htmlspecialchars($room['room_name']); ?></h1>
     <div class="container">
-        <h1>Room Details</h1>
-        <h2><?php echo $room['room_name']; ?></h2>
-        <p><strong>Hotel:</strong> <?php echo $room['hotel_name']; ?></p>
-        <p><strong>Location:</strong> <?php echo $room['location']; ?></p>
-        <p><strong>Description:</strong> <?php echo $room['room_description']; ?></p>
-        <p><strong>Price per Night:</strong> $<?php echo $room['price_per_night']; ?></p>
-        <p><strong>Max Adults:</strong> <?php echo $room['max_adults']; ?></p>
-        <p><strong>Max Children:</strong> <?php echo $room['max_children']; ?></p>
-
-        <!-- Display room images -->
-        <h2>Room Images</h2>
-        <?php if (!empty($images)): ?>
-            <div class="room-images">
-                <?php foreach ($images as $image): ?>
-                    <img src="<?php echo $image; ?>" alt="Room Image" class="room-image">
-                <?php endforeach; ?>
+                <!-- Swiper Image Gallery -->
+                <section class="gallery" id="gallery">
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    <?php foreach ($images as $image): ?>
+                            <img src="<?php echo htmlspecialchars($image); ?>" class="swiper-slide" alt="Room Image">
+                    <?php endforeach; ?>
+                </div>
+                <div class="swiper-pagination"></div>
             </div>
-        <?php else: ?>
-            <p>No images available for this room.</p>
-        <?php endif; ?>
+        </section>
+        
+        <section class="room-details">
+            <p><strong>Hotel:</strong> <?php echo htmlspecialchars($room['hotel_name']); ?></p>
+            <p><strong>Location:</strong> <?php echo htmlspecialchars($room['location']); ?></p>
+            <p><strong>Price per Night:</strong> $<?php echo htmlspecialchars($room['price_per_night']); ?></p>
+            <p><strong>Max Adults:</strong> <?php echo htmlspecialchars($room['max_adults']); ?></p>
+            <p><strong>Max Children:</strong> <?php echo htmlspecialchars($room['max_children']); ?></p>
+            <p><strong>Description:</strong> <?php echo htmlspecialchars($room['room_description']); ?></p>
+            <button class="back" onclick="location.href='room_list.php'">Back to Hotels</button>
+        </section>
 
-        <h2>Destinations</h2>
-        <?php if (!empty($destinations)): ?>
-            <p><?php echo implode(', ', $destinations); ?></p>
-        <?php else: ?>
-            <p>No destinations found for this room.</p>
-        <?php endif; ?>
+        <!-- availability -->
+        <section class="availability" id="availability">
+            <h2>Check Availability</h2>
+            <form action="room_details.php?id=<?php echo htmlspecialchars($room_id); ?>" method="POST">
+                <label for="start_date">Start Date</label>
+                <input type="date" id="start_date" name="start_date" required>
 
-        <h2>Check Availability</h2>
-        <form action="room_details.php?id=<?php echo $room_id; ?>" method="POST">
-            <label for="start_date">Start Date</label>
-            <input type="date" id="start_date" name="start_date" required>
+                <label for="end_date">End Date</label>
+                <input type="date" id="end_date" name="end_date" required>
 
-            <label for="end_date">End Date</label>
-            <input type="date" id="end_date" name="end_date" required>
+                <button type="submit" name="check_availability">Check Availability</button>
+            </form>
 
-            <button type="submit" name="check_availability">Check Availability</button>
-        </form>
-
-        <?php if (isset($is_available)): ?>
-            <h2>Availability Status</h2>
-            <?php if ($is_available): ?>
-                <p>The room is available for the selected dates.</p>
-                <form action="book_room.php" method="POST">
-                    <input type="hidden" name="room_id" value="<?php echo $room_id; ?>">
-                    <input type="hidden" name="start_date" value="<?php echo $start_date; ?>">
-                    <input type="hidden" name="end_date" value="<?php echo $end_date; ?>">
-                    <button type="submit" name="book_now">Book Now</button>
-                </form>
-            <?php else: ?>
-                <p>Sorry, the room is not available for the selected dates.</p>
+            <?php if (isset($is_available)): ?>
+                <h2>Availability Status</h2>
+                <?php if ($is_available): ?>
+                    <p>The room is available for the selected dates.</p>
+                    <form action="book_room.php" method="POST">
+                        <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room_id); ?>">
+                        <input type="hidden" name="start_date" value="<?php echo htmlspecialchars($start_date); ?>">
+                        <input type="hidden" name="end_date" value="<?php echo htmlspecialchars($end_date); ?>">
+                        <button type="submit" name="book_now">Book Now</button>
+                    </form>
+                <?php else: ?>
+                    <p>Sorry, the room is not available for the selected dates.</p>
+                <?php endif; ?>
             <?php endif; ?>
-        <?php endif; ?>
+        </section>
 
-        <button onclick="location.href='room_list.php'">Back to Hotels</button>
+        <section class="destinations" id="destinations">
+            <h2>Near Traveling Places</h2>
+            <?php if (!empty($destinations)): ?>
+                <p><?php echo implode(', ', $destinations); ?></p>
+            <?php else: ?>
+                <p>No near places found</p>
+            <?php endif; ?>
+        </section>
     </div>
+    <script src="room_details.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 </body>
 </html>
