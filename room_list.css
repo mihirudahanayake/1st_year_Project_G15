@@ -147,18 +147,18 @@ button[type="submit"]:hover {
 
 /* Responsive Styles */
 @media (max-width: 1024px) {
-    .room {
+    .view-details {
         flex: 1 1 calc(50% - 20px); /* Two rooms per row on smaller screens */
     }
 }
 
 @media (max-width: 768px) {
-    .room {
+    .view-details {
         flex-direction: column; /* Stack image and details vertically on small screens */
     }
 
     .room-image {
-        width: 100%;
+        width: 80%;
     }
 }
 
