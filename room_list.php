@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="room_list.css">
 </head>
 <body>
-
+    <div class="background"></div>
     <!-- Search Form -->
     <form action="room_list.php" method="GET">
         <label for="city">City</label>
@@ -108,6 +108,7 @@
             echo "<p>Error executing query: " . $conn->error . "</p>";
         } else if ($result->num_rows > 0) {
             while ($room = $result->fetch_assoc()) {
+                echo "<a href='room_details.php?id=" . $room['room_id'] . "' class='view-details'>";
                 echo "<div class='room'>";
                 echo "<img src='" . $room['first_image'] . "' alt='Room Image' class='room-image'>";
                 echo "<div class='room-details'>";
@@ -116,9 +117,9 @@
                 echo "<p>Price per Night: $" . $room['price_per_night'] . "</p>";
                 echo "<p>Hotel: " . $room['hotel_name'] . "</p>";
                 echo "<p>Location: " . $room['location'] . "</p>";
-                echo '<a href="room_details.php?id=' . $room['room_id'] . '" class="details-link">View Details</a>';
                 echo "</div>";
                 echo "</div>";
+                echo "</a>";
             }
         } else {
             echo "<p>No rooms available.</p>";

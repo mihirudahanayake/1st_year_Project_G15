@@ -6,9 +6,21 @@
  
  body {
      font-family: Arial, sans-serif;
-     background-color: #f4f4f4;
-     color: #333;
  }
+
+ .background{
+    background: url("Images/r.jpg")no-repeat center center/cover;
+    filter: blur(2px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
  
  .container {
      display: flex;
@@ -19,7 +31,6 @@
  }
  
 h2 {
-     color: #444;
      margin-bottom: 10px;
      text-align: center;
  }
@@ -27,6 +38,11 @@ h2 {
  h1 {
      text-align: center;
      padding-top: 10px;
+     /* text-shadow: 
+     -2px -2px 0 #104800,
+     2px -2px 0 #104800, 
+     -2px 2px 0 #104800,  
+     2px 2px 0 #104800;    */
  }
  
  p {
@@ -69,10 +85,10 @@ h2 {
 .gallery {
      width: 75%;
      padding: 10px;
-     border: 3px solid #ccc;
+     border: 3px solid #0000002e;
      border-radius: 8px;
      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-     background-color: #fff;
+     backdrop-filter: blur(8.5px);
      margin: 0 auto 2vh ; 
  }
  
@@ -92,20 +108,34 @@ h2 {
 .availability {
      width: 30vw;
      padding: 10px;
-     border: 3px solid #ccc;
+     backdrop-filter: blur(10px);
+     border: 3px solid #0000003c;
      border-radius: 8px;
-     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.055);
      margin: 10px 15vw;
 }
 
 .room-details {
      display: block;
-     padding-left: 15vw;
+     height: fit-content;
+     padding: 10px;
+     justify-content: center;
+     margin-left: 15vw;
+     background-color: #ffffff3a;
+     backdrop-filter: blur(10px);
+     border: 3px solid #0000003c;
+     border-radius: 10px;
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.055);
+     transition: 0.3s ease;
+ }
+
+ .room-details:hover {
+    background-color:  #ffffff9d;
  }
 
  .back {
-     margin-top: 20px;
      width: 200px;
+     height: 40px;
  }
 
  .destinations {

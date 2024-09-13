@@ -90,10 +90,11 @@ if (isset($_POST['check_availability'])) {
 
 </head>
 <body>
-<h1>Room no : <?php echo htmlspecialchars($room['room_name']); ?></h1>
+    <div class="background"></div>
+    <h1>Room no : <?php echo htmlspecialchars($room['room_name']); ?></h1>
     <div class="container">
-                <!-- Swiper Image Gallery -->
-                <section class="gallery" id="gallery">
+        <!-- Swiper Image Gallery -->
+        <section class="gallery" id="gallery">
             <div class="swiper">
                 <div class="swiper-wrapper">
                     <?php foreach ($images as $image): ?>
@@ -111,7 +112,6 @@ if (isset($_POST['check_availability'])) {
             <p><strong>Max Adults:</strong> <?php echo htmlspecialchars($room['max_adults']); ?></p>
             <p><strong>Max Children:</strong> <?php echo htmlspecialchars($room['max_children']); ?></p>
             <p><strong>Description:</strong> <?php echo htmlspecialchars($room['room_description']); ?></p>
-            <button class="back" onclick="location.href='room_list.php'">Back to Hotels</button>
         </section>
 
         <!-- availability -->
@@ -128,7 +128,6 @@ if (isset($_POST['check_availability'])) {
             </form>
 
             <?php if (isset($is_available)): ?>
-                <h2>Availability Status</h2>
                 <?php if ($is_available): ?>
                     <p>The room is available for the selected dates.</p>
                     <form action="book_room.php" method="POST">
@@ -142,7 +141,7 @@ if (isset($_POST['check_availability'])) {
                 <?php endif; ?>
             <?php endif; ?>
         </section>
-
+        
         <section class="destinations" id="destinations">
             <h2>Near Traveling Places</h2>
             <?php if (!empty($destinations)): ?>
@@ -150,7 +149,9 @@ if (isset($_POST['check_availability'])) {
             <?php else: ?>
                 <p>No near places found</p>
             <?php endif; ?>
+            <button class="back" onclick="location.href='room_list.php'">Back to Hotels</button>
         </section>
+        
     </div>
     <script src="room_details.js"></script>
     <!-- Swiper JS -->
