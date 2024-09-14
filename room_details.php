@@ -91,7 +91,7 @@ if (isset($_POST['check_availability'])) {
 </head>
 <body>
     <div class="background"></div>
-    <h1>Room no : <?php echo htmlspecialchars($room['room_name']); ?></h1>
+    <h1>Room no : <?php echo htmlspecialchars($room['room_number']); ?></h1>
     <div class="container">
         <!-- Swiper Image Gallery -->
         <section class="gallery" id="gallery">
