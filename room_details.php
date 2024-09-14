@@ -111,7 +111,7 @@ if (isset($_POST['check_availability'])) {
             <p><strong>Price per Night:</strong> $<?php echo htmlspecialchars($room['price_per_night']); ?></p>
             <p><strong>Max Adults:</strong> <?php echo htmlspecialchars($room['max_adults']); ?></p>
             <p><strong>Max Children:</strong> <?php echo htmlspecialchars($room['max_children']); ?></p>
-            <p><strong>Description:</strong> <?php echo htmlspecialchars($room['room_description']); ?></p>
+            <p><strong>Facilities:</strong> <?php echo htmlspecialchars($room['facilities']); ?></p>
         </section>
 
         <!-- availability -->

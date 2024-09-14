@@ -66,7 +66,7 @@
         include('config.php');
 
         // Base query to fetch rooms, hotel details, and the first image
-        $query = "SELECT DISTINCT rooms.room_id, rooms.room_name, rooms.room_description, rooms.price_per_night, 
+        $query = "SELECT DISTINCT rooms.room_id, rooms.room_name, rooms.facilities, rooms.price_per_night, 
                  hotels.hotel_name, hotels.location, 
                  (SELECT image_path FROM room_images WHERE room_images.room_id = rooms.room_id ORDER BY image_id ASC LIMIT 1) AS first_image 
           FROM rooms 
@@ -113,10 +113,10 @@
                 echo "<img src='" . $room['first_image'] . "' alt='Room Image' class='room-image'>";
                 echo "<div class='room-details'>";
                 echo "<h3>" . $room['hotel_name'] . "</h3>";
-                echo "<p>Description: " . $room['room_description'] . "</p>";
                 echo "<p>Price per Night: $" . $room['price_per_night'] . "</p>";
                 echo "<p>Hotel: " . $room['hotel_name'] . "</p>";
                 echo "<p>Location: " . $room['location'] . "</p>";
+                echo "<p>Facilities: " . $room['facilities'] . "</p>";
                 echo "</div>";
                 echo "</div>";
                 echo "</a>";
