@@ -6,7 +6,21 @@ include 'config.php';
 if (isset($_POST['add_destination'])) {
     $desti_name = $conn->real_escape_string($_POST['desti_name']);
     $desti_description = $conn->real_escape_string($_POST['desti_description']);
-    $city = $conn->real_escape_string($_POST['city']);
+    
+    // Check if a new city is added or an existing one is selected
+    $new_city = $conn->real_escape_string($_POST['new_city']);
+    if (!empty($new_city)) {
+        // Insert the new city into the cities table
+        $city_query = "INSERT INTO cities (city_name) VALUES ('$new_city')";
+        if ($conn->query($city_query) === TRUE) {
+            $city = $new_city; // Set the city as the new one added
+        } else {
+            echo "<p>Error adding city: " . $conn->error . "</p>";
+        }
+    } else {
+        // Use the selected city from the dropdown
+        $city = $conn->real_escape_string($_POST['city']);
+    }
 
     // Insert the destination into the destinations table
     $query = "INSERT INTO destinations (desti_name, desti_description, city) 
@@ -65,6 +79,9 @@ if (isset($_GET['delete'])) {
 
 // Fetch all destinations
 $destinations = $conn->query("SELECT * FROM destinations");
+
+// Fetch all cities
+$cities = $conn->query("SELECT * FROM cities");
 ?>
 
 <!DOCTYPE html>
@@ -86,6 +103,18 @@ $destinations = $conn->query("SELECT * FROM destinations");
             text-align: left;
         }
     </style>
+    <script>
+        function toggleCityInput() {
+            var citySelect = document.getElementById('city');
+            var newCityInput = document.getElementById('new_city_input');
+
+            if (citySelect.value === "add_new_city") {
+                newCityInput.style.display = 'block';
+            } else {
+                newCityInput.style.display = 'none';
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -94,7 +123,6 @@ $destinations = $conn->query("SELECT * FROM destinations");
     <button><a href="admin_panel.php">Manage</a></button>
 
     <h1>Destinations</h1>
-
 
     <!-- Form to Add a New Destination -->
     <form action="admin.php" method="POST" enctype="multipart/form-data">
@@ -105,7 +133,20 @@ $destinations = $conn->query("SELECT * FROM destinations");
         <textarea id="desti_description" name="desti_description" required></textarea>
 
         <label for="city">City</label>
-        <input type="text" id="city" name="city" required>
+        <select id="city" name="city" onchange="toggleCityInput()">
+            <option value="">Select city</option>
+            <?php while ($city = $cities->fetch_assoc()): ?>
+                <option value="<?php echo htmlspecialchars($city['city_name']); ?>">
+                    <?php echo htmlspecialchars($city['city_name']); ?>
+                </option>
+            <?php endwhile; ?>
+            <option value="add_new_city">Add New City</option>
+        </select>
+
+        <div id="new_city_input" style="display:none;">
+            <label for="new_city">New City Name</label>
+            <input type="text" id="new_city" name="new_city">
+        </div>
 
         <label for="images">Images</label>
         <input type="file" id="images" name="images[]" multiple required>
@@ -142,7 +183,6 @@ $destinations = $conn->query("SELECT * FROM destinations");
                         <?php endwhile; ?>
                     </td>
                     <td>
-                        <!-- Add the Edit button linking to edit_destination.php with the destination ID -->
                         <a href="edit_destination.php?id=<?php echo $destination['destination_id']; ?>">Edit</a>
                         <a href="admin.php?delete=<?php echo $destination['destination_id']; ?>">Delete</a>
                     </td>
