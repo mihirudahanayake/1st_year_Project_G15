@@ -56,23 +56,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_room'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_image'])) {
     $room_id = $_POST['room_id']; // Ensure room_id is present
 
-    // Check if the room_id exists in the rooms table
-    $stmt = $conn->prepare("SELECT room_id FROM rooms WHERE room_id = ?");
+    // Check if the room_id exists in the rooms table and get the room number
+    $stmt = $conn->prepare("SELECT room_number FROM rooms WHERE room_id = ?");
     $stmt->bind_param("i", $room_id);
     $stmt->execute();
-    $roomExists = $stmt->get_result()->num_rows > 0;
-    $stmt->close();
-
-    if (!$roomExists) {
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $roomData = $result->fetch_assoc();
+        $room_number = $roomData['room_number'];
+    } else {
         echo "<script>alert('Invalid room ID.');</script>";
         exit();
     }
+    $stmt->close();
+
+    // Count how many images have been uploaded for this room
+    $stmt = $conn->prepare("SELECT COUNT(*) as image_count FROM room_images WHERE room_id = ?");
+    $stmt->bind_param("i", $room_id);
+    $stmt->execute();
+    $imageCountResult = $stmt->get_result();
+    $imageData = $imageCountResult->fetch_assoc();
+    $image_count = $imageData['image_count'] + 1; // Increment for new image
+    $stmt->close();
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
         $target_dir = "uploads/";
-        $target_file = $target_dir . basename($_FILES["image"]["name"]);
+
+        // Set the image name as room_$room_number_image$image_count
+        $imageFileType = strtolower(pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION));
+        $target_file = $target_dir . "room_" . $room_number . "_image" . $image_count . "." . $imageFileType;
+
         $uploadOk = 1;
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
         // Check if image file is a real image
         $check = getimagesize($_FILES["image"]["tmp_name"]);
@@ -103,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_image'])) {
                 $stmt->bind_param("is", $room_id, $target_file);
                 $stmt->execute();
                 $stmt->close();
-                echo "<script>alert('The file " . htmlspecialchars(basename($_FILES["image"]["name"])) . " has been uploaded.');</script>";
+                echo "<script>alert('The file " . htmlspecialchars(basename($target_file)) . " has been uploaded.');</script>";
                 header("Location: edit_room.php?room_id=$room_id");
             } else {
                 echo "<script>alert('Sorry, there was an error uploading your file.');</script>";
@@ -113,7 +128,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_image'])) {
         echo "<script>alert('No file uploaded or file upload error.');</script>";
     }
 }
-
 
 // Handle image deletion
 if (isset($_GET['delete_image_id'])) {

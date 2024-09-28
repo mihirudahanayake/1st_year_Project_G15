@@ -244,7 +244,7 @@ $assigned_destinations_stmt->close();
             <input type="text" id="room_number" name="room_number" required>
 
             <label for="room_name">Room Name</label>
-            <input type="text" id="room_name" name="room_name" required>
+            <input type="text" id="room_name" name="room_name">
 
             <label for="facilities">Facilities</label>
             <textarea id="facilities" name="facilities" required></textarea>
@@ -275,8 +275,8 @@ $assigned_destinations_stmt->close();
         <h3>Manage Rooms</h3>
         <table>
             <tr>
-                <th>Room Name</th>
-                <th>Description</th>
+                <th>Room Number</th>
+                <th>Facilities</th>
                 <th>Price/Night</th>
                 <th>Max Adults</th>
                 <th>Max Children</th>
@@ -295,8 +295,8 @@ $assigned_destinations_stmt->close();
             while ($room = $rooms->fetch_assoc()):
             ?>
             <tr>
-                <td><?php echo htmlspecialchars($room['room_name']); ?></td>
-                <td><?php echo htmlspecialchars($room['room_description']); ?></td>
+                <td><?php echo htmlspecialchars($room['room_number']); ?></td>
+                <td><?php echo htmlspecialchars($room['facilities']); ?></td>
                 <td><?php echo htmlspecialchars($room['price_per_night']); ?></td>
                 <td><?php echo htmlspecialchars($room['max_adults']); ?></td>
                 <td><?php echo htmlspecialchars($room['max_children']); ?></td>
