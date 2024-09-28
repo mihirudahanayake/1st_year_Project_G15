@@ -39,21 +39,22 @@
         <div class="destinations-grid">
             <?php
             // Base query to fetch all destinations
-            $query = "SELECT destination_id, desti_name, desti_description, image_url, city FROM destinations WHERE 1=1";
+            $query = "SELECT d.destination_id, d.desti_name, d.desti_description, d.city 
+                      FROM destinations d WHERE 1=1";
 
             // Apply city filter if provided
             if (isset($_GET['city']) && !empty($_GET['city'])) {
                 $city = $conn->real_escape_string($_GET['city']);
-                $query .= " AND city LIKE '%$city%'";
+                $query .= " AND d.city LIKE '%$city%'";
             }
 
             // Apply destination name filter if provided
             if (isset($_GET['desti_name']) && !empty($_GET['desti_name'])) {
                 $desti_name = $conn->real_escape_string($_GET['desti_name']);
-                $query .= " AND desti_name LIKE '%$desti_name%'";
+                $query .= " AND d.desti_name LIKE '%$desti_name%'";
             }
 
-            // Execute the query
+            // Execute the destination query
             $result = $conn->query($query);
 
             if ($result->num_rows > 0) {
@@ -61,7 +62,21 @@
                     echo "<div class='destination'>";
                     echo "<h2>" . htmlspecialchars($destination['desti_name']) . "</h2>";
                     echo "<p>" . htmlspecialchars($destination['city']) . "</p>";
-                    echo "<img src='" . htmlspecialchars($destination['image_url']) . "' alt='" . htmlspecialchars($destination['desti_name']) . "'>";
+
+                    // Fetch images for the current destination
+                    $destination_id = intval($destination['destination_id']);
+                    $imageQuery = "SELECT image_url FROM destination_images WHERE destination_id = $destination_id LIMIT 1";
+                    $imageResult = $conn->query($imageQuery);
+
+                    // Display the first image if found
+                    if ($imageResult->num_rows > 0) {
+                        $image = $imageResult->fetch_assoc();
+                        echo "<img src='" . htmlspecialchars($image['image_url']) . "' alt='" . htmlspecialchars($destination['desti_name']) . "'>";
+                    } else {
+                        // If no image, show a placeholder
+                        echo "<img src='default_image.jpg' alt='No image available'>";
+                    }
+
                     echo "<p>" . htmlspecialchars($destination['desti_description']) . "</p>";
                     // Add a View Details button
                     echo '<a href="destination_details.php?id=' . htmlspecialchars($destination['destination_id']) . '" class="details-link">View Details</a>';

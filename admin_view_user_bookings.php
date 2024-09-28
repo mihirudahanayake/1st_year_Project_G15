@@ -9,8 +9,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 }
 
 // Check if user_id is provided
-if (isset($_GET['id'])) {
-    $user_id = $_GET['id'];
+if (isset($_GET['user_id'])) {
+    $user_id = $_GET['user_id'];
 
     // Fetch user bookings
     $stmt = $conn->prepare("SELECT bookings.booking_id, bookings.room_id, bookings.start_date, bookings.end_date, rooms.room_name, hotels.hotel_name 
@@ -62,8 +62,7 @@ if (isset($_GET['id'])) {
         <?php else: ?>
             <p>No bookings found for this user.</p>
         <?php endif; ?>
-
-        <a href="admin_panel.php">Back to Admin Panel</a>
+        <button><a href="admin_panel.php">Back to Admin Panel</a></button>
     </div>
 </body>
 </html>

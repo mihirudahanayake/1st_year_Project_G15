@@ -8,48 +8,60 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
     exit();
 }
 
-// Handle delete user action
-if (isset($_GET['delete_user_id'])) {
-    $delete_user_id = $_GET['delete_user_id'];
-    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
-    $stmt->bind_param("i", $delete_user_id);
-    $stmt->execute();
-    $stmt->close();
-    header("Location: admin_panel.php");
-    exit();
-}
-
-// Handle update user type action
-if (isset($_POST['update_user_type'])) {
+// Handle form submission for updating user details
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
     $user_id = $_POST['user_id'];
-    $new_user_type = $_POST['user_type'];
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $user_type = $_POST['user_type'];
 
-    $stmt = $conn->prepare("UPDATE users SET user_type = ? WHERE user_id = ?");
-    $stmt->bind_param("si", $new_user_type, $user_id);
-    $stmt->execute();
+    // Update user details in the database
+    $stmt = $conn->prepare("UPDATE users SET username = ?, email = ?, user_type = ? WHERE user_id = ?");
+    $stmt->bind_param("sssi", $username, $email, $user_type, $user_id);
+
+    if ($stmt->execute()) {
+        // Redirect to the same page to see changes
+        header("Location: admin_panel.php?update=success");
+        exit();
+    } else {
+        echo "Error updating user details.";
+    }
+
     $stmt->close();
-    header("Location: admin_panel.php");
-    exit();
 }
 
-// Fetch all hotels along with the hotel admin's name
-$hotels_stmt = $conn->prepare("
-    SELECT hotels.*, users.username AS admin_name
-    FROM hotels
-    LEFT JOIN users ON hotels.hotel_id = users.hotel_id
-    WHERE users.user_type = 'hotel_admin'
-");
-$hotels_stmt->execute();
-$hotels = $hotels_stmt->get_result();
-$hotels_stmt->close();
+// Handle form submission for updating hotel details
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hotel'])) {
+    $hotel_id = $_POST['hotel_id'];
+    $hotel_name = $_POST['hotel_name'];
+    $location = $_POST['location'];
+
+    // Update hotel details in the database
+    $stmt = $conn->prepare("UPDATE hotels SET hotel_name = ?, location = ? WHERE hotel_id = ?");
+    $stmt->bind_param("ssi", $hotel_name, $location, $hotel_id);
+
+    if ($stmt->execute()) {
+        // Redirect to the same page to see changes
+        header("Location: admin_panel.php?update=success");
+        exit();
+    } else {
+        echo "Error updating hotel details.";
+    }
+
+    $stmt->close();
+}
 
 // Fetch all users excluding admin users
-$users_stmt = $conn->prepare("
-    SELECT * FROM users WHERE user_type != 'admin'
-");
+$users_stmt = $conn->prepare("SELECT * FROM users WHERE user_type != 'admin'");
 $users_stmt->execute();
 $users = $users_stmt->get_result();
 $users_stmt->close();
+
+// Fetch all hotels
+$hotels_stmt = $conn->prepare("SELECT * FROM hotels");
+$hotels_stmt->execute();
+$hotels = $hotels_stmt->get_result();
+$hotels_stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -59,33 +71,33 @@ $users_stmt->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="admin.css">
+    <script>
+        function editUser(userId) {
+            document.getElementById('edit-form-' + userId).style.display = 'table-row';
+            document.getElementById('view-row-' + userId).style.display = 'none';
+        }
+
+        function cancelEditUser(userId) {
+            document.getElementById('edit-form-' + userId).style.display = 'none';
+            document.getElementById('view-row-' + userId).style.display = 'table-row';
+        }
+
+        function editHotel(hotelId) {
+            document.getElementById('edit-hotel-form-' + hotelId).style.display = 'table-row';
+            document.getElementById('view-hotel-row-' + hotelId).style.display = 'none';
+        }
+
+        function cancelEditHotel(hotelId) {
+            document.getElementById('edit-hotel-form-' + hotelId).style.display = 'none';
+            document.getElementById('view-hotel-row-' + hotelId).style.display = 'table-row';
+        }
+    </script>
 </head>
 <body>
+
     <div class="admin-container">
         <h2>Admin Panel</h2>
-
-        <h3>Manage Hotels</h3>
-        <table>
-            <tr>
-                <th>Hotel Name</th>
-                <th>Location</th>
-                <th>Hotel Admin</th>
-                <th>Actions</th>
-            </tr>
-            <?php while ($hotel = $hotels->fetch_assoc()): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($hotel['hotel_name']); ?></td>
-                <td><?php echo htmlspecialchars($hotel['location']); ?></td>
-                <td><?php echo htmlspecialchars($hotel['admin_name']); ?></td>
-                <td>
-                    <a href="admin_hotel_details.php?id=<?php echo $hotel['hotel_id']; ?>">View Details</a>
-                    <a href="edit_hotel.php?id=<?php echo $hotel['hotel_id']; ?>">Edit</a>
-                    <a href="admin_delete_hotel.php?id=<?php echo $hotel['hotel_id']; ?>" onclick="return confirm('Are you sure you want to delete this hotel?');">Delete</a>
-                </td>
-            </tr>
-            <?php endwhile; ?>
-        </table>
-
+        <button><a href="admin.php">Back to Dashboard</a></button>
         <h3>Manage Users</h3>
         <table>
             <tr>
@@ -95,24 +107,72 @@ $users_stmt->close();
                 <th>Actions</th>
             </tr>
             <?php while ($user = $users->fetch_assoc()): ?>
-            <tr>
+            <tr id="view-row-<?php echo $user['user_id']; ?>">
                 <td><?php echo htmlspecialchars($user['username']); ?></td>
                 <td><?php echo htmlspecialchars($user['email']); ?></td>
                 <td><?php echo htmlspecialchars($user['user_type']); ?></td>
                 <td>
-                    <a href="admin_edit_user.php?id=<?php echo $user['user_id']; ?>">Edit</a>
-                    <?php if ($user['user_type'] === 'hotel_admin'): ?>
-                        <a href="view_hotel_details.php?id=<?php echo $user['hotel_id']; ?>">View Hotel Details</a>
-                    <?php else: ?>
-                        <a href="admin_view_user_bookings.php?id=<?php echo $user['user_id']; ?>">View Booking Details</a>
-                    <?php endif; ?>
+                    <button onclick="editUser(<?php echo $user['user_id']; ?>)">Edit</button>
                     <a href="admin_delete_user.php?id=<?php echo $user['user_id']; ?>" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                    <?php if ($user['user_type'] === 'user'): ?>
+                        <a href="admin_view_user_bookings.php?user_id=<?php echo $user['user_id']; ?>" class="view-booking-button">View Booking Details</a>
+                    <?php endif; ?>
                 </td>
-
+            </tr>
+            <tr id="edit-form-<?php echo $user['user_id']; ?>" style="display:none;">
+                <form action="admin_panel.php" method="POST">
+                    <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
+                    <td><input type="text" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required></td>
+                    <td><input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required></td>
+                    <td>
+                        <select name="user_type">
+                            <option value="user" <?php echo $user['user_type'] === 'user' ? 'selected' : ''; ?>>User</option>
+                            <option value="hotel_admin" <?php echo $user['user_type'] === 'hotel_admin' ? 'selected' : ''; ?>>Hotel Admin</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="submit" name="update_user">Update</button>
+                        <button type="button" onclick="cancelEditUser(<?php echo $user['user_id']; ?>)">Cancel</button>
+                    </td>
+                </form>
             </tr>
             <?php endwhile; ?>
         </table>
+
+
+        <h3>Manage Hotels</h3>
+        <table>
+            <tr>
+                <th>Hotel Name</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
+            <?php while ($hotel = $hotels->fetch_assoc()): ?>
+            <tr id="view-hotel-row-<?php echo $hotel['hotel_id']; ?>">
+                <td><?php echo htmlspecialchars($hotel['hotel_name']); ?></td>
+                <td><?php echo htmlspecialchars($hotel['location']); ?></td>
+                <td>
+                    <button onclick="editHotel(<?php echo $hotel['hotel_id']; ?>)">Edit</button>
+                    <a href="admin_delete_hotel.php?id=<?php echo $hotel['hotel_id']; ?>" onclick="return confirm('Are you sure you want to delete this hotel?');">Delete</a>
+                    <a href="admin_hotel_details.php?id=<?php echo $hotel['hotel_id']; ?>" class="view-hotel-button">View Hotel Details</a>
+                </td>
+            </tr>
+            <tr id="edit-hotel-form-<?php echo $hotel['hotel_id']; ?>" style="display:none;">
+                <form action="admin_panel.php" method="POST">
+                    <input type="hidden" name="hotel_id" value="<?php echo $hotel['hotel_id']; ?>">
+                    <td><input type="text" name="hotel_name" value="<?php echo htmlspecialchars($hotel['hotel_name']); ?>" required></td>
+                    <td><input type="text" name="location" value="<?php echo htmlspecialchars($hotel['location']); ?>" required></td>
+                    <td>
+                        <button type="submit" name="update_hotel">Update</button>
+                        <button type="button" onclick="cancelEditHotel(<?php echo $hotel['hotel_id']; ?>)">Cancel</button>
+                    </td>
+                </form>
+            </tr>
+            <?php endwhile; ?>
+        </table>
+
     </div>
+
 </body>
 </html>
 
