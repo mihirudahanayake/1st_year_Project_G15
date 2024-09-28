@@ -30,13 +30,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
     $stmt->close();
 }
 
-// Handle form submission for updating hotel details
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hotel'])) {
     $hotel_id = $_POST['hotel_id'];
     $hotel_name = $_POST['hotel_name'];
     $location = $_POST['location'];
 
-    // Update hotel details in the database
+    // Check if the admin added a new city
+    if ($location === 'add_new_city' && !empty($_POST['new_city'])) {
+        $new_city = $_POST['new_city'];
+
+        // Insert the new city into the cities table
+        $stmt = $conn->prepare("INSERT INTO cities (city_name) VALUES (?)");
+        $stmt->bind_param("s", $new_city);
+        if ($stmt->execute()) {
+            $location = $new_city;  // Set the location to the new city
+        } else {
+            echo "Error adding new city.";
+            exit();
+        }
+        $stmt->close();
+    }
+
+    // Update hotel details with the selected or new city
     $stmt = $conn->prepare("UPDATE hotels SET hotel_name = ?, location = ? WHERE hotel_id = ?");
     $stmt->bind_param("ssi", $hotel_name, $location, $hotel_id);
 
@@ -51,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_hotel'])) {
     $stmt->close();
 }
 
+
 // Fetch all users excluding admin users
 $users_stmt = $conn->prepare("SELECT * FROM users WHERE user_type != 'admin'");
 $users_stmt->execute();
@@ -62,6 +78,14 @@ $hotels_stmt = $conn->prepare("SELECT * FROM hotels");
 $hotels_stmt->execute();
 $hotels = $hotels_stmt->get_result();
 $hotels_stmt->close();
+
+// Fetch all cities
+$cities_stmt = $conn->prepare("SELECT city_name FROM cities");
+$cities_stmt->execute();
+$cities = $cities_stmt->get_result();
+$cities_stmt->close();
+
+
 ?>
 
 <!DOCTYPE html>
@@ -138,8 +162,7 @@ $hotels_stmt->close();
             </tr>
             <?php endwhile; ?>
         </table>
-
-
+        
         <h3>Manage Hotels</h3>
         <table>
             <tr>
@@ -161,7 +184,23 @@ $hotels_stmt->close();
                 <form action="admin_panel.php" method="POST">
                     <input type="hidden" name="hotel_id" value="<?php echo $hotel['hotel_id']; ?>">
                     <td><input type="text" name="hotel_name" value="<?php echo htmlspecialchars($hotel['hotel_name']); ?>" required></td>
-                    <td><input type="text" name="location" value="<?php echo htmlspecialchars($hotel['location']); ?>" required></td>
+                    <td>
+                        <select name="location" id="location-select-<?php echo $hotel['hotel_id']; ?>" onchange="toggleNewCityInput(<?php echo $hotel['hotel_id']; ?>)">
+                            <option value="">Select a city</option>
+                            <?php
+                            // Reset the cities result set for each hotel
+                            $cities_stmt = $conn->prepare("SELECT city_name FROM cities");
+                            $cities_stmt->execute();
+                            $cities = $cities_stmt->get_result();
+                            while ($city = $cities->fetch_assoc()): ?>
+                                <option value="<?php echo htmlspecialchars($city['city_name']); ?>" <?php echo $hotel['location'] === $city['city_name'] ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($city['city_name']); ?>
+                                </option>
+                            <?php endwhile; ?>
+                            <option value="add_new_city">Add New City</option>
+                        </select>
+                        <input type="text" name="new_city" placeholder="New City Name" style="display:none;" id="new-city-input-<?php echo $hotel['hotel_id']; ?>">
+                    </td>
                     <td>
                         <button type="submit" name="update_hotel">Update</button>
                         <button type="button" onclick="cancelEditHotel(<?php echo $hotel['hotel_id']; ?>)">Cancel</button>
@@ -171,7 +210,22 @@ $hotels_stmt->close();
             <?php endwhile; ?>
         </table>
 
+
     </div>
+
+    <script>
+        function toggleNewCityInput(hotelId) {
+            const selectElement = document.getElementById('location-select-' + hotelId);
+            const newCityInput = document.getElementById('new-city-input-' + hotelId);
+            
+            if (selectElement.value === 'add_new_city') {
+                newCityInput.style.display = 'inline-block';
+            } else {
+                newCityInput.style.display = 'none';
+            }
+        }
+    </script>
+
 
 </body>
 </html>
