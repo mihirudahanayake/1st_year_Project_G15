@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 include('config.php');
 
 // Check if the admin is logged in

@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 include('config.php');
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'hotel_admin') {

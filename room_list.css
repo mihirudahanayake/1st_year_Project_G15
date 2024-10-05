@@ -1,13 +1,37 @@
-/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: none;
+    scroll-behavior: smooth;
+    font-family: 'Josefin Sans', sans-serif;
+}
+
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0 20px;
 }
 
+.bg {
+    background-image: url("Images/tr.png");
+    filter: blur(2px);
+    background-size: cover;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
 .background{
     background: url("Images/tr.png")no-repeat center center/cover;
-    filter: blur(4px);
+
     position: fixed;
     top: 0;
     left: 0;

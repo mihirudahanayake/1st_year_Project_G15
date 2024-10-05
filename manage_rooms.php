@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 include('config.php');
 
 $hotel_id = $_GET['hotel_id'];

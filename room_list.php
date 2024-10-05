@@ -1,3 +1,6 @@
+<?php
+include('config.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,16 +8,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Listing</title>
     <link rel="stylesheet" href="room_list.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet"/>
 </head>
 <body>
-    <div class="background"></div>
+    <div class="bg"></div>
+    <?php include 'header.php'; ?>
+
     <!-- Search Form -->
     <form action="room_list.php" method="GET">
         <label for="city">City</label>
         <select id="city" name="city">
             <option value="">Select a city</option>
             <?php
-            include('config.php');
 
             // Fetch unique city names for the dropdown list from the cities table
             $cityQuery = "SELECT city_name FROM cities";
@@ -62,8 +68,6 @@
     <!-- Room Listing Section -->
     <div class="room-container">
         <?php
-        // Include database configuration
-        include('config.php');
 
         // Base query to fetch rooms, hotel details, and the first image
         $query = "SELECT DISTINCT rooms.room_id, rooms.room_name, rooms.facilities, rooms.price_per_night, 
@@ -73,9 +77,8 @@
           JOIN hotels ON rooms.hotel_id = hotels.hotel_id
           LEFT JOIN hotel_destinations ON hotels.hotel_id = hotel_destinations.hotel_id
           LEFT JOIN destinations ON hotel_destinations.destination_id = destinations.destination_id
-          WHERE 1=1"; // Base query with filtering placeholder
+          WHERE 1=1";
 
-        // Add filtering criteria
         if (isset($_GET['city']) && !empty($_GET['city'])) {
             $city = $conn->real_escape_string($_GET['city']);
             $query .= " AND hotels.location = '$city'";
@@ -98,10 +101,8 @@
 
         $query .= " ORDER BY rooms.room_id";
 
-        // Output the query for debugging
         echo "<!-- SQL Query: $query -->";
 
-        // Execute the query
         $result = $conn->query($query);
 
         if ($result === false) {
@@ -128,5 +129,7 @@
         $conn->close();
         ?>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

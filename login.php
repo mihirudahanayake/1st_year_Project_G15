@@ -1,6 +1,5 @@
 <?php
-session_start();
-include('config.php');
+include ('config.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
@@ -34,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: admin.php");
         } else{
             // Regular user
-            header("Location: index_after_login.html");
+            header("Location: index.html");
         }
         exit();
     } else {

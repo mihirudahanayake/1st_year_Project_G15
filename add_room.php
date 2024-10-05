@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 include('config.php');
 
 // Check if the user is logged in and is a hotel admin
@@ -35,6 +35,17 @@ if (isset($_POST['add_room'])) {
         $image_count = 5; // Limit to 5 images
     }
 
+    // Count existing images for the room
+    $stmt = $conn->prepare("SELECT COUNT(*) AS image_count FROM room_images WHERE room_id = ?");
+    $stmt->bind_param("i", $room_id);
+    $stmt->execute();
+    $stmt->bind_result($existing_image_count);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Start numbering new images after existing images
+    $image_index = $existing_image_count + 1;
+
     for ($i = 0; $i < $image_count; $i++) {
         $image_name = $_FILES['room_images']['name'][$i];
         $image_tmp_name = $_FILES['room_images']['tmp_name'][$i];
@@ -42,18 +53,19 @@ if (isset($_POST['add_room'])) {
         $image_error = $_FILES['room_images']['error'][$i];
 
         if ($image_error === UPLOAD_ERR_OK) {
-            // Generate a unique file name to avoid conflicts
+            // Generate a file name following the format room_$room_number_imageX.jpg
             $image_ext = pathinfo($image_name, PATHINFO_EXTENSION);
-            $image_new_name = uniqid('room_' . $room_id . '_', true) . '.' . $image_ext;
+            $image_new_name = 'room_' . $room_number . '_image' . $image_index . '.' . $image_ext;
+            $image_index++; // Increment the image index
 
             // Move the uploaded file to the destination directory
             move_uploaded_file($image_tmp_name, $upload_dir . $image_new_name);
 
-            // Save the image path to the database
+            // Save the full image path to the database
+            $full_image_path = $upload_dir . $image_new_name; // Include the directory path
             $stmt = $conn->prepare("INSERT INTO room_images (room_id, image_path) VALUES (?, ?)");
-            $stmt->bind_param("is", $room_id, $image_new_name);
+            $stmt->bind_param("is", $room_id, $full_image_path);
             $stmt->execute();
-            $stmt->close();
         }
     }
 

@@ -1,5 +1,5 @@
 <?php
-session_start(); // Start the session to access session variables
+
 include('config.php');
 
 // Check if the form was submitted

@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 include('config.php'); // Include your database connection file
 
 // Check if the user is logged in
@@ -45,7 +45,7 @@ $user = $result->fetch_assoc();
         <a href="view_booking.php" class="view-bookings-button">View Bookings</a>
         <?php endif; ?>
 
-        <button onclick="location.href='index_after_login.php'">Back to Home</button>
+        <button onclick="location.href='index.html'">Back to Home</button>
         <button onclick="location.href='logout.php'">Log out</button>
     </div>
 </body>
