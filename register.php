@@ -7,6 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
+    $name = $_POST['name'];
+    $telephone = $_POST['telephone'];
 
     // Validate passwords
     if ($password !== $confirm_password) {
@@ -32,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user_type = 'user';
 
     // Insert the new user into the database
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password, user_type) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $username, $email, $hashed_password, $user_type);
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password, user_type, name, telephone) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssss", $username, $email, $hashed_password, $user_type, $name, $telephone);
 
     if ($stmt->execute()) {
         echo "Registration successful!";
@@ -58,6 +60,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="signup-box">
             <h2>Sign Up</h2>
             <form action="register.php" method="POST">
+                <label for="name">Name</label>
+                <div class="textbox">
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <label for="telephone">Telephone</label>
+                <div class="textbox">
+                    <input type="tel" id="telephone" name="telephone" required>
+                </div>
+
                 <label for="username">Username</label>
                 <div class="textbox">
                     <input type="text" id="username" name="username" required>
