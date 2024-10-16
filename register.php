@@ -44,3 +44,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+    <div class="signup-container"></div>
+        <div class="signup-box">
+            <h2>Sign Up</h2>
+            <form action="register.php" method="POST">
+                <label for="username">Username</label>
+                <div class="textbox">
+                    <input type="text" id="username" name="username" required>
+                </div>
+
+                <label for="email">Email</label>
+                <div class="textbox">
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <label for="password">Password</label>
+                <div class="textbox">
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <label for="confirm_password">Confirm Password</label>
+                <div class="textbox">
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                </div>
+            
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
+            <div class="signup-link">
+                <p>Already have an account? <a href="login.html">Login here</a>.</p>
+            </div>
+        </div>   
+</body>
+</html>
