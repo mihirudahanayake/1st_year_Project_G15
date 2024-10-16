@@ -290,86 +290,15 @@ if (isset($_POST['delete_image'])) {
             <?php else: ?>
                 <?php foreach ($assigned_destinations as $destination): ?>
                     <li>
-                        <strong><?php echo htmlspecialchars($destination['desti_name']); ?></strong> 
-                        - <?php echo htmlspecialchars($destination['desti_description']); ?> 
+                        <strong><?php echo htmlspecialchars($destination['desti_name']); ?></strong>  
                         (City: <?php echo htmlspecialchars($destination['city']); ?>)
                     </li>
                 <?php endforeach; ?>
             <?php endif; ?>
         </ul>
+        <button onclick="location.href='assign_desti.php'">Assign New Destination</button>
 
-        <!-- Select or Add City -->
-        <h3>Select City</h3>
-        <form method="POST" action="hotel_dashboard.php">
-            <label for="city">Select City:</label>
-            <select name="city" id="city" onchange="this.form.submit()">
-                <option value="">Select a city</option>
-                <?php foreach ($cities as $city): ?>
-                    <option value="<?php echo htmlspecialchars($city['city_name']); ?>"
-                        <?php echo isset($_POST['city']) && $_POST['city'] === $city['city_name'] ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($city['city_name']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </form>
 
-        <!-- Add New City -->
-        <h3>Add New City</h3>
-        <form method="POST" action="hotel_dashboard.php">
-            <label for="new_city">New City:</label>
-            <input type="text" id="new_city" name="new_city" required>
-            <button type="submit" name="add_city">Add City</button>
-        </form>
-
-        <!-- Add Destination Based on Selected City -->
-        <?php if (isset($_POST['city'])): ?>
-            <h3>Select or Add Destination</h3>
-            <form method="POST" action="hotel_dashboard.php">
-                <input type="hidden" name="city" value="<?php echo htmlspecialchars($_POST['city']); ?>">
-                <label for="destination_id">Select Destination:</label>
-                <select name="destination_id" id="destination_id">
-                    <?php foreach ($destinations as $destination): ?>
-                        <option value="<?php echo htmlspecialchars($destination['destination_id']); ?>">
-                            <?php echo htmlspecialchars($destination['desti_name']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <button type="submit" name="assign_destination">Assign to Hotel</button>
-            </form>
-
-            <?php if (isset($_POST['city']) && !empty($_POST['city'])): ?>
-    <h3>Add New Destination</h3>
-    <form action="new_desti.php" method="POST" enctype="multipart/form-data">
-        <label for="desti_name">Destination Name</label>
-        <input type="text" id="desti_name" name="desti_name" required>
-
-        <label for="desti_description">Description</label>
-        <textarea id="desti_description" name="desti_description" required></textarea>
-
-        <label for="city">City</label>
-        <select id="city" name="city" required>
-            <?php
-            // Fetch cities again for the dropdown
-            $cities_stmt = $conn->prepare("SELECT * FROM cities");
-            $cities_stmt->execute();
-            $cities_result = $cities_stmt->get_result();
-            $cities_stmt->close();
-
-            while ($city = $cities_result->fetch_assoc()): ?>
-                <option value="<?php echo htmlspecialchars($city['city_name']); ?>"
-                    <?php echo $_POST['city'] === $city['city_name'] ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($city['city_name']); ?>
-                </option>
-            <?php endwhile; ?>
-        </select>
-
-        <label for="image">Image</label>
-        <input type="file" id="image" name="image" required>
-
-        <button type="submit" name="add_destination">Add Destination</button>
-    </form>
-<?php endif; ?>
-        <?php endif; ?>
         <!-- Add a New Room Section -->
         <h3>Add a New Room</h3>
         <form action="add_room.php" method="POST" enctype="multipart/form-data">
@@ -459,7 +388,7 @@ if (isset($_POST['delete_image'])) {
                     </form>
                     <form action="edit_room.php" method="GET">
                         <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room['room_id']); ?>">
-                        <button type="submit">Edit</button>
+                        <button type="submit">View & Edit</button>
                     </form>
                 </td>
             </tr>
