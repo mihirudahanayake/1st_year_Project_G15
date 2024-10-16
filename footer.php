@@ -7,40 +7,48 @@
       <link rel="stylesheet" href="footer.css">
    </head>
    <body>
-      <section class="footer">
-
-         <div class="box-container">
-
-            <div class="box">
-               <a href="tel:1234567890"><i class="fas fa-phone"></i> +123-456-7890</a>
-               <a href="tel:1112223333"><i class="fas fa-phone"></i> +111-222-3333</a>
-               <a href="mailto:shakhanas@gmail.com"><i class="fas fa-envelope"></i> shakhanas@gmail.com</a>
-               <a href="mailto:anasbhai@gmail.com"><i class="fas fa-envelope"></i> anasbhai@gmail.com</a>
-               <a href="#"><i class="fas fa-map-marker-alt"></i> mumbai, india - 400104</a>
+      <footer>
+         <div class="footer-container">
+            <div class="footer-column">
+                  <h2>Travel<span>Mate</span></h2>
+                  <p>Discover the beauty of Sri Lanka with our easy-to-use travel website. From stunning destinations to the best hotel deals, we are here to help you plan your perfect getaway. Book your dream vacation today and explore the wonders of Sri Lanka!</p>
+                  <div class="social-icons">
+                     <a href="#"><i class="fab fa-facebook-f"></i></a>
+                     <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                     <a href="#"><i class="fab fa-twitter"></i></a>
+                  </div>
             </div>
-
-            <div class="box">
-               <a href="#home">home</a>
-               <a href="#about">about</a>
-               <a href="bookings.php">my bookings</a>
-               <a href="#reservation">reservation</a>
-               <a href="#gallery">gallery</a>
-               <a href="#contact">contact</a>
-               <a href="#reviews">reviews</a>
+            <div class="footer-column">
+                  <h3>Services</h3>
+                  <ul>
+                     <li><a href="#">About Us</a></li>
+                     <li><a href="hotel_list.php">Hotels</a></li>
+                     <li><a href="travel_destination.php">Destinations</a></li>
+                     <li><a href="#">Contact Us</a></li>
+                  </ul>
             </div>
-
-            <div class="box">
-               <a href="#">facebook <i class="fab fa-facebook-f"></i></a>
-               <a href="#">twitter <i class="fab fa-twitter"></i></a>
-               <a href="#">instagram <i class="fab fa-instagram"></i></a>
-               <a href="#">linkedin <i class="fab fa-linkedin"></i></a>
-               <a href="#">youtube <i class="fab fa-youtube"></i></a>
+            <div class="footer-column">
+                  <h3>Popular Destinations</h3>
+                  <div class="destination-images">
+                     <img src="destination1.jpg" alt="Destination 1">
+                     <img src="destination2.jpg" alt="Destination 2">
+                     <img src="destination3.jpg" alt="Destination 3">
+                     <img src="destination4.jpg" alt="Destination 4">
+                     <img src="destination5.jpg" alt="Destination 5">
+                     <img src="destination6.jpg" alt="Destination 6">
+                  </div>
             </div>
-
+            <div class="footer-column">
+                  <h3>Contact</h3>
+                  <p><i class="fas fa-map-marker-alt"></i> Any ware, any rode, Sri Lanka</p>
+                  <p><i class="fas fa-phone-alt"></i> +91 701234567</p>
+                  <p><i class="fas fa-envelope"></i> travelmate@gmail.com</p>
+            </div>
          </div>
+         <div class="footer-bottom">
+            <p>travelmate©2024 all right reserve</p>
+         </div>
+      </footer>
 
-         <div class="credit">&copy; copyright @ 2022 by mr. web designer | all rights reseved!</div>
-
-      </section>
    </body>
 </html>

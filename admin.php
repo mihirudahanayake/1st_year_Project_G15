@@ -120,8 +120,8 @@ $cities = $conn->query("SELECT * FROM cities");
 
     <h1>Site Admin</h1>
 
-    <button><a href="admin_panel.php">Manage</a></button>
-
+    <button onclick="location.href='admin_panel.php'">Manage</button>
+    <button onclick="location.href='profile.php'">Profile</button>
     <h1>Destinations</h1>
 
     <!-- Form to Add a New Destination -->

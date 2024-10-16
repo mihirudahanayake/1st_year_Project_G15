@@ -41,11 +41,20 @@ $user = $result->fetch_assoc();
             <button type="submit">Update Profile</button>
         </form>
 
+        <!-- Show the "View Bookings" button only if the user is a normal user -->
         <?php if ($user['user_type'] === 'user'): ?>
-        <a href="view_booking.php" class="view-bookings-button">View Bookings</a>
+            <a href="view_booking.php" class="view-bookings-button">View Bookings</a>
         <?php endif; ?>
 
-        <button onclick="location.href='index.html'">Back to Home</button>
+        <!-- Show the appropriate button based on the user type -->
+        <?php if ($user['user_type'] === 'user'): ?>
+            <button onclick="location.href='index.php'">Back to home</button>
+        <?php elseif ($user['user_type'] === 'hotel_admin'): ?>
+            <button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
+        <?php else: ?>
+            <button onclick="location.href='admin.php'">Back to Dashboard</button>
+        <?php endif; ?>
+
         <button onclick="location.href='logout.php'">Log out</button>
     </div>
 </body>

@@ -89,7 +89,9 @@ if (isset($_POST['check_availability'])) {
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 
 </head>
+
 <body>
+
     <div class="background"></div>
     <h1>Room no : <?php echo htmlspecialchars($room['room_number']); ?></h1>
     <div class="container">

@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!empty($password)) {
         // Hash the new password
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-        $stmt = $conn->prepare("UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE users SET username = ?, email = ?, password = ? WHERE user_id = ?");
         $stmt->bind_param("sssi", $username, $email, $hashed_password, $user_id);
     } else {
         $stmt = $conn->prepare("UPDATE users SET username = ?, email = ? WHERE user_id = ?");

@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: admin.php");
         } else{
             // Regular user
-            header("Location: index.html");
+            header("Location: index.php");
         }
         exit();
     } else {

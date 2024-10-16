@@ -128,7 +128,115 @@ $assigned_destinations_stmt->execute();
 $assigned_destinations_result = $assigned_destinations_stmt->get_result();
 $assigned_destinations = $assigned_destinations_result->fetch_all(MYSQLI_ASSOC);
 $assigned_destinations_stmt->close();
+
+// Fetch existing images for the hotel
+$hotel_images_stmt = $conn->prepare("SELECT * FROM hotel_images WHERE hotel_id = ?");
+$hotel_images_stmt->bind_param("i", $hotel_id);
+$hotel_images_stmt->execute();
+$hotel_images_result = $hotel_images_stmt->get_result();
+$hotel_images = $hotel_images_result->fetch_all(MYSQLI_ASSOC);
+$hotel_images_stmt->close();
+
+
+
+
+// Handle image upload
+if (isset($_POST['upload_image'])) {
+    // File upload path
+    $target_dir = "uploads/hotel_images/";
+
+    // Check if the directory exists, create if it doesn't
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
+
+    $target_file = $target_dir . basename($_FILES["hotel_image"]["name"]);
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+    // Check if the file is an image
+    $check = getimagesize($_FILES["hotel_image"]["tmp_name"]);
+    if ($check !== false) {
+        // Check for upload errors
+        if ($_FILES["hotel_image"]["error"] !== UPLOAD_ERR_OK) {
+            $message = "File upload error. Code: " . $_FILES["hotel_image"]["error"];
+            return; // Exit the script if there’s an upload error
+        }
+
+        // Allowed file types
+        $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+        if (!in_array($imageFileType, $allowed_types)) {
+            $message = "Sorry, only JPG, JPEG, PNG, & GIF files are allowed.";
+            return; // Exit the script if the file type is not allowed
+        }
+
+        // Avoid overwriting existing files
+        $fileName = pathinfo($target_file, PATHINFO_FILENAME);
+        $extension = pathinfo($target_file, PATHINFO_EXTENSION);
+        $counter = 1;
+
+        while (file_exists($target_file)) {
+            $target_file = $target_dir . $fileName . '_' . $counter . '.' . $extension;
+            $counter++;
+        }
+
+        // Move file to target directory
+        if (move_uploaded_file($_FILES["hotel_image"]["tmp_name"], $target_file)) {
+            // Insert file path into the database
+            $stmt = $conn->prepare("INSERT INTO hotel_images (hotel_id, image_path) VALUES (?, ?)");
+            $stmt->bind_param("is", $hotel_id, $target_file);
+            $stmt->execute();
+            $stmt->close();
+            header("Location: hotel_dashboard.php?hotel_id=$hotel_id");
+        } else {
+            $message = "Error uploading image. Please check folder permissions.";
+            error_log("Error moving uploaded file: " . print_r($_FILES["hotel_image"], true)); // Log details for debugging
+        }
+    } else {
+        $message = "File is not an image.";
+    }
+    
+}
+
+// Handle image deletion
+if (isset($_POST['delete_image'])) {
+    $image_id = $_POST['image_id'];
+
+    // Fetch the image path from the database
+    $image_stmt = $conn->prepare("SELECT image_path FROM hotel_images WHERE image_id = ? AND hotel_id = ?");
+    $image_stmt->bind_param("ii", $image_id, $hotel_id);
+    $image_stmt->execute();
+    $image_result = $image_stmt->get_result();
+    $image_stmt->close();
+
+    if ($image_result->num_rows > 0) {
+        $image = $image_result->fetch_assoc();
+        $image_path = $image['image_path'];
+
+        // Delete the image file from the server
+        if (unlink($image_path)) {
+            // Delete the record from the database
+            $delete_stmt = $conn->prepare("DELETE FROM hotel_images WHERE image_id = ? AND hotel_id = ?");
+            $delete_stmt->bind_param("ii", $image_id, $hotel_id);
+            $delete_stmt->execute();
+            $delete_stmt->close();
+            header("Location: hotel_dashboard.php?hotel_id=$hotel_id");
+        } else {
+            $message = "Error deleting image file.";
+        }
+    } else {
+        $message = "Image not found.";
+    }
+    
+}
+
+
+
 ?>
+
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -142,7 +250,32 @@ $assigned_destinations_stmt->close();
     <div class="dashboard-container">
         <h2>Hotel Dashboard</h2>
 
-        <button onclick="location.href='hadminprofile.php'">Profile</button>
+        <button onclick="location.href='profile.php'">Profile</button>
+
+        <h3>Manage Hotel Images</h3>
+
+<!-- Form to upload hotel images -->
+<form action="hotel_dashboard.php" method="POST" enctype="multipart/form-data">
+    <label for="hotel_image">Upload Hotel Image:</label>
+    <input type="file" name="hotel_image" id="hotel_image" accept="image/*" required>
+    <button type="submit" name="upload_image">Upload Image</button>
+</form>
+
+<!-- Display existing images with delete option -->
+<h4>Existing Hotel Images</h4>
+<ul>
+    <?php foreach ($hotel_images as $image): ?>
+        <li>
+            <img src="<?php echo htmlspecialchars($image['image_path']); ?>" alt="Hotel Image" width="100">
+            <form method="POST" action="hotel_dashboard.php" style="display:inline;">
+                <input type="hidden" name="image_id" value="<?php echo $image['image_id']; ?>">
+                <button type="submit" name="delete_image">Delete</button>
+            </form>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+
 
         <!-- Message Display -->
         <?php if (!empty($message)): ?>

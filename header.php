@@ -27,12 +27,12 @@ include_once "config.php";
                          <ul id="nav-menu">
                               <li><a href="index.php">Home</a></li>
                               <li><a href="#">About</a></li>
-                              <li><a href="room_list.php">Hotels</a></li>
+                              <li><a href="hotel_list.php">Hotels</a></li>
                               <li><a href="travel_destination.php">Travel Destinations</a></li>
                               <li><a href="#">Contact Us</a></li>
                          </ul>
                          <?php 
-                              if (isset($_SESSION['user_data'])) 
+                              if (isset($_SESSION['user_id'])) 
                               {
                                    echo '<a id="login" href="profile.php"><b>Profile</b></a>';
                               }
@@ -48,9 +48,9 @@ include_once "config.php";
           <div class="side-nav" id="side-nav">
                <button class="close-btn" id="close-btn">&times;</button>
                <ul>
-                    <li><a href="#">Home</a></li>
+                    <li><a href="index.php">Home</a></li>
                     <li><a href="#">About</a></li>
-                    <li><a href="room_list.php">Hotels</a></li>
+                    <li><a href="hotel_list.php">Hotels</a></li>
                     <li><a href="travel_destination.php">Travel Destinations</a></li>
                     <li><a href="#">Contact Us</a></li>
                </ul>

@@ -59,7 +59,7 @@
      cursor: pointer;
  }
  
- ul {
+.header ul {
      display: flex;
      align-items: center;
      gap: 10px;
@@ -67,7 +67,7 @@
      transition: left .3s ease;
  }
  
- ul li a {
+.header ul li a {
      font-weight: bold;
      text-transform: capitalize;
      font-size: 20px;
@@ -82,8 +82,8 @@
          3px 3px 0 #000;    /* Bottom-right shadow */
  }
  
- ul li a:hover,
- ul li a.active {
+.header ul li a:hover,
+.header ul li a.active {
      color: rgb(62, 206, 250);
  }
  
@@ -139,6 +139,7 @@
      cursor: pointer;
      color: #fff;
      transition: .5s ease;
+     line-height: 200%;
  }
  
  #login:hover {

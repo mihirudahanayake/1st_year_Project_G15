@@ -9,7 +9,7 @@
 }
 
 body {
-    margin: 0;
+    margin-top: 10vh;
     padding: 0 20px;
 }
 
@@ -28,20 +28,6 @@ body {
     background-size: cover;
 }
 
-
-.background{
-    background: url("Images/tr.png")no-repeat center center/cover;
-
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
 
 form {
     backdrop-filter: blur(8.5px);
@@ -131,9 +117,8 @@ button[type="submit"]:hover {
 
 /* Hover Effects */
 .room:hover {
-    transform: scale(1.04); 
+    transform: scale(1.025); 
     backdrop-filter: blur(20px);
-    border-radius: 15px;
     background-color: #ffffff85;
 }
 
