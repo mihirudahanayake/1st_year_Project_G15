@@ -19,15 +19,14 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $image_query = "SELECT image_url FROM destination_images WHERE destination_id = $destination_id";
     $image_result = $conn->query($image_query);
 
-    // Query to fetch available rooms associated with this destination
-    $rooms_query = "
-        SELECT rooms.room_id, rooms.room_name, rooms.facilities, rooms.price_per_night, hotels.hotel_name 
-        FROM rooms
-        JOIN hotels ON rooms.hotel_id = hotels.hotel_id
+    // Query to fetch available hotels associated with this destination
+    $hotels_query = "
+        SELECT DISTINCT hotels.hotel_id, hotels.hotel_name, hotels.description, hotels.location 
+        FROM hotels
         JOIN hotel_destinations ON hotels.hotel_id = hotel_destinations.hotel_id
         WHERE hotel_destinations.destination_id = $destination_id
     ";
-    $rooms_result = $conn->query($rooms_query);
+    $hotels_result = $conn->query($hotels_query);
 
 } else {
     echo "<p>No destination specified.</p>";
@@ -64,20 +63,20 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
         <a href="travel_destination.php" class="back-link">Back to Destinations</a>
 
-        <h2>Available Hotel Rooms near <?php echo htmlspecialchars($destination['desti_name']); ?></h2>
-        <div class="rooms-list">
+        <h2>Available Hotels near <?php echo htmlspecialchars($destination['desti_name']); ?></h2>
+        <div class="hotels-list">
             <?php
-            if ($rooms_result->num_rows > 0) {
-                while ($room = $rooms_result->fetch_assoc()) {
-                    echo "<div class='room'>";
-                    echo "<h3>" .  htmlspecialchars($room['hotel_name']) . "</h3>";
-                    echo "<p>" . htmlspecialchars($room['facilities']) . "</p>";
-                    echo "<p><strong>Price per Night:</strong> $" . htmlspecialchars($room['price_per_night']) . "</p>";
-                    echo '<a href="room_details.php?id=' . htmlspecialchars($room['room_id']) . '" class="details-link">View Details</a>';
+            if ($hotels_result->num_rows > 0) {
+                while ($hotel = $hotels_result->fetch_assoc()) {
+                    echo "<div class='hotel'>";
+                    echo "<h3>" . htmlspecialchars($hotel['hotel_name']) . "</h3>";
+                    echo "<p>" . htmlspecialchars($hotel['description']) . "</p>";
+                    echo "<p><strong>Location:</strong> " . htmlspecialchars($hotel['location']) . "</p>";
+                    echo '<a href="room_list.php?id=' . htmlspecialchars($hotel['hotel_id']) . '" class="details-link">View Details</a>';
                     echo "</div>";
                 }
             } else {
-                echo "<p>No available rooms near this destination.</p>";
+                echo "<p>No available hotels near this destination.</p>";
             }
             ?>
         </div>
