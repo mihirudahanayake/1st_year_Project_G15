@@ -364,22 +364,25 @@ if (isset($_POST['delete_image'])) {
                 <td><?php echo htmlspecialchars($room['max_children']); ?></td>
                 <td><?php echo htmlspecialchars($room['availability']); ?></td>
                 <td>
-                    <?php
-                    // Fetch all booking date ranges for this room
-                    $stmt = $conn->prepare("SELECT start_date, end_date FROM bookings WHERE room_id = ?");
-                    $stmt->bind_param("i", $room['room_id']);
-                    $stmt->execute();
-                    $booking_result = $stmt->get_result();
-                    $stmt->close();
+                <?php
+// Fetch all booking date ranges for this room along with booking IDs
+$stmt = $conn->prepare("SELECT booking_id, start_date, end_date FROM bookings WHERE room_id = ?");
+$stmt->bind_param("i", $room['room_id']);
+$stmt->execute();
+$booking_result = $stmt->get_result();
+$stmt->close();
 
-                    if ($booking_result->num_rows > 0) {
-                        while ($booking = $booking_result->fetch_assoc()) {
-                            echo "Booked from " . htmlspecialchars($booking['start_date']) . " to " . htmlspecialchars($booking['end_date']) . "<br>";
-                        }
-                    } else {
-                        echo "No bookings";
-                    }
-                    ?>
+if ($booking_result->num_rows > 0) {
+    while ($booking = $booking_result->fetch_assoc()) {
+        // Create a clickable link for each booking date range
+        echo "<a href='booking_details.php?booking_id=" . htmlspecialchars($booking['booking_id']) . "'>";
+        echo "Booked from " . htmlspecialchars($booking['start_date']) . " to " . htmlspecialchars($booking['end_date']) . "</a><br>";
+    }
+} else {
+    echo "No bookings";
+}
+?>
+
                 </td>
                 <td>
                     <form action="delete_room.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this room?');">
