@@ -21,21 +21,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         exit;
     }
 
-    // Fetch all destinations associated with the room
-    $stmt = $conn->prepare("SELECT destinations.desti_name
-                            FROM hotel_destinations
-                            JOIN destinations ON hotel_destinations.destination_id = destinations.destination_id
-                            WHERE hotel_destinations.hotel_id = (SELECT hotel_id FROM rooms WHERE room_id = ?)");
-    $stmt->bind_param("i", $room_id);
-    $stmt->execute();
-    $destResult = $stmt->get_result();
 
-    $destinations = [];
-    if ($destResult->num_rows > 0) {
-        while ($row = $destResult->fetch_assoc()) {
-            $destinations[] = $row['desti_name'];
-        }
-    }
+
 
     // Fetch room images
     $stmt = $conn->prepare("SELECT image_path FROM room_images WHERE room_id = ?");
@@ -91,8 +78,8 @@ if (isset($_POST['check_availability'])) {
 </head>
 
 <body>
-
     <div class="background"></div>
+    <?php include 'header.php'; ?>
     <h1>Room no : <?php echo htmlspecialchars($room['room_number']); ?></h1>
     <div class="container">
         <!-- Swiper Image Gallery -->
@@ -106,7 +93,7 @@ if (isset($_POST['check_availability'])) {
                 <div class="swiper-pagination"></div>
             </div>
         </section>
-        
+
         <section class="room-details">
             <p><strong>Hotel:</strong> <?php echo htmlspecialchars($room['hotel_name']); ?></p>
             <p><strong>Location:</strong> <?php echo htmlspecialchars($room['location']); ?></p>
@@ -126,7 +113,7 @@ if (isset($_POST['check_availability'])) {
                 <label for="end_date">End Date</label>
                 <input type="date" id="end_date" name="end_date" required>
 
-                <button type="submit" name="check_availability">Check Availability</button>
+                <button type="submit" name="check_availability" id="check-availability">Check Availability</button>
             </form>
 
             <?php if (isset($is_available)): ?>
@@ -136,25 +123,28 @@ if (isset($_POST['check_availability'])) {
                         <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room_id); ?>">
                         <input type="hidden" name="start_date" value="<?php echo htmlspecialchars($start_date); ?>">
                         <input type="hidden" name="end_date" value="<?php echo htmlspecialchars($end_date); ?>">
-                        <button type="submit" name="book_now">Book Now</button>
+                        <button type="submit" name="book_now" id="book-now-btn">Book Now</button>
                     </form>
                 <?php else: ?>
                     <p>Sorry, the room is not available for the selected dates.</p>
                 <?php endif; ?>
             <?php endif; ?>
-        </section>
-        
-        <section class="destinations" id="destinations">
-            <h2>Near Traveling Places</h2>
-            <?php if (!empty($destinations)): ?>
-                <p><?php echo implode(', ', $destinations); ?></p>
-            <?php else: ?>
-                <p>No near places found</p>
-            <?php endif; ?>
-            <button class="back" onclick="location.href='room_list.php'">Back to Hotels</button>
+            
         </section>
         
     </div>
+    <?php include 'footer.php'; ?>
+    <script>
+        document.getElementById("book-now-btn").addEventListener("click", function(event) {
+            // Check if the user is logged in (adjust the condition as needed)
+            var userLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+            
+            if (!userLoggedIn) {
+                alert("You must be logged in to book a room.");
+                event.preventDefault(); // Prevent the form from submitting
+            }
+        });
+    </script>
     <script src="room_details.js"></script>
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>

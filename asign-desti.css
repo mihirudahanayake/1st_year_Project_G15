@@ -1,0 +1,79 @@
+/* asign-desti.css */
+
+/* Basic Reset */
+* {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+ }
+ 
+ body {
+     font-family: Arial, sans-serif;
+     background-color: #f4f4f4;
+     color: #333;
+     line-height: 1.6;
+     padding: 20px;
+ }
+ 
+ h3 {
+     margin: 20px 0;
+     color: #007BFF; /* Primary Color */
+ }
+ 
+ /* Button Styling */
+ button {
+     background-color: #007BFF; /* Primary Color */
+     color: white;
+     border: none;
+     border-radius: 5px;
+     padding: 10px 15px;
+     cursor: pointer;
+     font-size: 16px;
+     transition: background-color 0.3s;
+ }
+ 
+ button:hover {
+     background-color: #0056b3; /* Darker shade */
+ }
+ 
+ /* Form Styling */
+ form {
+     background-color: white;
+     border: 1px solid #ccc;
+     border-radius: 8px;
+     padding: 20px;
+     margin: 20px 0;
+     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+ }
+ 
+ label {
+     display: block;
+     margin: 10px 0 5px;
+ }
+ 
+ input[type="text"],
+ input[type="file"],
+ select,
+ textarea {
+     width: 100%;
+     padding: 10px;
+     margin-bottom: 15px;
+     border: 1px solid #ccc;
+     border-radius: 5px;
+     font-size: 16px;
+ }
+ 
+ input[type="text"]:focus,
+ select:focus,
+ textarea:focus {
+     border-color: #007BFF; /* Focus Border Color */
+     outline: none;
+ }
+ 
+ /* Responsive Design */
+ @media (max-width: 600px) {
+     button {
+         width: 100%;
+     }
+ }
+ 

@@ -71,7 +71,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="profile.css">
 </head>
 <body>
+    <div class="bg"></div>
+    <div class="back-button-container">
+            <!-- Move the back button to this container -->
+            <?php if ($user['user_type'] == 'user'): ?>
+                <button onclick="location.href='index.php'" class="back-button">Back to Home</button>
+            <?php elseif ($user['user_type'] == 'hotel_admin'): ?>
+                <button onclick="location.href='hotel_dashboard.php'" class="back-button">Back to Dashboard</button>
+            <?php elseif ($user['user_type'] == 'admin'): ?>
+                <button onclick="location.href='admin.php'" class="back-button">Back to Dashboard</button>
+            <?php endif; ?>
+        </div>
     <div class="profile-container">
+
         <h2>Your Profile</h2>
         
         <!-- Display the profile picture -->
@@ -104,21 +116,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <button type="submit">Update Profile</button>
         </form>
-
-        <?php if ($user['user_type'] == 'user'): ?>
-            <button onclick="location.href='view_booking.php'" class="view-bookings-button">View Bookings</button>
-        <?php endif; ?>
-
-        <!-- Show the appropriate button based on the user type -->
-        <?php if ($user['user_type'] == 'user'): ?>
-            <button onclick="location.href='index.php'">Back to home</button>
-        <?php elseif ($user['user_type'] == 'hotel_admin'): ?>
-            <button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
-        <?php elseif ($user['user_type'] == 'admin'): ?>
-            <button onclick="location.href='admin.php'">Back to Dashboard</button>
-        <?php endif; ?>
-
-        <button onclick="location.href='logout.php'" class="logout">Log out</button>
+        <div class="action-buttons">
+            <?php if ($user['user_type'] == 'user'): ?>
+                <button onclick="location.href='view_booking.php'" class="view-bookings-button">View Bookings</button>
+            <?php endif; ?>
+            <button onclick="location.href='logout.php'" class="logout">Log out</button>
+        </div>
     </div>
 </body>
 </html>

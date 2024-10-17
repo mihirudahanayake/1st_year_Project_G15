@@ -175,38 +175,61 @@ $imageStmt->close();
     <link rel="stylesheet" href="edit_room.css">
 </head>
 <body>
-    <h2>Edit Room</h2>
-    <form method="POST" action="edit_room.php">
-        <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room['room_id'] ?? ''); ?>">
-        <label for="room_number">Room Number:</label>
-        <input type="text" name="room_number" value="<?php echo htmlspecialchars($room['room_number'] ?? ''); ?>">
+    <div class="bg"></div>
+    <div class="div1">
+        <!-- Back to Dashboard Button -->
+        <button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
+        <h2>Booking Details</h2>
+        <p><?php
+            // Fetch all booking date ranges for this room
+            $stmt = $conn->prepare("SELECT booking_id, start_date, end_date FROM bookings WHERE room_id = ?");
+            $stmt->bind_param("i", $room['room_id']);
+            $stmt->execute();
+            $booking_result = $stmt->get_result();
+            $stmt->close();
 
-        <label for="room_name">Room Name:</label>
-        <input type="text" name="room_name" value="<?php echo htmlspecialchars($room['room_name'] ?? ''); ?>">
+            if ($booking_result->num_rows > 0) {
+                while ($booking = $booking_result->fetch_assoc()) {
+                    // Create a clickable link for each booking date range
+                    echo "<a href='booking_details.php?booking_id=" . htmlspecialchars($booking['booking_id']) . "'>";
+                    echo "Booked from " . htmlspecialchars($booking['start_date']) . " to " . htmlspecialchars($booking['end_date']) . "</a><br>";
+                }
+            } else {
+                echo "No bookings";
+            }
+        ?></p>
+        <h2>Edit Room</h2>
+        <form method="POST" action="edit_room.php">
+            <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room['room_id'] ?? ''); ?>">
+            <label for="room_number">Room Number:</label>
+            <input type="text" name="room_number" value="<?php echo htmlspecialchars($room['room_number'] ?? ''); ?>">
 
-        <label for="max_adults">Maximum Adults:</label>
-        <input type="number" name="max_adults" value="<?php echo htmlspecialchars($room['max_adults'] ?? ''); ?>">
+            <label for="room_name">Room Name:</label>
+            <input type="text" name="room_name" value="<?php echo htmlspecialchars($room['room_name'] ?? ''); ?>">
 
-        <label for="max_children">Maximum Children:</label>
-        <input type="number" name="max_children" value="<?php echo htmlspecialchars($room['max_children'] ?? ''); ?>">
+            <label for="max_adults">Maximum Adults:</label>
+            <input type="number" name="max_adults" value="<?php echo htmlspecialchars($room['max_adults'] ?? ''); ?>">
 
-        <label for="facilities">Facilities:</label>
-        <textarea name="facilities"><?php echo htmlspecialchars($room['facilities'] ?? ''); ?></textarea>
+            <label for="max_children">Maximum Children:</label>
+            <input type="number" name="max_children" value="<?php echo htmlspecialchars($room['max_children'] ?? ''); ?>">
 
-        <label for="price_per_night">Price Per Night:</label>
-        <input type="text" name="price_per_night" value="<?php echo htmlspecialchars($room['price_per_night'] ?? ''); ?>">
+            <label for="facilities">Facilities:</label>
+            <textarea name="facilities"><?php echo htmlspecialchars($room['facilities'] ?? ''); ?></textarea>
 
-        <label for="availability">Availability:</label>
-        <select name="availability">
-            <option value="available" <?php if (($room['availability'] ?? '') == 'available') echo 'selected'; ?>>Available</option>
-            <option value="unavailable" <?php if (($room['availability'] ?? '') == 'unavailable') echo 'selected'; ?>>Unavailable</option>
-        </select>
+            <label for="price_per_night">Price Per Night:</label>
+            <input type="text" name="price_per_night" value="<?php echo htmlspecialchars($room['price_per_night'] ?? ''); ?>">
 
-        <button type="submit" name="update_room">Update Room</button>
-    </form>
+            <label for="availability">Availability:</label>
+            <select name="availability">
+                <option value="available" <?php if (($room['availability'] ?? '') == 'available') echo 'selected'; ?>>Available</option>
+                <option value="unavailable" <?php if (($room['availability'] ?? '') == 'unavailable') echo 'selected'; ?>>Unavailable</option>
+            </select>
 
-    <!-- Back to Dashboard Button -->
-    <button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
+            <button type="submit" name="update_room">Update Room</button>
+        </form>
+    </div>
+
+    
 
     <h2>Room Images</h2>
 

@@ -109,8 +109,15 @@ if (isset($_POST['assign_destination'])) {
 }
 ?>   
 
+<!DOCTYPE HTML>
+<html>
+     <head>
+          <title>add destination</title>
+          <link rel="stylesheet" href="asign-desti.css">
+     </head>
+     <body>
 
-<button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
+          <button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
         <!-- Select or Add City -->
         <h3>Select City</h3>
         <form method="POST" action="assign_desti.php">
@@ -183,3 +190,6 @@ if (isset($_POST['assign_destination'])) {
     </form>
 <?php endif; ?>
         <?php endif; ?>
+
+</body>
+</html>

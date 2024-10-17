@@ -19,6 +19,22 @@ $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $bookings_result = $stmt->get_result();
 $stmt->close();
+
+// Handle booking cancellation
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking'])) {
+    $booking_id = $_POST['booking_id'];
+    
+    // Prepare the SQL statement to delete the booking
+    $delete_stmt = $conn->prepare("DELETE FROM bookings WHERE booking_id = ?");
+    $delete_stmt->bind_param("i", $booking_id);
+    if ($delete_stmt->execute()) {
+        echo "<script>alert('Booking cancelled successfully.');</script>";
+    } else {
+        echo "<script>alert('Error cancelling booking: " . $conn->error . "');</script>";
+    }
+    $delete_stmt->close();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +43,7 @@ $stmt->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Bookings</title>
-    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="view-booking.css">
 </head>
 <body>
     <div class="profile-container">
@@ -39,6 +55,7 @@ $stmt->close();
                     <th>Room Name</th>
                     <th>Start Date</th>
                     <th>End Date</th>
+                    <th>Action</th>
                 </tr>
                 <?php while($booking = $bookings_result->fetch_assoc()): ?>
                 <tr>
@@ -46,7 +63,12 @@ $stmt->close();
                     <td><?php echo htmlspecialchars($booking['room_name']); ?></td>
                     <td><?php echo htmlspecialchars($booking['start_date']); ?></td>
                     <td><?php echo htmlspecialchars($booking['end_date']); ?></td>
-                    
+                    <td>
+                        <form method="POST" action="">
+                            <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars($booking['booking_id']); ?>">
+                            <button type="submit" name="cancel_booking" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel Booking</button>
+                        </form>
+                    </td>
                 </tr>
                 <?php endwhile; ?>
             </table>
@@ -54,7 +76,7 @@ $stmt->close();
             <p>You have no bookings.</p>
         <?php endif; ?>
 
-        <a href="profile.php" class="back-link">Back to Profile</a>
+        <button onclick="location.href='profile.php'" class="back-link">Back to Profile</button>
     </div>
 </body>
 </html>

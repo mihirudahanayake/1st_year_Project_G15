@@ -37,10 +37,11 @@ $booking_stmt->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Details</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="booking-details.css">
 </head>
 <body>
-    <div class="booking-details-container">
+     <div class="bg"></div>
+     <div class="booking-details-container">
         <h2>Booking Details</h2>
         <p><strong>Booking ID:</strong> <?php echo htmlspecialchars($booking['booking_id']); ?></p>
         <p><strong>User Name:</strong> <?php echo htmlspecialchars($booking['user_name']); ?></p>

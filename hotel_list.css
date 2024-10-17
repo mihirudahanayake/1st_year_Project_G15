@@ -14,7 +14,7 @@ body {
 }
 
 .bg {
-    background-image: url("Images/tr.png");
+    background-image: url("Images/bg1.png");
     filter: blur(2px);
     background-size: cover;
     position: fixed;
@@ -25,7 +25,6 @@ body {
     z-index: -1;
     background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
 }
 
 form {
