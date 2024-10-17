@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch user data
 $user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT username, email, name, telephone, profile_picture FROM users WHERE user_id = ?");
+$stmt = $conn->prepare("SELECT username, email, name, telephone, profile_picture, user_type FROM users WHERE user_id = ?"); // Include user_type
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -105,11 +105,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit">Update Profile</button>
         </form>
 
-        <a href="view_booking.php" class="view-bookings-button">View Bookings</a>
+        <?php if ($user['user_type'] == 'user'): ?>
+            <button onclick="location.href='view_booking.php'" class="view-bookings-button">View Bookings</button>
+        <?php endif; ?>
 
         <!-- Show the appropriate button based on the user type -->
-        <button onclick="location.href='index.php'">Back to home</button>
-        <button onclick="location.href='logout.php'">Log out</button>
+        <?php if ($user['user_type'] == 'user'): ?>
+            <button onclick="location.href='index.php'">Back to home</button>
+        <?php elseif ($user['user_type'] == 'hotel_admin'): ?>
+            <button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
+        <?php elseif ($user['user_type'] == 'admin'): ?>
+            <button onclick="location.href='admin.php'">Back to Dashboard</button>
+        <?php endif; ?>
+
+        <button onclick="location.href='logout.php'" class="logout">Log out</button>
     </div>
 </body>
 </html>
