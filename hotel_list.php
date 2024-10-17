@@ -16,6 +16,7 @@ include('config.php');
     <?php include 'header.php'; ?>
 
     <!-- Search Form -->
+     <div class="search">
     <form action="hotel_list.php" method="GET">
         <label for="city">City</label>
         <select id="city" name="city">
@@ -36,8 +37,9 @@ include('config.php');
             }
             ?>
         </select>
-        <button type="submit">Search</button>
+        <button id="search" type="submit">Search</button>
     </form>
+    </div>
 
     <!-- Hotel Listing Section -->
     <main class="hotel-container">

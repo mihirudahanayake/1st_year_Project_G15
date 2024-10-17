@@ -17,6 +17,8 @@ include('config.php');
 
     <!-- Search Form -->
     <form action="room_list.php" method="GET">
+        <input type="hidden" name="id" value="<?php echo isset($_GET['id']) ? htmlspecialchars($_GET['id']) : ''; ?>"> <!-- Include hotel ID in the form -->
+
         <label for="min_price">Min Price</label>
         <input type="number" id="min_price" name="min_price" step="0.01" placeholder="Minimum price per night">
 
@@ -29,64 +31,133 @@ include('config.php');
     <!-- Room Listing Section -->
     <div class="room-container">
         <?php
-        // Base query to fetch rooms, hotel details, and the first image
-        $query = "SELECT DISTINCT rooms.room_id, rooms.room_number, rooms.price_per_night, 
-                  hotels.hotel_name, hotels.location, 
-                  (SELECT image_path FROM room_images WHERE room_images.room_id = rooms.room_id ORDER BY image_id ASC LIMIT 1) AS first_image 
-          FROM rooms 
-          JOIN hotels ON rooms.hotel_id = hotels.hotel_id
-          LEFT JOIN hotel_destinations ON hotels.hotel_id = hotel_destinations.hotel_id
-          LEFT JOIN destinations ON hotel_destinations.destination_id = destinations.destination_id
-          WHERE 1=1"; // Ensure the query always runs
-
-        // Filter by hotel ID
+        // Make sure the hotel ID is set from the URL
         if (isset($_GET['id']) && !empty($_GET['id'])) {
-            $hotel_id = $conn->real_escape_string($_GET['id']);
-            $query .= " AND rooms.hotel_id = '$hotel_id'";
-        }
+            $hotel_id = $conn->real_escape_string($_GET['id']); // Escape the hotel_id for security
 
-        // Price range filters
-        if (isset($_GET['min_price']) && !empty($_GET['min_price'])) {
-            $min_price = $conn->real_escape_string($_GET['min_price']);
-            $query .= " AND rooms.price_per_night >= $min_price";
-        }
+            // Base query to fetch rooms, hotel details, and the first image
+            $query = "SELECT DISTINCT rooms.room_id, rooms.room_number, rooms.price_per_night, 
+                      hotels.hotel_name, hotels.location, 
+                      (SELECT image_path FROM room_images WHERE room_images.room_id = rooms.room_id ORDER BY image_id ASC LIMIT 1) AS first_image 
+              FROM rooms 
+              JOIN hotels ON rooms.hotel_id = hotels.hotel_id
+              LEFT JOIN hotel_destinations ON hotels.hotel_id = hotel_destinations.hotel_id
+              LEFT JOIN destinations ON hotel_destinations.destination_id = destinations.destination_id
+              WHERE rooms.hotel_id = '$hotel_id'"; // Ensure only rooms from the specific hotel are shown
 
-        if (isset($_GET['max_price']) && !empty($_GET['max_price'])) {
-            $max_price = $conn->real_escape_string($_GET['max_price']);
-            $query .= " AND rooms.price_per_night <= $max_price";
-        }
+            // Price range filters
+            if (isset($_GET['min_price']) && !empty($_GET['min_price'])) {
+                $min_price = $conn->real_escape_string($_GET['min_price']);
+                $query .= " AND rooms.price_per_night >= $min_price";
+            }
 
-        $query .= " ORDER BY rooms.room_id";
+            if (isset($_GET['max_price']) && !empty($_GET['max_price'])) {
+                $max_price = $conn->real_escape_string($_GET['max_price']);
+                $query .= " AND rooms.price_per_night <= $max_price";
+            }
 
-        echo "<!-- SQL Query: $query -->";
+            $query .= " ORDER BY rooms.room_id";
 
-        $result = $conn->query($query);
+            echo "<!-- SQL Query: $query -->"; // For debugging
 
-        if ($result === false) {
-            echo "<p>Error executing query: " . $conn->error . "</p>";
-        } else if ($result->num_rows > 0) {
-            while ($room = $result->fetch_assoc()) {
-                echo "<a href='room_details.php?id=" . $room['room_id'] . "' class='view-details'>";
-                echo "<div class='room'>";
-                echo "<img src='" . $room['first_image'] . "' alt='Room Image' class='room-image'>";
-                echo "<div class='room-details'>";
-                echo "<h3>Room " . $room['room_number'] . "</h3>";
-                echo "<p>Price per Night: $" . $room['price_per_night'] . "</p>";
-                echo "<p>Hotel: " . $room['hotel_name'] . "</p>";
-                echo "<p>Location: " . $room['location'] . "</p>";
-                echo "</div>";
-                echo "</div>";
-                echo "</a>";
+            $result = $conn->query($query);
+
+            if ($result === false) {
+                echo "<p>Error executing query: " . $conn->error . "</p>";
+            } else if ($result->num_rows > 0) {
+                while ($room = $result->fetch_assoc()) {
+                    echo "<a href='room_details.php?id=" . $room['room_id'] . "' class='view-details'>";
+                    echo "<div class='room'>";
+                    if (!empty($room['first_image'])) {
+                        echo "<img src='" . htmlspecialchars($room['first_image']) . "' alt='Room Image' class='room-image'>";
+                    } else {
+                        echo "<img src='default_room_image.jpg' alt='Room Image' class='room-image'>"; // Fallback image
+                    }
+                    echo "<div class='room-details'>";
+                    echo "<h3>Room " . htmlspecialchars($room['room_number']) . "</h3>";
+                    echo "<p>Price per Night: $" . htmlspecialchars($room['price_per_night']) . "</p>";
+                    echo "<p>Hotel: " . htmlspecialchars($room['hotel_name']) . "</p>";
+                    echo "<p>Location: " . htmlspecialchars($room['location']) . "</p>";
+                    echo "</div>";
+                    echo "</div>";
+                    echo "</a>";
+                }
+            } else {
+                echo "<p>No rooms available.</p>";
+            }
+
+            // Fetch all destinations associated with the hotel
+            $stmt = $conn->prepare("SELECT destinations.desti_name, destinations.destination_id
+                                    FROM hotel_destinations
+                                    JOIN destinations ON hotel_destinations.destination_id = destinations.destination_id
+                                    WHERE hotel_destinations.hotel_id = ?");
+            $stmt->bind_param("i", $hotel_id); // Bind $hotel_id to the query
+            $stmt->execute();
+            $destResult = $stmt->get_result();
+
+            $destinations = [];
+            if ($destResult->num_rows > 0) {
+                while ($row = $destResult->fetch_assoc()) {
+                    // Add destination name and id to the array
+                    $destinations[] = $row;
+                }
             }
         } else {
-            echo "<p>No rooms available.</p>";
+            echo "<p>No hotel selected. Please choose a hotel.</p>";
         }
-
-        $conn->close();
         ?>
     </div>
 
+    <section class="destinations" id="destinations">
+    <h2>Near Traveling Places</h2>
+    <?php if (!empty($destinations)): ?>
+        <div class="destination-container">
+            <?php foreach ($destinations as $destination): ?>
+                <div class="destination-box">
+                    <a href="destination_details.php?id=<?php echo $destination['destination_id']; ?>">
+                        <?php
+                        // Fetch the first image URL for the current destination
+                        $destination_id = $destination['destination_id'];
+
+                        // Check connection
+                        if ($conn->connect_error) {
+                            die("Connection failed: " . $conn->connect_error);
+                        }
+
+                        // Query to fetch the first image URL for the destination
+                        $sql = "SELECT image_url FROM destination_images WHERE destination_id = ? LIMIT 1";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("i", $destination_id);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+
+                        // Fetch the image URL
+                        $first_image_url = null;
+                        if ($row = $result->fetch_assoc()) {
+                            $first_image_url = $row['image_url'];
+                        }
+
+                        // Close the statement and connection
+                        $stmt->close();
+                        ?>
+
+                        <img src="<?php echo htmlspecialchars($first_image_url); ?>" alt="<?php echo htmlspecialchars($destination['desti_name']); ?>" class="destination-image">
+                        <p class="destination-name"><?php echo htmlspecialchars($destination['desti_name']); ?></p>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <p>No near places found</p>
+    <?php endif; ?>
+</section>
+
+
+
     <?php include 'footer.php'; ?>
+
+    <!-- Close connection after all queries -->
+    <?php $conn->close(); ?>
 
     <script src="script.js"></script>
 </body>

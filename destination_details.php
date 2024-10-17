@@ -45,10 +45,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 <body>
     <div class="container">
         <h1><?php echo htmlspecialchars($destination['desti_name']); ?></h1>
-        <p><?php echo htmlspecialchars($destination['desti_description']); ?></p>
 
         <!-- Display images -->
-        <h2>Images of <?php echo htmlspecialchars($destination['desti_name']); ?></h2>
         <div class="image-gallery">
             <?php
             if ($image_result->num_rows > 0) {
@@ -60,6 +58,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
             }
             ?>
         </div>
+
+        <p><?php echo htmlspecialchars($destination['desti_description']); ?></p>
 
         <a href="travel_destination.php" class="back-link">Back to Destinations</a>
 

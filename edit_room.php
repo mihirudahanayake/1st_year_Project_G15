@@ -172,6 +172,7 @@ $imageStmt->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Room</title>
+    <link rel="stylesheet" href="edit_room.css">
 </head>
 <body>
     <h2>Edit Room</h2>
@@ -208,12 +209,7 @@ $imageStmt->close();
     <button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
 
     <h2>Room Images</h2>
-    <form method="POST" action="edit_room.php" enctype="multipart/form-data">
-        <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room['room_id'] ?? ''); ?>">
-        <label for="image">Upload New Image:</label>
-        <input type="file" name="image" id="image" accept="image/*">
-        <button type="submit" name="upload_image">Upload Image</button>
-    </form>
+
 
     <div class="image-gallery">
         <?php if ($images && $images->num_rows > 0) {
@@ -227,6 +223,12 @@ $imageStmt->close();
             echo "No images found for this room.";
         } ?>
     </div>
+    <form method="POST" action="edit_room.php" enctype="multipart/form-data">
+        <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room['room_id'] ?? ''); ?>">
+        <label for="image">Upload New Image:</label>
+        <input type="file" name="image" id="image" accept="image/*">
+        <button type="submit" name="upload_image">Upload Image</button>
+    </form>
 
 </body>
 </html>

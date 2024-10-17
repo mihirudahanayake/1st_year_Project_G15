@@ -74,3 +74,47 @@ if (isset($_POST['add_room'])) {
     exit();
 }
 ?>
+
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>add new room</title>
+        <link rel="stylesheet" href="add_room.css">
+    </head>
+    <body>
+        <div class="dashboard-container">
+            <!-- Add a New Room Section -->
+            <h3>Add a New Room</h3>
+            <form action="add_room.php" method="POST" enctype="multipart/form-data">
+                <label for="room_number">Room Number</label>
+                <input type="text" id="room_number" name="room_number" required>
+
+                <label for="room_name">Room Name</label>
+                <input type="text" id="room_name" name="room_name">
+
+                <label for="facilities">Facilities</label>
+                <textarea id="facilities" name="facilities" required></textarea>
+
+                <label for="price_per_night">Price per Night</label>
+                <input type="number" id="price_per_night" name="price_per_night" required>
+
+                <label for="max_adults">Max Adults</label>
+                <input type="number" id="max_adults" name="max_adults" required>
+
+                <label for="max_children">Max Children</label>
+                <input type="number" id="max_children" name="max_children" required>
+                
+                <label for="availability">Availability</label>
+                <select id="availability" name="availability" required>
+                    <option value="Available">Available</option>
+                    <option value="Not Available">Not Available</option>
+                </select>
+                
+                <label for="room_images">Room Images (max 5)</label>
+                <input type="file" id="room_images" name="room_images[]" accept="image/*" multiple required>
+                    
+                <button type="submit" name="add_room">Add Room</button>
+            </form>
+        </div>
+    </body>
+</html>

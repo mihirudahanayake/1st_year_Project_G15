@@ -167,3 +167,58 @@ button[type="submit"]:hover {
     }
 
 }
+
+.destinations {
+    background-color: #f9f9f9; /* Light background color */
+    padding: 40px 20px; /* Padding for top/bottom and sides */
+    text-align: center; /* Center-align text */
+    border-radius: 8px; /* Rounded corners */
+    margin: 20px auto; /* Center the section horizontally */
+    max-width: 800px; /* Maximum width */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.destinations h2 {
+    font-size: 2.5em; /* Larger font size for the heading */
+    margin-bottom: 20px; /* Space below the heading */
+    color: #333; /* Dark text color */
+}
+
+.destination-container {
+    display: flex; /* Use flexbox for layout */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: center; /* Center items */
+    gap: 20px; /* Space between boxes */
+}
+
+.destination-box {
+    background-color: #fff; 
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Hide overflow for rounded corners */
+    width: 200px; /* Fixed width for boxes */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.2s; /* Smooth transform on hover */
+}
+
+.destination-box:hover {
+    transform: scale(1.05); /* Scale up on hover */
+}
+
+.destination-image {
+    width: 100%; /* Image fills the box */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.destination-name {
+    padding: 10px; /* Padding inside the box */
+    font-size: 1.2em; /* Slightly larger font size */
+    color: #333; /* Dark text color */
+    text-align: center; /* Center text */
+    margin: 0; /* Remove default margin */
+}
+
+.destination-box a {
+    text-decoration: none; /* Remove underline from links */
+    color: inherit; /* Inherit color from parent */
+}

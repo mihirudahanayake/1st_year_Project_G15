@@ -229,13 +229,7 @@ if (isset($_POST['delete_image'])) {
     
 }
 
-
-
 ?>
-
-
-
-
 
 
 <!DOCTYPE html>
@@ -252,29 +246,28 @@ if (isset($_POST['delete_image'])) {
 
         <button onclick="location.href='profile.php'">Profile</button>
 
-        <h3>Manage Hotel Images</h3>
+        <h3>Images</h3>
 
-<!-- Form to upload hotel images -->
-<form action="hotel_dashboard.php" method="POST" enctype="multipart/form-data">
-    <label for="hotel_image">Upload Hotel Image:</label>
-    <input type="file" name="hotel_image" id="hotel_image" accept="image/*" required>
-    <button type="submit" name="upload_image">Upload Image</button>
-</form>
+        <!-- Display existing images with delete option -->
+        <h4>Existing Hotel Images</h4>
+        <ul>
+            <?php foreach ($hotel_images as $image): ?>
+                <li>
+                    <img src="<?php echo htmlspecialchars($image['image_path']); ?>" alt="Hotel Image" width="100">
+                    <form method="POST" action="hotel_dashboard.php" style="display:inline;">
+                        <input type="hidden" name="image_id" value="<?php echo $image['image_id']; ?>">
+                        <button type="submit" name="delete_image">Delete</button>
+                    </form>
+                </li>
+            <?php endforeach; ?>
+        </ul>
 
-<!-- Display existing images with delete option -->
-<h4>Existing Hotel Images</h4>
-<ul>
-    <?php foreach ($hotel_images as $image): ?>
-        <li>
-            <img src="<?php echo htmlspecialchars($image['image_path']); ?>" alt="Hotel Image" width="100">
-            <form method="POST" action="hotel_dashboard.php" style="display:inline;">
-                <input type="hidden" name="image_id" value="<?php echo $image['image_id']; ?>">
-                <button type="submit" name="delete_image">Delete</button>
-            </form>
-        </li>
-    <?php endforeach; ?>
-</ul>
-
+        <!-- Form to upload hotel images -->
+        <form action="hotel_dashboard.php" method="POST" enctype="multipart/form-data">
+            <label for="hotel_image">Upload Hotel Image:</label>
+            <input type="file" name="hotel_image" id="hotel_image" accept="image/*" required>
+            <button type="submit" name="upload_image">Upload Image</button>
+        </form>
 
 
         <!-- Message Display -->
@@ -298,39 +291,8 @@ if (isset($_POST['delete_image'])) {
         </ul>
         <button onclick="location.href='assign_desti.php'">Assign New Destination</button>
 
-
-        <!-- Add a New Room Section -->
-        <h3>Add a New Room</h3>
-        <form action="add_room.php" method="POST" enctype="multipart/form-data">
-            <label for="room_number">Room Number</label>
-            <input type="text" id="room_number" name="room_number" required>
-
-            <label for="room_name">Room Name</label>
-            <input type="text" id="room_name" name="room_name">
-
-            <label for="facilities">Facilities</label>
-            <textarea id="facilities" name="facilities" required></textarea>
-
-            <label for="price_per_night">Price per Night</label>
-            <input type="number" id="price_per_night" name="price_per_night" required>
-
-            <label for="max_adults">Max Adults</label>
-            <input type="number" id="max_adults" name="max_adults" required>
-
-            <label for="max_children">Max Children</label>
-            <input type="number" id="max_children" name="max_children" required>
-            
-            <label for="availability">Availability</label>
-            <select id="availability" name="availability" required>
-                <option value="Available">Available</option>
-                <option value="Not Available">Not Available</option>
-            </select>
-            
-            <label for="room_images">Room Images (max 5)</label>
-            <input type="file" id="room_images" name="room_images[]" accept="image/*" multiple required>
-                
-            <button type="submit" name="add_room">Add Room</button>
-        </form>
+        <button onclick="location.href='add_room.php'">Add new room</button>
+        
 
 
         <!-- Manage Rooms Section -->
@@ -364,24 +326,24 @@ if (isset($_POST['delete_image'])) {
                 <td><?php echo htmlspecialchars($room['max_children']); ?></td>
                 <td><?php echo htmlspecialchars($room['availability']); ?></td>
                 <td>
-                <?php
-// Fetch all booking date ranges for this room along with booking IDs
-$stmt = $conn->prepare("SELECT booking_id, start_date, end_date FROM bookings WHERE room_id = ?");
-$stmt->bind_param("i", $room['room_id']);
-$stmt->execute();
-$booking_result = $stmt->get_result();
-$stmt->close();
+                            <?php
+            // Fetch all booking date ranges for this room along with booking IDs
+            $stmt = $conn->prepare("SELECT booking_id, start_date, end_date FROM bookings WHERE room_id = ?");
+            $stmt->bind_param("i", $room['room_id']);
+            $stmt->execute();
+            $booking_result = $stmt->get_result();
+            $stmt->close();
 
-if ($booking_result->num_rows > 0) {
-    while ($booking = $booking_result->fetch_assoc()) {
-        // Create a clickable link for each booking date range
-        echo "<a href='booking_details.php?booking_id=" . htmlspecialchars($booking['booking_id']) . "'>";
-        echo "Booked from " . htmlspecialchars($booking['start_date']) . " to " . htmlspecialchars($booking['end_date']) . "</a><br>";
-    }
-} else {
-    echo "No bookings";
-}
-?>
+            if ($booking_result->num_rows > 0) {
+                while ($booking = $booking_result->fetch_assoc()) {
+                    // Create a clickable link for each booking date range
+                    echo "<a href='booking_details.php?booking_id=" . htmlspecialchars($booking['booking_id']) . "'>";
+                    echo "Booked from " . htmlspecialchars($booking['start_date']) . " to " . htmlspecialchars($booking['end_date']) . "</a><br>";
+                }
+            } else {
+                echo "No bookings";
+            }
+            ?>
 
                 </td>
                 <td>
