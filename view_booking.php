@@ -1,5 +1,4 @@
 <?php
-
 include('config.php'); // Include your database connection file
 
 // Check if the user is logged in
@@ -23,18 +22,30 @@ $stmt->close();
 // Handle booking cancellation
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking'])) {
     $booking_id = $_POST['booking_id'];
-    
+
     // Prepare the SQL statement to delete the booking
     $delete_stmt = $conn->prepare("DELETE FROM bookings WHERE booking_id = ?");
     $delete_stmt->bind_param("i", $booking_id);
+    
     if ($delete_stmt->execute()) {
-        echo "<script>alert('Booking cancelled successfully.');</script>";
+        // Redirect to the same page with a success message
+        header("Location: view_booking.php?status=success");
+        exit;
     } else {
-        echo "<script>alert('Error cancelling booking: " . $conn->error . "');</script>";
+        // Handle error (this can be displayed in the user interface if needed)
+        header("Location: view_booking.php?status=error&message=" . urlencode($conn->error));
+        exit;
     }
-    $delete_stmt->close();
 }
 
+// Check for status messages in the URL
+if (isset($_GET['status'])) {
+    if ($_GET['status'] == 'success') {
+        echo "<script>alert('Booking cancelled successfully.');</script>";
+    } elseif ($_GET['status'] == 'error' && isset($_GET['message'])) {
+        echo "<script>alert('Error cancelling booking: " . htmlspecialchars($_GET['message']) . "');</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -46,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking'])) {
     <link rel="stylesheet" href="view-booking.css">
 </head>
 <body>
+    <div class="bg"></div>
     <div class="profile-container">
         <h2>Your Bookings</h2>
         <?php if ($bookings_result->num_rows > 0): ?>
@@ -64,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking'])) {
                     <td><?php echo htmlspecialchars($booking['start_date']); ?></td>
                     <td><?php echo htmlspecialchars($booking['end_date']); ?></td>
                     <td>
-                        <form method="POST" action="">
+                        <form method="POST" action="view_booking.php">
                             <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars($booking['booking_id']); ?>">
                             <button type="submit" name="cancel_booking" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel Booking</button>
                         </form>
@@ -76,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking'])) {
             <p>You have no bookings.</p>
         <?php endif; ?>
 
-        <button onclick="location.href='profile.php'" class="back-link">Back to Profile</button>
+        <button onclick="location.href='profile.php'" id="back-link">Back to Profile</button>
     </div>
 </body>
 </html>
