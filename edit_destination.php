@@ -13,7 +13,19 @@ if (isset($_GET['id'])) {
     if (isset($_POST['update_destination'])) {
         $desti_name = $conn->real_escape_string($_POST['desti_name']);
         $desti_description = $conn->real_escape_string($_POST['desti_description']);
-        $city = $conn->real_escape_string($_POST['city']);
+        $new_city = $conn->real_escape_string($_POST['new_city']);
+
+        // If a new city is added, insert it into the cities table
+        if (!empty($new_city)) {
+            $city_query = "INSERT INTO cities (city_name) VALUES ('$new_city')";
+            if ($conn->query($city_query) === TRUE) {
+                $city = $new_city;
+            } else {
+                echo "<p>Error adding city: " . $conn->error . "</p>";
+            }
+        } else {
+            $city = $conn->real_escape_string($_POST['city']);
+        }
 
         // Update the destination in the database
         $updateQuery = "UPDATE destinations SET desti_name='$desti_name', desti_description='$desti_description', city='$city' WHERE destination_id=$destination_id";
@@ -51,7 +63,7 @@ if (isset($_GET['id'])) {
             // Check file size (limit to 5MB)
             if ($_FILES["image"]["size"] <= 5000000) {
                 // Allow only certain file formats
-                if ($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif") {
+                if (in_array($imageFileType, ["jpg", "png", "jpeg", "gif"])) {
                     // Move file to the target directory
                     if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                         // Insert the image into the database
@@ -84,6 +96,9 @@ if (isset($_GET['id'])) {
 
 // Fetch images for this destination
 $imagesResult = $conn->query("SELECT * FROM destination_images WHERE destination_id = $destination_id");
+
+// Fetch all cities for the city dropdown
+$cities = $conn->query("SELECT * FROM cities");
 ?>
 
 <!DOCTYPE html>
@@ -93,6 +108,18 @@ $imagesResult = $conn->query("SELECT * FROM destination_images WHERE destination
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Destination</title>
     <link rel="stylesheet" href="edit_destination.css">
+    <script>
+        function toggleCityInput() {
+            var citySelect = document.getElementById('city');
+            var newCityInput = document.getElementById('new_city_input');
+
+            if (citySelect.value === "add_new_city") {
+                newCityInput.style.display = 'block';
+            } else {
+                newCityInput.style.display = 'none';
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Edit Destination</h1>
@@ -106,7 +133,20 @@ $imagesResult = $conn->query("SELECT * FROM destination_images WHERE destination
         <textarea id="desti_description" name="desti_description" required><?php echo htmlspecialchars($destination['desti_description']); ?></textarea>
 
         <label for="city">City</label>
-        <input type="text" id="city" name="city" value="<?php echo htmlspecialchars($destination['city']); ?>" required>
+        <select id="city" name="city" onchange="toggleCityInput()">
+            <option value="">Select city</option>
+            <?php while ($city = $cities->fetch_assoc()): ?>
+                <option value="<?php echo htmlspecialchars($city['city_name']); ?>" <?php echo ($destination['city'] === $city['city_name']) ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($city['city_name']); ?>
+                </option>
+            <?php endwhile; ?>
+            <option value="add_new_city">Add New City</option>
+        </select>
+
+        <div id="new_city_input" style="display:none;">
+            <label for="new_city">New City Name</label>
+            <input type="text" id="new_city" name="new_city">
+        </div>
 
         <button type="submit" name="update_destination">Update Destination</button>
     </form>

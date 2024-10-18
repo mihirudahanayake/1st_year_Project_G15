@@ -77,6 +77,13 @@ if ($user_id) {
                         <td><?php echo htmlspecialchars($booking['hotel_name']); ?></td>
                         <td><?php echo htmlspecialchars($booking['start_date']); ?></td>
                         <td><?php echo htmlspecialchars($booking['end_date']); ?></td>
+                        <td>
+                            <!-- Form to remove booking -->
+                            <form action="remove_booking_admin.php" method="POST">
+                                <input type="hidden" name="booking_id" value="<?php echo $booking['booking_id']; ?>">
+                                <button type="submit" class="remove-btn">Remove</button>
+                            </form>
+                        </td>
                     </tr>
                 <?php endwhile; ?>
             </table>

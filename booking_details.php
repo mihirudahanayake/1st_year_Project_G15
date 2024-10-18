@@ -40,8 +40,8 @@ $booking_stmt->close();
     <link rel="stylesheet" href="booking-details.css">
 </head>
 <body>
-     <div class="bg"></div>
-     <div class="booking-details-container">
+    <div class="bg"></div>
+    <div class="booking-details-container">
         <h2>Booking Details</h2>
         <p><strong>Booking ID:</strong> <?php echo htmlspecialchars($booking['booking_id']); ?></p>
         <p><strong>User Name:</strong> <?php echo htmlspecialchars($booking['user_name']); ?></p>
@@ -51,7 +51,16 @@ $booking_stmt->close();
         <p><strong>Hotel Name:</strong> <?php echo htmlspecialchars($booking['hotel_name']); ?></p>
         <p><strong>Check-in Date:</strong> <?php echo htmlspecialchars($booking['start_date']); ?></p>
         <p><strong>Check-out Date:</strong> <?php echo htmlspecialchars($booking['end_date']); ?></p>
+
+        <!-- Button to go back to the dashboard -->
         <button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
+
+        <!-- Form to remove the booking -->
+        <form action="remove_booking.php" method="POST">
+            <input type="hidden" name="booking_id" value="<?php echo $booking_id; ?>">
+            <button type="submit" class="remove-btn">Remove Booking</button>
+        </form>
     </div>
 </body>
 </html>
+

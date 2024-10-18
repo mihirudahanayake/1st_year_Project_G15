@@ -28,23 +28,52 @@ include('config.php');
         <button type="submit">Search</button>
     </form>
 
+    <?php
+    // Make sure the hotel ID is set from the URL
+    if (isset($_GET['id']) && !empty($_GET['id'])) {
+        $hotel_id = $conn->real_escape_string($_GET['id']); // Escape the hotel_id for security
+
+        // Query to fetch hotel details (name and location)
+        $hotelQuery = "SELECT hotel_name, location FROM hotels WHERE hotel_id = '$hotel_id'";
+        $hotelResult = $conn->query($hotelQuery);
+        echo "<div class='hotel-container'>"; // Centered container start
+        if ($hotelResult->num_rows > 0) {
+            $hotel = $hotelResult->fetch_assoc();
+            echo "<h1 class='hotel-name'>" . htmlspecialchars($hotel['hotel_name']) . "</h1>";
+            echo "<p class='hotel-location'>Location: " . htmlspecialchars($hotel['location']) . "</p>";
+
+            // Query to fetch hotel images from hotel_images table
+            $hotelImagesQuery = "SELECT image_path FROM hotel_images WHERE hotel_id = '$hotel_id'";
+            $hotelImagesResult = $conn->query($hotelImagesQuery);
+
+            if ($hotelImagesResult->num_rows > 0) {
+                echo "<div class='hotel-images'>";
+                while ($image = $hotelImagesResult->fetch_assoc()) {
+                    echo "<img src='" . htmlspecialchars($image['image_path']) . "' alt='Hotel Image' class='hotel-image'>";
+                }
+                echo "</div>";
+            } else {
+                echo "<p>No images available for this hotel.</p>";
+            }
+        } else {
+            echo "<p>Hotel not found.</p>";
+        }
+        echo "</div>"; // Centered container end
+
+        // Base query to fetch rooms, hotel details, and the first image for each room
+        $query = "SELECT DISTINCT rooms.room_id, rooms.room_number, rooms.price_per_night, rooms.max_adults, rooms.max_children,
+                          hotels.hotel_name, hotels.location, 
+                          (SELECT image_path FROM room_images WHERE room_images.room_id = rooms.room_id ORDER BY image_id ASC LIMIT 1) AS first_image 
+                  FROM rooms 
+                  JOIN hotels ON rooms.hotel_id = hotels.hotel_id
+                  LEFT JOIN hotel_destinations ON hotels.hotel_id = hotel_destinations.hotel_id
+                  LEFT JOIN destinations ON hotel_destinations.destination_id = destinations.destination_id
+                  WHERE rooms.hotel_id = '$hotel_id'"; // Ensure only rooms from the specific hotel are shown
+?>
+
     <!-- Room Listing Section -->
     <div class="room-container">
         <?php
-        // Make sure the hotel ID is set from the URL
-        if (isset($_GET['id']) && !empty($_GET['id'])) {
-            $hotel_id = $conn->real_escape_string($_GET['id']); // Escape the hotel_id for security
-
-            // Base query to fetch rooms, hotel details, and the first image
-            $query = "SELECT DISTINCT rooms.room_id, rooms.room_number, rooms.price_per_night, 
-                      hotels.hotel_name, hotels.location, 
-                      (SELECT image_path FROM room_images WHERE room_images.room_id = rooms.room_id ORDER BY image_id ASC LIMIT 1) AS first_image 
-              FROM rooms 
-              JOIN hotels ON rooms.hotel_id = hotels.hotel_id
-              LEFT JOIN hotel_destinations ON hotels.hotel_id = hotel_destinations.hotel_id
-              LEFT JOIN destinations ON hotel_destinations.destination_id = destinations.destination_id
-              WHERE rooms.hotel_id = '$hotel_id'"; // Ensure only rooms from the specific hotel are shown
-
             // Price range filters
             if (isset($_GET['min_price']) && !empty($_GET['min_price'])) {
                 $min_price = $conn->real_escape_string($_GET['min_price']);
@@ -74,10 +103,10 @@ include('config.php');
                         echo "<img src='default_room_image.jpg' alt='Room Image' class='room-image'>"; // Fallback image
                     }
                     echo "<div class='room-details'>";
-                    echo "<h3>Room " . htmlspecialchars($room['room_number']) . "</h3>";
-                    echo "<p>Price per Night: $" . htmlspecialchars($room['price_per_night']) . "</p>";
-                    echo "<p>Hotel: " . htmlspecialchars($room['hotel_name']) . "</p>";
-                    echo "<p>Location: " . htmlspecialchars($room['location']) . "</p>";
+                    echo "<h3>Room No : " . htmlspecialchars($room['room_number']) . "</h3>";
+                    echo "<p>Price per Night: LKR " . htmlspecialchars($room['price_per_night']) . "</p>";
+                    echo "<p>Max Adults: " . htmlspecialchars($room['max_adults']) . "</p>";
+                    echo "<p>Max Child: " . htmlspecialchars($room['max_children']) . "</p>";
                     echo "</div>";
                     echo "</div>";
                     echo "</a>";
@@ -151,8 +180,6 @@ include('config.php');
         <p>No near places found</p>
     <?php endif; ?>
 </section>
-
-
 
     <?php include 'footer.php'; ?>
 

@@ -72,4 +72,18 @@ body {
  .booking-details-container button:hover {
      background-color: #0056b3;
  }
+
+ .remove-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.remove-btn:hover {
+    background-color: darkred;
+}
  
