@@ -3,7 +3,8 @@ include('config.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $hotel_name = $_POST['hotel_name'];
-    $total_rooms = $_POST['total_rooms'];
+    // Set total_rooms to 0
+    $total_rooms = 0; 
     $description = $_POST['description'];
     $admin_id = $_SESSION['user_id'];
     $city_name = $_POST['city_name'];
@@ -60,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 }
+
 
 // Fetch cities for the dropdown
 $stmt = $conn->prepare("SELECT city_id, city_name FROM cities");
@@ -122,8 +124,6 @@ $stmt->close();
     <form action="add_hotel.php" method="POST">
         <label for="hotel_name">Hotel Name</label>
         <input type="text" id="hotel_name" name="hotel_name" required>
-        <label for="total_rooms">Total Rooms</label>
-        <input type="number" id="total_rooms" name="total_rooms" required>
         <label for="description">Description</label>
         <textarea id="description" name="description" required></textarea>
         <label for="city_name">Select City</label>

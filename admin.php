@@ -75,7 +75,7 @@ $cities = $conn->query("SELECT * FROM cities");
                     <?php endif; ?>
                 </div>
                 <div class="actions">
-                    <a href="edit_destination.php?id=<?php echo $destination['destination_id']; ?>">Edit</a>
+                    <a href="edit_destination.php?id=<?php echo $destination['destination_id']; ?>">View & Edit</a>
                     <!-- Add the delete button with a confirmation prompt -->
                     <button onclick="confirmDelete(<?php echo $destination['destination_id']; ?>)">Delete</button>
                 </div>

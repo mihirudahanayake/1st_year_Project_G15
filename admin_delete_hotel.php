@@ -63,6 +63,10 @@ if (isset($_GET['id'])) {
         // Commit the transaction
         $conn->commit();
 
+        // Redirect to the admin panel after deletion
+        header("Location: admin_panel.php");
+        exit();
+
     } catch (Exception $e) {
         // Rollback the transaction in case of an error
         $conn->rollback();

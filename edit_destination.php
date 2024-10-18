@@ -18,7 +18,9 @@ if (isset($_GET['id'])) {
         // Update the destination in the database
         $updateQuery = "UPDATE destinations SET desti_name='$desti_name', desti_description='$desti_description', city='$city' WHERE destination_id=$destination_id";
         if ($conn->query($updateQuery) === TRUE) {
-            echo "<p>Destination updated successfully.</p>";
+            // Redirect to admin.php after successful update
+            header("Location: admin.php");
+            exit();
         } else {
             echo "<p>Error updating destination: " . $conn->error . "</p>";
         }
@@ -29,11 +31,52 @@ if (isset($_GET['id'])) {
         $image_id = intval($_GET['delete_image']);
         $deleteImageQuery = "DELETE FROM destination_images WHERE id = $image_id";
         if ($conn->query($deleteImageQuery) === TRUE) {
-            echo "<p>Image deleted successfully.</p>";
+            // Redirect to admin.php after successful image deletion
+            header("Location: admin.php");
+            exit();
         } else {
             echo "<p>Error deleting image: " . $conn->error . "</p>";
         }
     }
+
+    // Handle image upload
+    if (isset($_POST['upload_image'])) {
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["image"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // Check if the file is an actual image
+        $check = getimagesize($_FILES["image"]["tmp_name"]);
+        if ($check !== false) {
+            // Check file size (limit to 5MB)
+            if ($_FILES["image"]["size"] <= 5000000) {
+                // Allow only certain file formats
+                if ($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif") {
+                    // Move file to the target directory
+                    if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                        // Insert the image into the database
+                        $insertImageQuery = "INSERT INTO destination_images (destination_id, image_url) VALUES ($destination_id, '$target_file')";
+                        if ($conn->query($insertImageQuery) === TRUE) {
+                            // Redirect to admin.php after successful image upload
+                            header("Location: admin.php");
+                            exit();
+                        } else {
+                            echo "<p>Error uploading image: " . $conn->error . "</p>";
+                        }
+                    } else {
+                        echo "<p>Sorry, there was an error uploading your file.</p>";
+                    }
+                } else {
+                    echo "<p>Only JPG, JPEG, PNG, and GIF files are allowed.</p>";
+                }
+            } else {
+                echo "<p>Sorry, your file is too large.</p>";
+            }
+        } else {
+            echo "<p>File is not an image.</p>";
+        }
+    }
+
 } else {
     echo "No destination selected for editing.";
     exit;
@@ -65,6 +108,13 @@ $imagesResult = $conn->query("SELECT * FROM destination_images WHERE destination
         <input type="text" id="city" name="city" value="<?php echo htmlspecialchars($destination['city']); ?>" required>
 
         <button type="submit" name="update_destination">Update Destination</button>
+    </form>
+
+    <!-- Image upload form -->
+    <h2>Upload New Image</h2>
+    <form action="edit_destination.php?id=<?php echo $destination_id; ?>" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit" name="upload_image">Upload Image</button>
     </form>
 
     <!-- Show images and delete option -->
