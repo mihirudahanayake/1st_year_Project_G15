@@ -14,7 +14,7 @@ $hotel_id = $_SESSION['hotel_id'];
 if (isset($_POST['add_room'])) {
     $room_number = $_POST['room_number'];
     $room_name = $_POST['room_name'];
-    $facilities = $_POST['facilities'];
+    $facilities = $_POST['facilities']; // Multi-line text with line breaks
     $price_per_night = $_POST['price_per_night'];
     $max_adults = $_POST['max_adults'];
     $max_children = $_POST['max_children'];
@@ -77,59 +77,57 @@ if (isset($_POST['add_room'])) {
 
 <!DOCTYPE HTML>
 <html>
-    <head>
-        <title>add new room</title>
-        <link rel="stylesheet" href="add_room.css">
-    </head>
-    <body>
-        <div class="bg"></div>
-        <div class="dashboard-container">
-            <!-- Add a New Room Section -->
-            <h3>Add a New Room</h3>
-            <form action="add_room.php" method="POST" enctype="multipart/form-data">
-                <div class="fields">
-                    <div class="field">
-                        <label for="room_number">Room Number</label>
-                        <input type="text" id="room_number" name="room_number" required>
-                    </div>
-                    <div class="field">
-                        <label for="room_name">Room Name</label>
-                        <input type="text" id="room_name" name="room_name">
-                    </div>
+<head>
+    <title>Add New Room</title>
+    <link rel="stylesheet" href="add_room.css">
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="dashboard-container">
+        <!-- Add a New Room Section -->
+        <h3>Add a New Room</h3>
+        <form action="add_room.php" method="POST" enctype="multipart/form-data">
+            <div class="fields">
+                <div class="field">
+                    <label for="room_number">Room Number</label>
+                    <input type="text" id="room_number" name="room_number" required>
+                </div>
+                <div class="field">
+                    <label for="room_name">Room Name</label>
+                    <input type="text" id="room_name" name="room_name">
+                </div>
+            </div>
+
+            <label for="facilities">Facilities</label>
+            <textarea id="facilities" name="facilities" required></textarea>
+
+            <label for="price_per_night">Price per Night</label>
+            <input type="number" id="price_per_night" name="price_per_night" required>
+
+            <!-- Wrap Max Adults and Max Children in a container -->
+            <div class="fields">
+                <div class="field">
+                    <label for="max_adults">Max Adults</label>
+                    <input type="number" id="max_adults" name="max_adults" required>
                 </div>
 
-
-                <label for="facilities">Facilities</label>
-                <textarea id="facilities" name="facilities" required></textarea>
-
-                <label for="price_per_night">Price per Night</label>
-                <input type="number" id="price_per_night" name="price_per_night" required>
-
-                <!-- Wrap Max Adults and Max Children in a container -->
-                <div class="fields">
-                    <div class="field">
-                        <label for="max_adults">Max Adults</label>
-                        <input type="number" id="max_adults" name="max_adults" required>
-                    </div>
-
-                    <div class="field">
-                        <label for="max_children">Max Children</label>
-                        <input type="number" id="max_children" name="max_children" required>
-                    </div>
+                <div class="field">
+                    <label for="max_children">Max Children</label>
+                    <input type="number" id="max_children" name="max_children" required>
                 </div>
+            </div>
 
-                <label for="availability">Availability</label>
-                <select id="availability" name="availability" required>
-                    <option value="Available">Available</option>
-                    <option value="Not Available">Not Available</option>
-                </select>
-                
-                <label for="room_images">Room Images (max 5)</label>
-                <input type="file" id="room_images" name="room_images[]" accept="image/*" multiple required>
-                
-                <button type="submit" name="add_room">Add Room</button>
-            </form>
-
-        </div>
-    </body>
+            <label for="availability">Availability</label>
+            <select id="availability" name="availability" required>
+                <option value="Available">Available</option>
+                <option value="Not Available">Not Available</option>
+            </select>
+            
+            <label for="room_images">Room Images (max 5)</label>
+            <input type="file" id="room_images" name="room_images[]" accept="image/*" multiple required>
+            
+            <button type="submit" name="add_room">Add Room</button>
+        </form>
+    </div>
+</body>
 </html>

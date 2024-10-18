@@ -21,9 +21,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         exit;
     }
 
-
-
-
     // Fetch room images
     $stmt = $conn->prepare("SELECT image_path FROM room_images WHERE room_id = ?");
     $stmt->bind_param("i", $room_id);
@@ -74,7 +71,6 @@ if (isset($_POST['check_availability'])) {
     <link rel="stylesheet" href="room_details.css">
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-
 </head>
 
 <body>
@@ -100,8 +96,17 @@ if (isset($_POST['check_availability'])) {
             <p><strong>Price per Night:</strong> $<?php echo htmlspecialchars($room['price_per_night']); ?></p>
             <p><strong>Max Adults:</strong> <?php echo htmlspecialchars($room['max_adults']); ?></p>
             <p><strong>Max Children:</strong> <?php echo htmlspecialchars($room['max_children']); ?></p>
-            <p><strong>Facilities:</strong> <?php echo htmlspecialchars($room['facilities']); ?></p>
+            
+            <p><strong>Facilities:</strong></p>
+            <ul>
+                <?php 
+                $facilities = explode("\n", $room['facilities']); // Split facilities by line breaks
+                foreach ($facilities as $facility): ?>
+                    <li><?php echo htmlspecialchars($facility); ?></li> <!-- Display each facility in a list -->
+                <?php endforeach; ?>
+            </ul>
         </section>
+
 
         <!-- availability -->
         <section class="availability" id="availability">
@@ -129,7 +134,6 @@ if (isset($_POST['check_availability'])) {
                     <p>Sorry, the room is not available for the selected dates.</p>
                 <?php endif; ?>
             <?php endif; ?>
-            
         </section>
         
     </div>

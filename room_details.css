@@ -144,3 +144,12 @@ strong {
     margin: 0 auto;
     text-align: center;
 }
+
+.room-details ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.room-details li {
+    padding: 5px 0;
+}
