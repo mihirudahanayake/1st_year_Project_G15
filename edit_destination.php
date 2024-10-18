@@ -92,6 +92,7 @@ $imagesResult = $conn->query("SELECT * FROM destination_images WHERE destination
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Destination</title>
+    <link rel="stylesheet" href="edit_destination.css">
 </head>
 <body>
     <h1>Edit Destination</h1>

@@ -37,7 +37,7 @@ if (isset($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel Details</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin_hotel_details.css">
 </head>
 <body>
     <div class="admin-container">
