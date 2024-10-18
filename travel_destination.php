@@ -4,37 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Destinations</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="travel_destination.css">
 </head>
 <body>
+<?php include('header.php'); ?>
+<div class="bg"></div>
     <div class="container">
-        <h1>Explore Our Travel Destinations</h1>
+        <h1>Travel Destinations</h1>
 
         <!-- Search Form -->
         <form action="travel_destination.php" method="GET">
-            <label for="city">Search by City</label>
-            <select id="city" name="city">
-                <option value="">Select a city</option>
-                <?php
-                include('config.php');
+            <div class="search-filters">
+                <div class="filter">
+                    <select id="city" name="city">
+                        <option value="">Select a city</option>
+                        <?php
+                        include('config.php');
 
-                // Fetch cities from the cities table
-                $cityQuery = "SELECT DISTINCT city_name FROM cities";
-                $cityResult = $conn->query($cityQuery);
+                        // Fetch cities from the cities table
+                        $cityQuery = "SELECT DISTINCT city_name FROM cities";
+                        $cityResult = $conn->query($cityQuery);
 
-                if ($cityResult->num_rows > 0) {
-                    while ($row = $cityResult->fetch_assoc()) {
-                        echo '<option value="' . htmlspecialchars($row['city_name']) . '">' . htmlspecialchars($row['city_name']) . '</option>';
-                    }
-                }
-                ?>
-            </select>
+                        if ($cityResult->num_rows > 0) {
+                            while ($row = $cityResult->fetch_assoc()) {
+                                echo '<option value="' . htmlspecialchars($row['city_name']) . '">' . htmlspecialchars($row['city_name']) . '</option>';
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
 
-            <label for="desti_name">Search by Destination Name</label>
-            <input type="text" id="desti_name" name="desti_name" placeholder="Enter destination name">
+                <div class="filter">
+                    <input type="text" id="desti_name" name="desti_name" placeholder="Enter destination name">
+                </div>
 
-            <button type="submit">Search</button>
+                <!-- Add the search button in the same line -->
+                <div class="filter search-button">
+                    <button type="submit">Search</button>
+                </div>
+            </div>
         </form>
+
+
+
 
         <div class="destinations-grid">
             <?php
@@ -77,7 +89,13 @@
                         echo "<img src='default_image.jpg' alt='No image available'>";
                     }
 
-                    echo "<p>" . htmlspecialchars($destination['desti_description']) . "</p>";
+                    // Limit the description length
+                    $maxDescriptionLength = 100; // Set the maximum length of the description
+                    $shortDescription = strlen($destination['desti_description']) > $maxDescriptionLength 
+                        ? substr($destination['desti_description'], 0, $maxDescriptionLength) . '...' 
+                        : $destination['desti_description'];
+
+                    echo "<p>" . htmlspecialchars($shortDescription) . "</p>";
                     // Add a View Details button
                     echo '<a href="destination_details.php?id=' . htmlspecialchars($destination['destination_id']) . '" class="details-link">View Details</a>';
                     echo "</div>";
@@ -90,5 +108,6 @@
             ?>
         </div>
     </div>
+    <?php include('footer.php'); ?>
 </body>
 </html>

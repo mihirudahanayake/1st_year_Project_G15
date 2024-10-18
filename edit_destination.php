@@ -8,94 +8,107 @@ if (isset($_GET['id'])) {
     // Fetch destination details from the database
     $result = $conn->query("SELECT * FROM destinations WHERE destination_id = $destination_id");
     $destination = $result->fetch_assoc();
+}
 
-    // Check if form is submitted to update the destination
-    if (isset($_POST['update_destination'])) {
-        $desti_name = $conn->real_escape_string($_POST['desti_name']);
-        $desti_description = $conn->real_escape_string($_POST['desti_description']);
-        $new_city = $conn->real_escape_string($_POST['new_city']);
+// Check if form is submitted to update the destination
+if (isset($_POST['update_destination'])) {
+    $desti_name = $conn->real_escape_string($_POST['desti_name']);
+    $desti_description = $conn->real_escape_string($_POST['desti_description']);
+    $new_city = $conn->real_escape_string($_POST['new_city']);
 
-        // If a new city is added, insert it into the cities table
-        if (!empty($new_city)) {
-            $city_query = "INSERT INTO cities (city_name) VALUES ('$new_city')";
-            if ($conn->query($city_query) === TRUE) {
-                $city = $new_city;
-            } else {
-                echo "<p>Error adding city: " . $conn->error . "</p>";
-            }
+    // If a new city is added, insert it into the cities table
+    if (!empty($new_city)) {
+        $city_query = "INSERT INTO cities (city_name) VALUES ('$new_city')";
+        if ($conn->query($city_query) === TRUE) {
+            $city = $new_city;
         } else {
-            $city = $conn->real_escape_string($_POST['city']);
+            echo "<p>Error adding city: " . $conn->error . "</p>";
         }
-
-        // Update the destination in the database
-        $updateQuery = "UPDATE destinations SET desti_name='$desti_name', desti_description='$desti_description', city='$city' WHERE destination_id=$destination_id";
-        if ($conn->query($updateQuery) === TRUE) {
-            // Redirect to admin.php after successful update
-            header("Location: admin.php");
-            exit();
-        } else {
-            echo "<p>Error updating destination: " . $conn->error . "</p>";
-        }
+    } else {
+        $city = $conn->real_escape_string($_POST['city']);
     }
 
-    // Handle image deletion
-    if (isset($_GET['delete_image'])) {
-        $image_id = intval($_GET['delete_image']);
+    // Update the destination in the database
+    $updateQuery = "UPDATE destinations SET desti_name='$desti_name', desti_description='$desti_description', city='$city' WHERE destination_id=$destination_id";
+    if ($conn->query($updateQuery) === TRUE) {
+        // Redirect to edit_destination.php after successful update
+        header("Location: edit_destination.php?id=$destination_id");
+        exit();
+    } else {
+        echo "<p>Error updating destination: " . $conn->error . "</p>";
+    }
+}
+
+// Handle image upload
+if (isset($_POST['upload_image'])) {
+    $target_dir = "uploads/";
+    $target_file = $target_dir . basename($_FILES["image"]["name"]);
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+    // Check if the file is an actual image
+    $check = getimagesize($_FILES["image"]["tmp_name"]);
+    if ($check !== false) {
+        // Check file size (limit to 5MB)
+        if ($_FILES["image"]["size"] <= 5000000) {
+            // Allow only certain file formats
+            if (in_array($imageFileType, ["jpg", "png", "jpeg", "gif"])) {
+                // Move file to the target directory
+                if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                    // Insert the image into the database
+                    $insertImageQuery = "INSERT INTO destination_images (destination_id, image_url) VALUES ($destination_id, '$target_file')";
+                    if ($conn->query($insertImageQuery) === TRUE) {
+                        // Redirect to edit_destination.php after successful image upload
+                        header("Location: edit_destination.php?id=$destination_id");
+                        exit();
+                    } else {
+                        echo "<p>Error uploading image: " . $conn->error . "</p>";
+                    }
+                } else {
+                    echo "<p>Sorry, there was an error uploading your file.</p>";
+                }
+            } else {
+                echo "<p>Only JPG, JPEG, PNG, and GIF files are allowed.</p>";
+            }
+        } else {
+            echo "<p>Sorry, your file is too large.</p>";
+        }
+    } else {
+        echo "<p>File is not an image.</p>";
+    }
+}
+
+
+// Fetch images for this destination
+$imagesResult = $conn->query("SELECT * FROM destination_images WHERE destination_id = $destination_id");
+if (isset($_GET['delete_image'])) {
+    $image_id = intval($_GET['delete_image']);
+    
+    // Fetch the image URL from the database before deleting
+    $getImageQuery = "SELECT image_url FROM destination_images WHERE id = $image_id";
+    $imageResult = $conn->query($getImageQuery);
+    $image = $imageResult->fetch_assoc();
+
+    if ($image) {
+        // Delete the file from the server
+        $image_path = $image['image_url'];
+        if (file_exists($image_path)) {
+            unlink($image_path); // Deletes the file from the server
+        }
+
+        // Now delete the image record from the database
         $deleteImageQuery = "DELETE FROM destination_images WHERE id = $image_id";
         if ($conn->query($deleteImageQuery) === TRUE) {
-            // Redirect to admin.php after successful image deletion
-            header("Location: admin.php");
+            // Redirect to the same page after deletion
+            header("Location: edit_destination.php?id=$destination_id");
             exit();
         } else {
             echo "<p>Error deleting image: " . $conn->error . "</p>";
         }
+    } else {
+        echo "<p>Image not found.</p>";
     }
-
-    // Handle image upload
-    if (isset($_POST['upload_image'])) {
-        $target_dir = "uploads/";
-        $target_file = $target_dir . basename($_FILES["image"]["name"]);
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-        // Check if the file is an actual image
-        $check = getimagesize($_FILES["image"]["tmp_name"]);
-        if ($check !== false) {
-            // Check file size (limit to 5MB)
-            if ($_FILES["image"]["size"] <= 5000000) {
-                // Allow only certain file formats
-                if (in_array($imageFileType, ["jpg", "png", "jpeg", "gif"])) {
-                    // Move file to the target directory
-                    if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                        // Insert the image into the database
-                        $insertImageQuery = "INSERT INTO destination_images (destination_id, image_url) VALUES ($destination_id, '$target_file')";
-                        if ($conn->query($insertImageQuery) === TRUE) {
-                            // Redirect to admin.php after successful image upload
-                            header("Location: admin.php");
-                            exit();
-                        } else {
-                            echo "<p>Error uploading image: " . $conn->error . "</p>";
-                        }
-                    } else {
-                        echo "<p>Sorry, there was an error uploading your file.</p>";
-                    }
-                } else {
-                    echo "<p>Only JPG, JPEG, PNG, and GIF files are allowed.</p>";
-                }
-            } else {
-                echo "<p>Sorry, your file is too large.</p>";
-            }
-        } else {
-            echo "<p>File is not an image.</p>";
-        }
-    }
-
-} else {
-    echo "No destination selected for editing.";
-    exit;
 }
 
-// Fetch images for this destination
-$imagesResult = $conn->query("SELECT * FROM destination_images WHERE destination_id = $destination_id");
 
 // Fetch all cities for the city dropdown
 $cities = $conn->query("SELECT * FROM cities");
@@ -122,6 +135,7 @@ $cities = $conn->query("SELECT * FROM cities");
     </script>
 </head>
 <body>
+<button onclick="location.href='admin.php'">Back to Dashboard</button>
     <h1>Edit Destination</h1>
 
     <!-- Edit destination form -->

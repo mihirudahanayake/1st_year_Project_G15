@@ -4,7 +4,7 @@ include('config.php');
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $destination_id = $conn->real_escape_string($_GET['id']);
 
-    // Query to fetch the details of the specific destination
+    // Fetch the destination details
     $query = "SELECT desti_name, desti_description FROM destinations WHERE destination_id = $destination_id";
     $result = $conn->query($query);
 
@@ -15,11 +15,18 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         exit;
     }
 
-    // Query to fetch images associated with this destination from destination_images table
+    // Fetch associated images
     $image_query = "SELECT image_url FROM destination_images WHERE destination_id = $destination_id";
     $image_result = $conn->query($image_query);
 
-    // Query to fetch available hotels associated with this destination
+    $images = [];
+    if ($image_result->num_rows > 0) {
+        while ($image = $image_result->fetch_assoc()) {
+            $images[] = $image['image_url'];
+        }
+    }
+
+    // Fetch available hotels
     $hotels_query = "
         SELECT DISTINCT hotels.hotel_id, hotels.hotel_name, hotels.description, hotels.location 
         FROM hotels
@@ -40,28 +47,39 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($destination['desti_name']); ?> - Details</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="destination_details.css">
 </head>
 <body>
+
+    <div class="bg"></div>
+    <?php include('header.php');?>
     <div class="container">
         <h1><?php echo htmlspecialchars($destination['desti_name']); ?></h1>
 
-        <!-- Display images -->
-        <div class="image-gallery">
-            <?php
-            if ($image_result->num_rows > 0) {
-                while ($image = $image_result->fetch_assoc()) {
-                    echo "<img src='" . htmlspecialchars($image['image_url']) . "' alt='Image of " . htmlspecialchars($destination['desti_name']) . "'>";
-                }
-            } else {
-                echo "<p>No images available for this destination.</p>";
-            }
-            ?>
+        <section class="gallery" id="gallery">
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    <?php foreach ($images as $index => $image): ?>
+                        <div class="swiper-slide" data-index="<?php echo $index; ?>">
+                            <img src="<?php echo htmlspecialchars($image); ?>" alt="Image of <?php echo htmlspecialchars($destination['desti_name']); ?>">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div> <!-- Add this line for pagination -->
+            </div>
+        </section>
+
+        <!-- Thumbnail Section -->
+        <div class="thumbnails">
+            <?php foreach ($images as $index => $image): ?>
+                <img src="<?php echo htmlspecialchars($image); ?>" alt="Thumbnail of <?php echo htmlspecialchars($destination['desti_name']); ?>" data-index="<?php echo $index; ?>">
+            <?php endforeach; ?>
         </div>
 
         <p><?php echo htmlspecialchars($destination['desti_description']); ?></p>
-
-        <a href="travel_destination.php" class="back-link">Back to Destinations</a>
 
         <h2>Available Hotels near <?php echo htmlspecialchars($destination['desti_name']); ?></h2>
         <div class="hotels-list">
@@ -81,6 +99,39 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
             ?>
         </div>
     </div>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper('.swiper', {
+            loop: true,
+            effect: "fade",
+            slidesPerView: 2,
+            spaceBetween: 10,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+        });
+
+        // Thumbnail click event to change the active slide
+        const thumbnails = document.querySelectorAll('.thumbnails img');
+
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function () {
+                const index = this.getAttribute('data-index');
+                swiper.slideTo(index);
+            });
+        });
+    </script>
+    <?php include('footer.php'); ?>
 </body>
 </html>
 

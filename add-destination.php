@@ -81,8 +81,9 @@ $cities = $conn->query("SELECT * FROM cities");
     </script>
 </head>
 <body>
-
+<button onclick="location.href='admin.php'">Back to Dashboard</button>
 <h1>Add Destination</h1>
+
 <form action="add-destination.php" method="POST" enctype="multipart/form-data">
     <label for="desti_name">Destination Name</label>
     <input type="text" id="desti_name" name="desti_name" required>

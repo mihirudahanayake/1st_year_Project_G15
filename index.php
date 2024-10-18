@@ -15,48 +15,8 @@ include_once "config.php";
     
 </head>
 <body>
-    <header class="header">
-        <nav>
-            <div class="navbar">
-                <button class="menu-btn" id="menu-btn">
-                    <i class="ri-menu-line"></i>
-                </button>
-                <h3 class="logo"><span>
-                    <span class="t-span1">Travel</span>
-                    <span class="t-span2">Mate</span>
-                  </span></h3>
-                <ul id="nav-menu">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="hotel_list.php">Hotels</a></li>
-                    <li><a href="travel_destination.php">Travel Destinations</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
-                <?php 
-                    if (isset($_SESSION['user_id'])) 
-                    {
-                        echo '<a id="login" href="profile.php"><b>Profile</b></a>';
-                    }
-                    else {
-                        echo '<a id="login" href="login.html"><b>Log in</b></a>';
-                    }
-                ?>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Side Navigation -->
-    <div class="side-nav" id="side-nav">
-        <button class="close-btn" id="close-btn">&times;</button>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="hotel_list.php">Hotels</a></li>
-            <li><a href="travel_destination.php">Travel Destinations</a></li>
-            <li><a href="#">Contact Us</a></li>
-        </ul>
-    </div>
-
+<?php include 'header.php'; ?>
+<div class="bg"></div>
     <!--home section start-->
     <section class="home" id="home">
         <h1 class="mhead">Let's Create <br/>Memorable <br/>Journey</h1>
@@ -107,7 +67,7 @@ include_once "config.php";
             </div>        
         </div>        
     </section> -->
-
+    <?php include 'footer.php'; ?>
     <script src="script.js"></script>
 </body>
 </html>

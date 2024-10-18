@@ -12,7 +12,8 @@
      margin-top: 30px;
      padding-top: 20px;
      padding-bottom: 10px;
-     background-color: #2f5b97;
+     background-color: #005b9ce6;
+     backdrop-filter: blur(10px);
      color: white;
      margin-left: -20px;
      margin-right: -20px;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- දායකයා: 127.0.0.1
--- උත්පාදන වේලාව: ඔක්තෝම්බර් 18, 2024 දින 11:59 AM ට
+-- උත්පාදන වේලාව: ඔක්තෝම්බර් 19, 2024 දින 12:53 AM ට
 -- සේවාදායකයේ අනුවාදය: 10.4.32-MariaDB
 -- PHP අනුවාදය: 8.2.12
 
@@ -36,17 +36,6 @@ CREATE TABLE `bookings` (
   `booking_status` enum('confirmed','pending','cancelled') DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- වගු සඳහා නික්ෂේප දත්ත `bookings`
---
-
-INSERT INTO `bookings` (`booking_id`, `user_id`, `room_id`, `start_date`, `end_date`, `booking_status`) VALUES
-(6, 7, 12, '2024-08-13', '2024-08-14', 'confirmed'),
-(7, 10, 14, '2024-09-28', '2024-09-29', 'confirmed'),
-(8, 10, 15, '2024-10-18', '2024-10-19', 'confirmed'),
-(9, 10, 15, '2024-10-20', '2024-10-21', 'confirmed'),
-(10, 10, 15, '2024-10-20', '2024-10-21', 'pending');
-
 -- --------------------------------------------------------
 
 --
@@ -69,7 +58,9 @@ INSERT INTO `cities` (`city_id`, `city_name`) VALUES
 (13, 'tan'),
 (999, 'New City Name'),
 (1000, 'rjt'),
-(1001, 'Tangalle');
+(1001, 'Tangalle'),
+(1002, 'Anuradhapuraya'),
+(1003, 'Dambulla');
 
 -- --------------------------------------------------------
 
@@ -90,11 +81,12 @@ CREATE TABLE `destinations` (
 --
 
 INSERT INTO `destinations` (`destination_id`, `desti_name`, `desti_description`, `image_url`, `city`) VALUES
-(3, 'be', 'er\r\nsdcjcgc\r\n\r\nere3e ', './uploads/4092564-about-mobile-ui-profile-ui-user-website_114033.png', 'Beliatta'),
-(17, 'eee', 'eee', './uploads/search (2).png', 'tan'),
-(19, 'we', 'ew\r\nwe\r\n ew  \r\n we\r\n\r\nwe', './uploads/search_locate_find_icon-icons.com_67287.png', 'tan'),
-(42, 'rjt', 'hi', '', 'rjt'),
-(43, 'Beach', 'sea view \r\nnice for day out', '', 'matara');
+(3, 'Ruwanweli Seya', 'Ruwanweli Maha Seya (Ruwanweliseya) is one of the most venerated Buddhist sites in Sri Lanka built by the great king Dutugamunu who reigned from 137 BCE to 119 BCE from Anuradhapura. Ruwanweli Maha Seya is not the largest nor the oldest of the stupas erected in Anuradhapura, but this is the most venerated by the Buddhists surpassing all other great stupas. It has the most imposing collection of relics of Gautama Buddha than was ever enshrined in any other dagoba on the island.\r\n\r\nere3e ', './uploads/4092564-about-mobile-ui-profile-ui-user-website_114033.png', 'Anuradhapuraya'),
+(17, 'Sri maha bodiya', 'After the introduction of Buddhism to Sri Lanka by Mahinda Thero in 250 BC Emperor Asoka in India sent his daughter Theri Sanghamitta to the island with a branch of the Sacred Bodhi obtained from the main stem of the bodhi tree in Bodh Gaya under which Buddha attained enlightenment. King Devanampiyatissa received this sapling and planted it at the present site in Mahameghavana Garden in 249 BC. Taking this information into account today (in 2023) the Sri Maha Bodhi tree is exactly 2273 years old. Thus this tree is considered the oldest living tree in world in the recorded history.', './uploads/search (2).png', 'Anuradhapuraya'),
+(19, 'Mirisawetiya Dagaba', 'Mirisawetiya Dagaba was built by King Dutugamunu (161-137 BCE) and this belongs to the Mahavihara Complex. King Dutugamunu was the great king who defeated the Tamil invaders who ruled the country for 30 years and brought the country under one ruler in the 1st century BCE.', './uploads/search_locate_find_icon-icons.com_67287.png', 'Anuradhapuraya'),
+(43, 'Beach', 'sea view \r\nnice for day out', '', 'matara'),
+(44, 'Sigiriya', 'Sigiriya or Sinhagiri is an ancient rock fortress located in the northern Matale District near the town of Dambulla in the Central Province, Sri Lanka. It is a site of historical and archaeological significance that is dominated by a massive column of granite approximately 180 m high.', '', 'Dambulla'),
+(45, 'Pidurangala', 'Pidurangala is a massive rock formation located a few kilometers north of Sigiriya in Sri Lanka. It has an interesting history closely related to that of the Sigiriya Rock Fortress. Climbing to the top of Pidurangala Rock is more strenuous than climbing Sigiriya. If you are fit and adventurous it is a climb worth making. It will take you about two hours. There is far less to see on this site than Sigiriya.', '', 'Dambulla');
 
 -- --------------------------------------------------------
 
@@ -113,12 +105,13 @@ CREATE TABLE `destination_images` (
 --
 
 INSERT INTO `destination_images` (`id`, `destination_id`, `image_url`) VALUES
-(6, 19, './uploads/search_locate_find_icon-icons.com_67287.png'),
-(8, 42, './uploads/3655706b92e2321348b29e2a3e473900.jpg'),
-(9, 3, 'uploads/travel-and-tourism-background-vector.jpg'),
-(10, 17, 'uploads/R (3).jpeg'),
 (11, 43, './uploads/roomd.jpg'),
-(12, 42, 'uploads/R (5).jpeg');
+(19, 44, './uploads/R (7).jpeg'),
+(20, 3, 'uploads/WhatsApp Image 2024-10-18 at 17.08.33_5fb359a2.jpg'),
+(22, 17, 'uploads/Sri-Maha-Bodiya.jpg'),
+(23, 19, 'uploads/OIP (7).jpeg'),
+(24, 45, './uploads/R (8).jpeg'),
+(25, 3, 'uploads/R (9).jpeg');
 
 -- --------------------------------------------------------
 
@@ -141,8 +134,10 @@ CREATE TABLE `hotels` (
 --
 
 INSERT INTO `hotels` (`hotel_id`, `hotel_name`, `total_rooms`, `user_id`, `description`, `location`, `city_id`) VALUES
-(16, 'New Hotel 02', 1, 7, 'ss', 'Tangalle', 11),
-(31, 'New Hotel', 6, 11, 'hi', 'matara', 11);
+(31, 'New Hotel', 6, 11, 'hi', 'matara', 11),
+(35, 'Sigiriya Kingdom Resort ', 3, 18, 'swimming pools, Free', 'Dambulla', 1003),
+(36, 'Gold Crown Residence', 3, 19, 'good', 'Dambulla', 1003),
+(37, 'Eden Grand ', 3, 20, ' ', 'Dambulla', 1003);
 
 -- --------------------------------------------------------
 
@@ -161,7 +156,6 @@ CREATE TABLE `hotel_destinations` (
 --
 
 INSERT INTO `hotel_destinations` (`id`, `hotel_id`, `destination_id`) VALUES
-(4, 16, 3),
 (9, 31, 43);
 
 -- --------------------------------------------------------
@@ -181,7 +175,10 @@ CREATE TABLE `hotel_images` (
 --
 
 INSERT INTO `hotel_images` (`image_id`, `hotel_id`, `image_path`) VALUES
-(9, 31, 'uploads/hotel_images/Horizon_Club_Ocean_View_Room-1.jpg');
+(9, 31, 'uploads/hotel_images/Horizon_Club_Ocean_View_Room-1.jpg'),
+(12, 35, 'uploads/2.jpg'),
+(13, 36, 'uploads/trh.jpg'),
+(14, 37, 'uploads/dfs.jpg');
 
 -- --------------------------------------------------------
 
@@ -224,13 +221,21 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`room_id`, `hotel_id`, `room_name`, `room_number`, `price_per_night`, `max_adults`, `max_children`, `availability`, `hotel_name`, `facilities`) VALUES
-(12, 16, '2e', 5, 7.00, 2, 1, 'available', NULL, 'no ac'),
 (14, 31, 'nn', 7, 10.00, 2, 4, 'available', NULL, 'ac\r\nsea view'),
 (15, 31, 'we', 27, 20.00, 2, 2, 'available', NULL, '0'),
-(27, 31, '', 3, 3.00, 2, 1, 'Available', NULL, 'ac'),
+(27, 31, 'no', 3, 3000.00, 2, 1, 'available', NULL, 'ac'),
 (28, 31, '', 45, 4.00, 2, 1, 'Available', NULL, 'no'),
 (29, 31, '', 4, 2.00, 1, 0, 'Available', NULL, '2'),
-(33, 31, '22', 2, 4.00, 1, 1, 'available', NULL, '22\r\nhq th\r\nkj55');
+(33, 31, '22', 2, 4.00, 1, 1, 'available', NULL, '22\r\nhq th\r\nkj55'),
+(34, 35, '', 1, 17000.00, 2, 0, 'Available', NULL, 'swimming pools\r\nFree WiFi\r\nRestaurant\r\nFree parking'),
+(35, 35, '', 2, 21000.00, 2, 1, 'Available', NULL, 'swimming pools\r\nFree WiFi\r\nRestaurant\r\nFree parking'),
+(36, 35, '', 3, 32000.00, 2, 3, 'Available', NULL, 'swimming pools\r\nFree WiFi\r\nRestaurant\r\nFree parking'),
+(37, 36, '', 1, 9500.00, 2, 0, 'Available', NULL, 'Swimming pools\r\nFree WiFi\r\nRestaurant\r\nAirport shuttle'),
+(38, 36, '', 2, 11700.00, 2, 1, 'Available', NULL, 'Swimming pools\r\nFree WiFi\r\nRestaurant\r\nAirport shuttle'),
+(39, 36, '', 3, 18000.00, 2, 3, 'Available', NULL, 'Swimming pools\r\nFree WiFi\r\nRestaurant\r\nAirport shuttle'),
+(40, 37, '', 1, 9250.00, 2, 0, 'Available', NULL, 'swimming pools\r\nFree WiFi\r\nRestaurant\r\nAirport shuttle\r\nFitness centrer'),
+(41, 37, '', 2, 26700.00, 2, 1, 'Available', NULL, 'swimming pools\r\nFree WiFi\r\nRestaurant\r\nAirport shuttle\r\nFitness centrer'),
+(42, 37, '', 3, 38560.00, 2, 3, 'Available', NULL, 'swimming pools\r\nFree WiFi\r\nRestaurant\r\nAirport shuttle\r\nFitness centrer');
 
 --
 -- ප්‍රේරක `rooms`
@@ -297,12 +302,36 @@ INSERT INTO `room_images` (`image_id`, `room_id`, `image_path`) VALUES
 (30, 14, 'uploads/r1ii.jpeg'),
 (31, 27, 'room_27_66e514d86875f9.91549764.jpg'),
 (33, 15, 'uploads/R (2).jpeg'),
-(36, 15, 'uploads/room_27_image4.jpeg'),
 (37, 15, 'uploads/room_27_image3.jpeg'),
 (38, NULL, 'uploads/rooms/room__image1.jpg'),
 (39, 29, 'uploads/rooms/room_4_image1.jpg'),
 (43, 28, 'uploads/room_45_image2.jpg'),
-(46, 33, 'uploads/rooms/room_2_image1.jpg');
+(46, 33, 'uploads/rooms/room_2_image1.jpg'),
+(47, 34, 'uploads/rooms/room_01_image1.jpg'),
+(48, 34, 'uploads/rooms/room_01_image2.jpg'),
+(49, 35, 'uploads/rooms/room_2_image1.jpg'),
+(50, 35, 'uploads/rooms/room_2_image2.jpg'),
+(51, 36, 'uploads/rooms/room_3_image1.jpg'),
+(52, 36, 'uploads/rooms/room_3_image2.jpg'),
+(53, 36, 'uploads/rooms/room_3_image3.jpg'),
+(54, 37, 'uploads/rooms/room_01_image1.jpg'),
+(55, 37, 'uploads/rooms/room_01_image2.jpg'),
+(56, 37, 'uploads/rooms/room_01_image3.jpg'),
+(57, 38, 'uploads/rooms/room_02_image1.jpg'),
+(58, 38, 'uploads/rooms/room_02_image2.jpg'),
+(59, 38, 'uploads/rooms/room_02_image3.jpg'),
+(60, 39, 'uploads/rooms/room_03_image1.jpg'),
+(61, 39, 'uploads/rooms/room_03_image2.jpg'),
+(62, 39, 'uploads/rooms/room_03_image3.jpg'),
+(63, 40, 'uploads/rooms/room_01_image1.jpg'),
+(64, 40, 'uploads/rooms/room_01_image2.jpg'),
+(65, 40, 'uploads/rooms/room_01_image3.jpg'),
+(66, 41, 'uploads/rooms/room_02_image1.jpg'),
+(67, 41, 'uploads/rooms/room_02_image2.jpg'),
+(68, 41, 'uploads/rooms/room_02_image3.jpg'),
+(69, 42, 'uploads/rooms/room_03_image1.jpg'),
+(70, 42, 'uploads/rooms/room_03_image2.jpg'),
+(71, 42, 'uploads/rooms/room_03_image3.jpg');
 
 -- --------------------------------------------------------
 
@@ -334,10 +363,13 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `created_at`, `
 (9, 'Mihiru', 'mihiru09@gmail.com', '$2y$10$zHLJ7', '2024-08-12 08:06:15', 'admin', '', NULL, NULL, NULL, NULL),
 (10, 'testuser', 'testuser@gmail.com', '$2y$10$b5JXTAYnKnVOMJN6rstbt.oKb.vqtks4eS1fl38g71Ml5aK68kdcC', '2024-08-13 07:26:15', 'user', '', NULL, 'User 01', '0701234567', '1.png'),
 (11, 'testhadmin', 'testhadmin@gmail.com', '$2y$10$azimQGMjUJrViRdmD/3z0ur8Hp5X0BZKy9hvLfhVZCPCVIIe6U0N2', '2024-08-13 07:27:26', 'hotel_admin', '', 31, 'hotel', '000000000000', 'travel-and-tourism-background-vector.jpg'),
-(12, 'testadmin', 'testadmin@gmail.com', '$2y$10$DByNtJngGCUTNKEV9itPaOQaPeMSbzpyFKVZHEbz.98CiDo9PP0R.', '2024-08-13 07:28:12', 'admin', '', 33, NULL, NULL, NULL),
+(12, 'testadmin', 'testadmin@gmail.com', '$2y$10$DByNtJngGCUTNKEV9itPaOQaPeMSbzpyFKVZHEbz.98CiDo9PP0R.', '2024-08-13 07:28:12', 'admin', '', 33, 'Admin', '0123456789', '4092564-about-mobile-ui-profile-ui-user-website_114033.png'),
 (14, 'ab', 'ab@a', '$2y$10$NEIrq', '2024-08-13 08:35:19', 'hotel_admin', '', 30, NULL, NULL, NULL),
 (15, 'hadmin', 'ff@g', '$2y$10$x77Ls', '2024-10-16 08:15:24', 'user', '', NULL, NULL, NULL, NULL),
-(16, 'mm', 'mm@m', '$2y$10$b5JXTAYnKnVOMJN6rstbt.oKb.vqtks4eS1fl38g71Ml5aK68kdcC', '2024-10-16 08:16:50', 'hotel_admin', '', 34, NULL, NULL, NULL);
+(16, 'mm', 'mm@m', '$2y$10$b5JXTAYnKnVOMJN6rstbt.oKb.vqtks4eS1fl38g71Ml5aK68kdcC', '2024-10-16 08:16:50', 'hotel_admin', '', 34, NULL, NULL, NULL),
+(18, 'hotel1', 'hotel1@gmail.com', '$2y$10$5mBzQD4d5c1RH3bsfUjdSOgwHxvVDU19ITZunOksBPm.bcaApM/Fa', '2024-10-18 12:19:45', 'hotel_admin', '', 35, 'Hotel1', '0123456789', NULL),
+(19, 'hotel2', 'hotel2@gmail.com', '$2y$10$b3lkMEsFn7mR1iDTTM9jx.W2FvAm.g3LTkMS3P22TIP7KWZDA.JLq', '2024-10-18 12:33:58', 'hotel_admin', '', 36, 'hotel2', '0123456789', NULL),
+(20, 'Hotel3', 'hotel3@gmail.com', '$2y$10$ycESjBgF.njATrxwRmng6OCS.xBx3srSL8sngcdhUyJ72y.Y0nzUW', '2024-10-18 13:33:51', 'hotel_admin', '', 37, 'hotel3', '0123456789', NULL);
 
 --
 -- Indexes for dumped tables
@@ -438,31 +470,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `cities`
 --
 ALTER TABLE `cities`
-  MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1002;
+  MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1004;
 
 --
 -- AUTO_INCREMENT for table `destinations`
 --
 ALTER TABLE `destinations`
-  MODIFY `destination_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `destination_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `destination_images`
 --
 ALTER TABLE `destination_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `hotels`
 --
 ALTER TABLE `hotels`
-  MODIFY `hotel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `hotel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `hotel_destinations`
@@ -474,31 +506,31 @@ ALTER TABLE `hotel_destinations`
 -- AUTO_INCREMENT for table `hotel_images`
 --
 ALTER TABLE `hotel_images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `room_images`
 --
 ALTER TABLE `room_images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- නික්ෂේපනය කරන ලද වගු සඳහා සීමා බාධක

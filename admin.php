@@ -55,8 +55,8 @@ $cities = $conn->query("SELECT * FROM cities");
     <div class="dashboard-container">
     <h1>Site Admin</h1>
     <div class="button-container">
-        <button onclick="location.href='admin_panel.php'">Manage Users & Hotels</button>
-        <button onclick="location.href='profile.php'" id="profile">Profile</button>
+        <button style="font-size: 16px;" onclick="location.href='admin_panel.php'">Manage Users & Hotels</button>
+        <button style="font-size: 16px;" onclick="location.href='profile.php'" id="profile">Profile</button>
     </div>
 
     

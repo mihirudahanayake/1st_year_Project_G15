@@ -148,7 +148,25 @@ if (isset($_POST['check_availability'])) {
                 event.preventDefault(); // Prevent the form from submitting
             }
         });
-    </script>
+        
+    document.getElementById("book-now-btn").addEventListener("click", function(event) {
+        // Check if the user is logged in (adjust the condition as needed)
+        var userLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+        
+        if (!userLoggedIn) {
+            alert("You must be logged in to book a room.");
+            event.preventDefault(); // Prevent the form from submitting
+            return;
+        }
+
+        // Confirm booking action
+        var confirmation = confirm("Are you sure you want to book this room for the selected dates?");
+        if (!confirmation) {
+            event.preventDefault(); // Prevent the form from submitting if user cancels
+        }
+    });
+</script>
+
     <script src="room_details.js"></script>
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
