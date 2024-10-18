@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch user data
 $user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT username, email, name, telephone, profile_picture, user_type FROM users WHERE user_id = ?"); // Include user_type
+$stmt = $conn->prepare("SELECT username, email, name, telephone, profile_picture, user_type FROM users WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -23,6 +23,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
     $telephone = $_POST['telephone'];
     $password = $_POST['password'];
+    $error_messages = [];
+
+    // Validate telephone number (must be 10 digits)
+    if (!preg_match('/^\d{10}$/', $telephone)) {
+        $error_messages[] = "Telephone number must be exactly 10 digits.";
+    }
+
+    // Validate password criteria (if a new password is provided)
+    if (!empty($password) && !preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,12}$/', $password)) {
+        $error_messages[] = "Password must be 8 to 12 characters long, and include at least one uppercase letter, one lowercase letter, and one number.";
+    }
 
     // Check for file upload
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
@@ -37,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param("si", $file_name, $user_id);
             $stmt->execute();
         } else {
-            echo "Error uploading the file.";
+            $error_messages[] = "Error uploading the file.";
         }
     }
 
@@ -52,12 +63,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param("ssssi", $username, $email, $name, $telephone, $user_id);
     }
 
-    if ($stmt->execute()) {
-        echo "Profile updated successfully!";
-        header("Location: profile.php");
+    // Check for any errors and execute the statement
+    if (empty($error_messages)) {
+        if ($stmt->execute()) {
+            echo "<script>alert('Profile updated successfully!'); window.location.href = 'profile.php';</script>";
+            exit;
+        } else {
+            $error_messages[] = "Error updating profile: " . $stmt->error;
+        }
+    }
+
+    // If there are any error messages, show them in a JavaScript alert
+    if (!empty($error_messages)) {
+        echo "<script>alert('" . implode("\\n", $error_messages) . "'); window.location.href = 'profile.php';</script>";
         exit;
-    } else {
-        echo "Error updating profile: " . $stmt->error;
     }
 }
 ?>
@@ -73,20 +92,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="bg"></div>
     <div class="back-button-container">
-            <!-- Move the back button to this container -->
-            <?php if ($user['user_type'] == 'user'): ?>
-                <button onclick="location.href='index.php'" class="back-button">Back to Home</button>
-            <?php elseif ($user['user_type'] == 'hotel_admin'): ?>
-                <button onclick="location.href='hotel_dashboard.php'" class="back-button">Back to Dashboard</button>
-            <?php elseif ($user['user_type'] == 'admin'): ?>
-                <button onclick="location.href='admin.php'" class="back-button">Back to Dashboard</button>
-            <?php endif; ?>
-        </div>
+        <?php if ($user['user_type'] == 'user'): ?>
+            <button onclick="location.href='index.php'" class="back-button">Back to Home</button>
+        <?php elseif ($user['user_type'] == 'hotel_admin'): ?>
+            <button onclick="location.href='hotel_dashboard.php'" class="back-button">Back to Dashboard</button>
+        <?php elseif ($user['user_type'] == 'admin'): ?>
+            <button onclick="location.href='admin.php'" class="back-button">Back to Dashboard</button>
+        <?php endif; ?>
+    </div>
     <div class="profile-container">
 
         <h2>Your Profile</h2>
         
-        <!-- Display the profile picture -->
         <div class="profile-picture">
             <?php if ($user['profile_picture']): ?>
                 <img src="uploads/<?php echo htmlspecialchars($user['profile_picture']); ?>" alt="Profile Picture" width="150">
@@ -95,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
         </div>
 
-        <form action="profile.php" method="POST" enctype="multipart/form-data"> <!-- Add enctype for file upload -->
+        <form action="profile.php" method="POST" enctype="multipart/form-data">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
 

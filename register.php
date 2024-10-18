@@ -1,5 +1,4 @@
 <?php
-
 include('config.php'); // Include your database connection file
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -10,9 +9,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
     $telephone = $_POST['telephone'];
 
+    // Validate telephone number (must be 10 digits)
+    if (!preg_match('/^\d{10}$/', $telephone)) {
+        echo "<script>alert('Telephone number must be exactly 10 digits.'); window.location.href='register.php';</script>";
+        exit;
+    }
+
     // Validate passwords
     if ($password !== $confirm_password) {
-        echo "Passwords do not match.";
+        echo "<script>alert('Passwords do not match.'); window.location.href='register.php';</script>";
+        exit;
+    }
+
+    // Validate password criteria
+    if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,12}$/', $password)) {
+        echo "<script>alert('Password must be 8 to 12 characters long, and include at least one uppercase letter, one lowercase letter, and one number.'); window.location.href='register.php';</script>";
         exit;
     }
 
@@ -23,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        echo "Username or email already taken.";
+        echo "<script>alert('Username or email already taken.'); window.location.href='register.php';</script>";
         exit;
     }
 
@@ -38,11 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bind_param("ssssss", $username, $email, $hashed_password, $user_type, $name, $telephone);
 
     if ($stmt->execute()) {
-        echo "Registration successful!";
-        header("Location: login.html");
+        echo "<script>alert('Registration successful!'); window.location.href='login.html';</script>";
         exit;
     } else {
-        echo "Error: " . $stmt->error;
+        echo "<script>alert('Error: " . $stmt->error . "'); window.location.href='register.php';</script>";
     }
 }
 ?>
