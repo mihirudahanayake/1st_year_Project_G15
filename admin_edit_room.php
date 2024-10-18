@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Room</title>
+    <link rel="stylesheet" href="edit_room.css">
 </head>
 <body>
     <h2>Edit Room</h2>
@@ -52,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="room_name">Room Name</label>
         <input type="text" id="room_name" name="room_name" value="<?php echo htmlspecialchars($room['room_name']); ?>" required>
 
-        <label for="facilities">Room Description</label>
+        <label for="facilities">Facilities</label>
         <textarea id="facilities" name="facilities" required><?php echo htmlspecialchars($room['facilities']); ?></textarea>
 
         <label for="price_per_night">Price per Night</label>
