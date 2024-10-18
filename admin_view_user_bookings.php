@@ -26,6 +26,27 @@ if (isset($_GET['user_id'])) {
     echo "User ID not provided.";
     exit();
 }
+
+if ($user_id) {
+
+    // Fetch the user's name
+    $stmt = $conn->prepare("SELECT name FROM users WHERE user_id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $user_result = $stmt->get_result();
+
+    if ($user_result->num_rows > 0) {
+        $user = $user_result->fetch_assoc();
+        $user_name = $user['name'];
+    } else {
+        $user_name = "User"; // Fallback if user not found
+    }
+
+    $stmt->close();
+    $conn->close();
+} else {
+    $user_name = "User"; // Fallback if user ID is missing
+}
 ?>
 
 <!DOCTYPE html>
@@ -34,17 +55,17 @@ if (isset($_GET['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View User Bookings</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin-view-user-booking.css">
 </head>
 <body>
     <div class="admin-container">
-        <h2>User Bookings</h2>
+    <h2><?php echo htmlspecialchars($user_name); ?>'s Booking Details</h2>
 
         <?php if ($result->num_rows > 0): ?>
             <table>
                 <tr>
                     <th>Booking ID</th>
-                    <th>Room Name</th>
+                    <th>Room ID</th>
                     <th>Hotel Name</th>
                     <th>Start Date</th>
                     <th>End Date</th>
@@ -52,7 +73,7 @@ if (isset($_GET['user_id'])) {
                 <?php while ($booking = $result->fetch_assoc()): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($booking['booking_id']); ?></td>
-                        <td><?php echo htmlspecialchars($booking['room_name']); ?></td>
+                        <td><?php echo htmlspecialchars($booking['room_id']); ?></td>
                         <td><?php echo htmlspecialchars($booking['hotel_name']); ?></td>
                         <td><?php echo htmlspecialchars($booking['start_date']); ?></td>
                         <td><?php echo htmlspecialchars($booking['end_date']); ?></td>

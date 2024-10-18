@@ -66,7 +66,7 @@ $cities = $conn->query("SELECT * FROM cities");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Destination</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="add-destination.css">
     <script>
         function toggleCityInput() {
             var citySelect = document.getElementById('city');
@@ -83,7 +83,7 @@ $cities = $conn->query("SELECT * FROM cities");
 <body>
 
 <h1>Add Destination</h1>
-<form action="add_destination.php" method="POST" enctype="multipart/form-data">
+<form action="add-destination.php" method="POST" enctype="multipart/form-data">
     <label for="desti_name">Destination Name</label>
     <input type="text" id="desti_name" name="desti_name" required>
 

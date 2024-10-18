@@ -2,6 +2,22 @@
 // Include the database configuration
 include 'config.php';
 
+// Check if the delete parameter is passed in the URL
+if (isset($_GET['delete'])) {
+    $destination_id = intval($_GET['delete']);
+    
+    // First, delete associated images from the destination_images table
+    $delete_images = "DELETE FROM destination_images WHERE destination_id = $destination_id";
+
+    // Delete the destination from the destinations table
+    $delete_query = "DELETE FROM destinations WHERE destination_id = $destination_id";
+    if ($conn->query($delete_query) === TRUE) {
+        echo "<p>Destination deleted successfully.</p>";
+    } else {
+        echo "<p>Error deleting destination: " . $conn->error . "</p>";
+    }
+}
+
 // Fetch all destinations
 $destinations = $conn->query("SELECT * FROM destinations");
 
@@ -16,6 +32,13 @@ $cities = $conn->query("SELECT * FROM cities");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="admin.css">
+    <script>
+        function confirmDelete(destinationId) {
+            if (confirm("Are you sure you want to delete this destination?")) {
+                window.location.href = "admin.php?delete=" + destinationId;
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -23,10 +46,9 @@ $cities = $conn->query("SELECT * FROM cities");
 
 <button onclick="location.href='admin_panel.php'">Manage Users & Hotels</button>
 <button onclick="location.href='profile.php'">Profile</button>
-<h1>Destinations</h1>
 
 <div class="dashboard-container">
-    <h2>Existing Destinations</h2>
+    <h2>Travel Destinations</h2>
     <div class="card-container">
         <!-- Add New Destination Card -->
         <div class="card add-destination-card">
@@ -44,7 +66,6 @@ $cities = $conn->query("SELECT * FROM cities");
                         <?php echo htmlspecialchars($destination['desti_name']); ?>
                     </a>
                 </h3>
-                <p><?php echo htmlspecialchars($destination['desti_description']); ?></p>
                 <div>
                     <?php
                     // Fetch the first image for the destination
@@ -55,7 +76,8 @@ $cities = $conn->query("SELECT * FROM cities");
                 </div>
                 <div class="actions">
                     <a href="edit_destination.php?id=<?php echo $destination['destination_id']; ?>">Edit</a>
-                    <a href="admin.php?delete=<?php echo $destination['destination_id']; ?>">Delete</a>
+                    <!-- Add the delete button with a confirmation prompt -->
+                    <button onclick="confirmDelete(<?php echo $destination['destination_id']; ?>)">Delete</button>
                 </div>
             </div>
         <?php endwhile; ?>
