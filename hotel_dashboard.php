@@ -25,6 +25,22 @@
         exit();
     }
 
+    $h_stmt = $conn->prepare("SELECT hotel_name FROM hotels WHERE hotel_id = ?");
+    $h_stmt->bind_param("i", $hotel_id);  // Bind the parameters
+    
+    $h_stmt->execute();
+    $result = $h_stmt->get_result();  // Get the result of the query
+    
+    if ($result->num_rows > 0) {
+        $h_name = $result->fetch_assoc();
+        $hotel_name = $h_name['hotel_name'];
+    } else {
+        $hotel_name = "No hotel found";  // Handle no result found
+    }
+    
+    $h_stmt->close();  // Close the statement
+    
+
     // Initialize variables
     $cities = [];
     $destinations = [];
@@ -285,7 +301,7 @@ $stmt->close();
 <body>
     <div class="bg"></div>
     <div class="dashboard-container">
-        <h2>Hotel Dashboard</h2>
+    <h2><?php echo htmlspecialchars($hotel_name); ?></h2>
 
         <button onclick="location.href='profile.php'">Profile</button>
         <div class="notifications">

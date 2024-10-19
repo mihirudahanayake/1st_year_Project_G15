@@ -50,30 +50,74 @@ body {
      text-decoration: underline; /* Underline effect on hover */
  }
  
- .hotels-list {
-     margin-top: 20px; /* Space above the hotels list */
- }
- 
- .hotel {
-     margin-bottom: 20px; /* Space below each hotel */
-     padding: 15px;
-     border: 1px solid #ddd; /* Light border around hotel details */
-     border-radius: 8px; /* Rounded corners */
-     background-color: #f9f9f9; /* Light background for hotels */
-     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Light shadow */
- }
- 
- .details-link {
-     display: inline-block;
-     margin-top: 10px;
-     text-decoration: none;
-     color: #007BFF; /* Bootstrap primary color */
-     font-weight: bold;
- }
- 
- .details-link:hover {
-     text-decoration: underline; /* Underline effect on hover */
- }
+.hotels {
+    background-color: #f9f9f9;
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin: 20px auto;
+    max-width: 800px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hotels h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.hotel-container {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.hotel-box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+.hotel-box a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.hotel-box:hover {
+    transform: scale(1.05);
+}
+
+.hotel-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.hotel-name {
+    padding: 10px;
+    font-size: 1.2em;
+    color: #333;
+    text-align: center;
+    margin: 0;
+}
+
+.hotel-description {
+    padding: 10px;
+    font-size: 0.9em;
+    color: #666;
+    text-align: center;
+}
+
+
+
+h3 {
+    padding-bottom: 5px;
+}
 
  .container {
      max-width: 800px;

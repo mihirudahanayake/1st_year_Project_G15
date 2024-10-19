@@ -139,12 +139,14 @@ select, input[type="text"] {
     padding: 15px;
     background-color: #fafafac8;
     backdrop-filter: blur(30px);
-    transition: transform 0.3s;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.118);
+    transition: transform 0.3s ease, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
 }
 
 .destination:hover {
     transform: scale(1.04);
     background-color: #ffffffe4;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.23);
 }
 
 .destination img {

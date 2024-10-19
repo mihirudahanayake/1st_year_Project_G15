@@ -5,7 +5,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $destination_id = $conn->real_escape_string($_GET['id']);
 
     // Fetch the destination details
-    $query = "SELECT desti_name, desti_description FROM destinations WHERE destination_id = $destination_id";
+    $query = "SELECT desti_name, desti_description, city FROM destinations WHERE destination_id = $destination_id";
     $result = $conn->query($query);
 
     if ($result->num_rows > 0) {
@@ -56,6 +56,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <?php include('header.php');?>
     <div class="container">
         <h1><?php echo htmlspecialchars($destination['desti_name']); ?></h1>
+        <p><?php echo htmlspecialchars($destination['city']); ?></p>
 
         <section class="gallery" id="gallery">
             <div class="swiper">
@@ -78,25 +79,39 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                 <img src="<?php echo htmlspecialchars($image); ?>" alt="Thumbnail of <?php echo htmlspecialchars($destination['desti_name']); ?>" data-index="<?php echo $index; ?>">
             <?php endforeach; ?>
         </div>
-
-        <p><?php echo htmlspecialchars($destination['desti_description']); ?></p>
-
-        <h2>Available Hotels near <?php echo htmlspecialchars($destination['desti_name']); ?></h2>
-        <div class="hotels-list">
+            <p><?php echo htmlspecialchars($destination['desti_description']); ?></p>
+            <br><hr><br>
+            <h2>Available Hotels near <?php echo htmlspecialchars($destination['desti_name']); ?></h2>
+            <div class="hotel-container">
             <?php
-            if ($hotels_result->num_rows > 0) {
-                while ($hotel = $hotels_result->fetch_assoc()) {
-                    echo "<div class='hotel'>";
-                    echo "<h3>" . htmlspecialchars($hotel['hotel_name']) . "</h3>";
-                    echo "<p>" . htmlspecialchars($hotel['description']) . "</p>";
-                    echo "<p><strong>Location:</strong> " . htmlspecialchars($hotel['location']) . "</p>";
-                    echo '<a href="room_list.php?id=' . htmlspecialchars($hotel['hotel_id']) . '" class="details-link">View Details</a>';
-                    echo "</div>";
+                if ($hotels_result->num_rows > 0) {
+                    while ($hotel = $hotels_result->fetch_assoc()) {
+                        echo '<a href="room_list.php?id=' . htmlspecialchars($hotel['hotel_id']) . '" class="details-link">';
+                        echo "<div class='hotel-box'>";
+                        
+                        // Query to get the hotel image from the hotel_images table
+                        $hotel_id = $hotel['hotel_id'];
+                        $image_query = "SELECT image_path FROM hotel_images WHERE hotel_id = '$hotel_id' LIMIT 1";
+                        $image_result = $conn->query($image_query);
+                        
+                        if ($image_result && $image_result->num_rows > 0) {
+                            $image = $image_result->fetch_assoc();
+                            echo "<img src='" . htmlspecialchars($image['image_path']) . "' alt='Image of " . htmlspecialchars($hotel['hotel_name']) . "' class='hotel-image'>";
+                        } else {
+                            // Fallback if no image is found
+                            echo "<img src='default-hotel.jpg' alt='Default Hotel Image' class='hotel-image'>";
+                        }
+                        
+                        
+                        echo "<h3 class='hotel-name'>" . htmlspecialchars($hotel['hotel_name']) . "</h3>";
+                        echo '</a>';
+                        echo "</div>";
+                    }
+                } else {
+                    echo "<p>No available hotels near this destination.</p>";
                 }
-            } else {
-                echo "<p>No available hotels near this destination.</p>";
-            }
             ?>
+
         </div>
     </div>
 
