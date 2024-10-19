@@ -66,6 +66,12 @@ body {
     color: #333;
 }
 
+.foot {
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: -20px;
+}
+
 .hotel-container {
     margin-top: 1rem;
     display: flex;

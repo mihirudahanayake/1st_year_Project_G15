@@ -15,26 +15,29 @@
      background-color: #005b9ce6;
      backdrop-filter: blur(10px);
      color: white;
-     margin-left: -20px;
-     margin-right: -20px;
  }
  
  .footer-container {
      display: flex;
      justify-content: space-around;
      text-align: left;
-     padding: 0 50px;
+     padding: 0 100px;
  }
  
  .footer-column {
      flex: 1;
      margin: 0 20px;
      text-decoration: none;
+     text-align: center;
  }
  
  .footer-column h2, .footer-column h3 {
      color: #ffffff;
      margin-bottom: 15px;
+ }
+
+ .ct{
+    text-align: left;
  }
  
  .footer-column h2 span {
@@ -44,6 +47,7 @@
  .footer-column p {
      color: #ffffff;
      margin-bottom: 20px;
+     text-align: left;
  }
  
  .footer-column ul {

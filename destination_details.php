@@ -152,7 +152,9 @@ if (isset($_SESSION['user_type']) && $_SESSION['user_type'] == 'hotel_admin' ) {
             });
         });
     </script>
-    <?php include('footer.php'); ?>
+    <div class="foot">
+    <?php include 'footer.php'; ?>
+    </div>
 </body>
 </html>
 

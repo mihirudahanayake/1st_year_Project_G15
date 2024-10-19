@@ -26,23 +26,23 @@ include_once "config.php";
                 </span></h3>
                 <ul id="nav-menu">
                 <?php 
-    // Check if the user is logged in
-    if (isset($_SESSION['user_id'])) {
-        if ($_SESSION['user_type'] == 'hotel_admin') {
-            echo '<li><a href="hotel_dashboard.php">Home</a></li>';
-        } elseif ($_SESSION['user_type'] == 'user') {
-            echo '<li><a href="index.php">Home</a></li>';
-        } else {
-            echo '<li><a href="index.php">Home</a></li>';
-        }
-    } else {
-        echo '<li><a href="index.php">Home</a></li>';
-    }
-?>
+                    // Check if the user is logged in
+                    if (isset($_SESSION['user_id'])) {
+                        if ($_SESSION['user_type'] == 'hotel_admin') {
+                            echo '<li><a href="hotel_dashboard.php">Home</a></li>';
+                        } elseif ($_SESSION['user_type'] == 'user') {
+                            echo '<li><a href="index.php">Home</a></li>';
+                        } else {
+                            echo '<li><a href="index.php">Home</a></li>';
+                        }
+                    } else {
+                        echo '<li><a href="index.php">Home</a></li>';
+                    }
+                ?>
 
 
-                    <li><a href="#">About</a></li>
-
+                    <li><a href="about.php">About</a></li>
+                    <li><a href="travel_destination.php">Travel Destinations</a></li>
                     <?php 
                     // Check if the user is logged in
                     if (isset($_SESSION['user_id'])) {
@@ -60,8 +60,6 @@ include_once "config.php";
                      }
                     ?>
                     
-
-                    <li><a href="travel_destination.php">Travel Destinations</a></li>
                     <li><a href="#">Contact Us</a></li>
                 </ul>
                 
@@ -94,7 +92,7 @@ include_once "config.php";
                         }
                     }
                     ?>
-            <li><a href="#">About</a></li>
+            <li><a href="about.php">About</a></li>
 
             <?php 
             // Show relevant links based on user type in the side navigation

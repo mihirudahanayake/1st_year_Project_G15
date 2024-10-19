@@ -19,34 +19,65 @@
                   </div>
             </div>
             <div class="footer-column">
-                  <h3>Services</h3>
+                  <h3>- Quick link -</h3>
                   <ul>
-                     <li><a href="#">About Us</a></li>
-                     <li><a href="hotel_list.php">Hotels</a></li>
+                     <?php 
+                        // Check if the user is logged in
+                        if (isset($_SESSION['user_id'])) {
+                              if ($_SESSION['user_type'] == 'hotel_admin') {
+                                 echo '<li><a href="hotel_dashboard.php">Home</a></li>';
+                              } elseif ($_SESSION['user_type'] == 'user') {
+                                 echo '<li><a href="index.php">Home</a></li>';
+                              } else {
+                                 echo '<li><a href="index.php">Home</a></li>';
+                              }
+                        } else {
+                              echo '<li><a href="index.php">Home</a></li>';
+                        }
+                     ?>
+                     <li><a href="about.php">About Us</a></li>
+                     <?php 
+                    // Check if the user is logged in
+                    if (isset($_SESSION['user_id'])) {
+                         // Check the user type and show relevant links
+                         if ($_SESSION['user_type'] == 'hotel_admin') {
+                            // For hotel admins, hide 'Hotels' and show 'Add New Room'
+                            echo '<li><a href="add_room.php">Add New Room</a></li>';
+                         } elseif ($_SESSION['user_type'] == 'user') {
+                              echo '<li><a href="hotel_list.php">Hotels</a></li>';
+                         } else {
+                              echo '<li><a href="hotel_list.php">Hotels</a></li>';
+                         }
+                    } else {
+                         echo '<li><a href="hotel_list.php">Hotels</a></li>';
+                     }
+                    ?>
                      <li><a href="travel_destination.php">Destinations</a></li>
                      <li><a href="#">Contact Us</a></li>
                   </ul>
             </div>
-            <div class="footer-column">
-                  <h3>Popular Destinations</h3>
+            <!-- <div class="footer-column">
+                  <h3>Our Team</h3>
                   <div class="destination-images">
-                     <img src="destination1.jpg" alt="Destination 1">
+                     <img src="images/bg2.jpg" alt="Destination 1">
                      <img src="destination2.jpg" alt="Destination 2">
                      <img src="destination3.jpg" alt="Destination 3">
                      <img src="destination4.jpg" alt="Destination 4">
                      <img src="destination5.jpg" alt="Destination 5">
                      <img src="destination6.jpg" alt="Destination 6">
                   </div>
-            </div>
+            </div> -->
             <div class="footer-column">
-                  <h3>Contact</h3>
+               <div class="ct">
+                  <h3> -  Contact  -</h3>
                   <p><i class="fas fa-map-marker-alt"></i> Any ware, any rode, Sri Lanka</p>
-                  <p><i class="fas fa-phone-alt"></i> +91 701234567</p>
-                  <p><i class="fas fa-envelope"></i> travelmate@gmail.com</p>
+                  <p><i class="fas fa-phone-alt"></i> +91 70 48 68 401</p>
+                  <p><i class="fas fa-envelope"></i> travelmate.g15@gmail.com</p>
+               </div>
             </div>
          </div>
          <div class="footer-bottom">
-            <p>travelmate©2024 all right reserve</p>
+            <p>travelmate &copy; 2024 all right reserve</p>
          </div>
       </footer>
 

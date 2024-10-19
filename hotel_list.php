@@ -87,6 +87,6 @@ include('config.php');
     </main>
 
     <script src="script.js"></script>
-        <?php include 'footer.php'; ?>
+        <div class="foot"><?php include 'footer.php'; ?></div>
 </body>
 </html>

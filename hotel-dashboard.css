@@ -8,6 +8,10 @@ body {
     padding: 0;
 }
 
+.foot{
+    text-decoration: none;
+}
+
 .bg {
     background-image: url("Images/bg1.png");
     filter: blur(5px);
@@ -298,7 +302,7 @@ textarea {
     background-color: #218870;
 }
 
-p {
+.notifications p {
     color: #e74c3c;
     font-weight: bold;
 }

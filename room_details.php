@@ -137,7 +137,9 @@ if (isset($_POST['check_availability'])) {
         </section>
         
     </div>
+    <div class="foot">
     <?php include 'footer.php'; ?>
+    </div>
     <script>
         document.getElementById("book-now-btn").addEventListener("click", function(event) {
             // Check if the user is logged in (adjust the condition as needed)

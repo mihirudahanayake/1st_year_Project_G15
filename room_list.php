@@ -180,9 +180,9 @@ include('config.php');
         <p>No near places found</p>
     <?php endif; ?>
 </section>
-
+<div class="foot">
     <?php include 'footer.php'; ?>
-
+</div>
     <!-- Close connection after all queries -->
     <?php $conn->close(); ?>
 

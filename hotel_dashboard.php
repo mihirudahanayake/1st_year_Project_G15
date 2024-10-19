@@ -407,5 +407,8 @@ $stmt->close();
         </div>
         
     </div>
+    <div class="foot">
+        <?php include ("footer.php") ?>
+    </div>
 </body>
 </html>

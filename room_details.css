@@ -12,6 +12,11 @@ body {
     padding: 0 20px;
 }
 
+.foot {
+    margin-left: -20px;
+    margin-right: -20px;
+}
+
 .background{
     background: url("Images/r.jpg")no-repeat center center/cover;
     filter: blur(2px);
