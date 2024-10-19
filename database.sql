@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- දායකයා: 127.0.0.1
--- උත්පාදන වේලාව: ඔක්තෝම්බර් 19, 2024 දින 12:53 AM ට
+-- උත්පාදන වේලාව: ඔක්තෝම්බර් 19, 2024 දින 06:55 PM ට
 -- සේවාදායකයේ අනුවාදය: 10.4.32-MariaDB
 -- PHP අනුවාදය: 8.2.12
 
@@ -175,10 +175,10 @@ CREATE TABLE `hotel_images` (
 --
 
 INSERT INTO `hotel_images` (`image_id`, `hotel_id`, `image_path`) VALUES
-(9, 31, 'uploads/hotel_images/Horizon_Club_Ocean_View_Room-1.jpg'),
 (12, 35, 'uploads/2.jpg'),
 (13, 36, 'uploads/trh.jpg'),
-(14, 37, 'uploads/dfs.jpg');
+(14, 37, 'uploads/dfs.jpg'),
+(15, 31, 'uploads/Horizon_Club_Ocean_View_Room-1.jpg');
 
 -- --------------------------------------------------------
 
@@ -506,7 +506,7 @@ ALTER TABLE `hotel_destinations`
 -- AUTO_INCREMENT for table `hotel_images`
 --
 ALTER TABLE `hotel_images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `notifications`
