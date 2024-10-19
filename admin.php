@@ -50,13 +50,16 @@ $cities = $conn->query("SELECT * FROM cities");
     </script>
 </head>
 <body>
+<?php include 'header.php'; ?>
 
     <div class="bg"></div>
     <div class="dashboard-container">
     <h1>Site Admin</h1>
     <div class="button-container">
+    <button style="font-size: 16px;" onclick="location.href='manage-city.php'" id="manage-city">Manage Cities</button>
         <button style="font-size: 16px;" onclick="location.href='admin_panel.php'">Manage Users & Hotels</button>
         <button style="font-size: 16px;" onclick="location.href='profile.php'" id="profile">Profile</button>
+        
     </div>
 
     
@@ -88,6 +91,7 @@ $cities = $conn->query("SELECT * FROM cities");
                             <img src="<?php echo htmlspecialchars($image['image_url']); ?>" alt="Image">
                         <?php endif; ?>
                     </div>
+                    <p><?php echo htmlspecialchars($destination['city']); ?></p>
                     <div class="actions">
                         <a href="edit_destination.php?id=<?php echo $destination['destination_id']; ?>">View & Edit</a>
                         <!-- Add the delete button with a confirmation prompt -->
@@ -97,6 +101,6 @@ $cities = $conn->query("SELECT * FROM cities");
             <?php endwhile; ?>
         </div>
     </div>
-
+    <?php include 'footer.php'; ?>
 </body>
 </html>

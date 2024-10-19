@@ -32,7 +32,7 @@
                                  echo '<li><a href="index.php">Home</a></li>';
                               }
                         } else {
-                              echo '<li><a href="index.php">Home</a></li>';
+                              echo '<li><a href="admin.php">Home</a></li>';
                         }
                      ?>
                      <li><a href="about.php">About Us</a></li>
@@ -53,7 +53,7 @@
                      }
                     ?>
                      <li><a href="travel_destination.php">Destinations</a></li>
-                     <li><a href="#">Contact Us</a></li>
+                     <li><a href="Contact.php">Contact Us</a></li>
                   </ul>
             </div>
             <!-- <div class="footer-column">

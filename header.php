@@ -33,7 +33,7 @@ include_once "config.php";
                         } elseif ($_SESSION['user_type'] == 'user') {
                             echo '<li><a href="index.php">Home</a></li>';
                         } else {
-                            echo '<li><a href="index.php">Home</a></li>';
+                            echo '<li><a href="admin.php">Home</a></li>';
                         }
                     } else {
                         echo '<li><a href="index.php">Home</a></li>';
@@ -60,7 +60,7 @@ include_once "config.php";
                      }
                     ?>
                     
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="Contact.php">Contact Us</a></li>
                 </ul>
                 
                 <?php 
@@ -88,7 +88,7 @@ include_once "config.php";
                             echo '<li><a href="hotel_dashboard.php">Home</a></li>';
                         } else {
                             // For regular users, show 'Hotels'
-                            echo '<li><a href="index.php">Home</a></li>';
+                            echo '<li><a href="admin.php">Home</a></li>';
                         }
                     }
                     ?>
@@ -106,7 +106,7 @@ include_once "config.php";
             ?>
 
             <li><a href="travel_destination.php">Travel Destinations</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li><a href="Contact.php">Contact Us</a></li>
         </ul>
     </div>
      </body>
