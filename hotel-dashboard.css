@@ -2,10 +2,9 @@
 body {
     font-family: 'Lucida Sans', Arial, sans-serif;
     background-size: cover;
-    background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed; 
-    margin: 0;
+    margin-top: 2rem;
     padding: 0;
 }
 
@@ -23,7 +22,7 @@ body {
     background-repeat: no-repeat;
 }
 
-h2, h3 {
+h2, .dashboard-container h3 {
     color: #000000;
     text-align: center;
 }
@@ -46,7 +45,7 @@ h4 {
 }
 
 /* Buttons */
-button {
+.dashboard-container button {
     background-color: #28a745;
     color: white;
     border: none;
@@ -58,11 +57,11 @@ button {
     margin-right: 10px;
 }
 
-button:hover {
+.dashboard-container button:hover {
     background-color: #218838;
 }
 
-button:disabled {
+.dashboard-container button:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
 }
@@ -82,7 +81,7 @@ img {
     margin-right: 10px;
 }
 
-h3 {
+.dashboard-container h3 {
     text-align: center;
     color: #333;
 }
@@ -150,7 +149,7 @@ h3 {
     background-color: #0056b3;
 }
 
-.actions button + button {
+.actions button + .dashboard-container button {
     margin-left: 10px;
 }
 
@@ -170,38 +169,38 @@ textarea {
     resize: none;
 }
 
-h3 {
+.dashboard-container h3 {
     margin-top: 40px;
     font-size: 24px;
     border-bottom: 2px solid #3498db;
     padding-bottom: 10px;
 }
 
-ul {
+.dashboard-container ul {
     list-style-type: none;
     padding: 0;
 }
 
-li {
+.dashboard-container li {
     position: relative;
     display: inline-block;
     margin: 10px;
 }
 
-li img {
+.dashboard-container li img {
     width: 100px;
     height: auto;
     display: block;
     border-radius: 5px;
 }
 
-li form {
+.dashboard-container li form {
     position: absolute;
     top: 5px;
     right: 5px;
 }
 
-li #dlt {
+.dashboard-container li #dlt {
     background-color: red;
     color: white;
     border: none;
@@ -213,7 +212,7 @@ li #dlt {
     transition: transform 0.3s ease;
 }
 
-li #dlt:hover {
+.dashboard-container li #dlt:hover {
     opacity: 1;
     background-color: #ff0000;
     transition: transform 0.3s ease;
@@ -231,7 +230,7 @@ li #dlt:hover {
         padding: 8px;
     }
 
-    h3 {
+    .dashboard-container h3 {
         font-size: 22px;
     }
 

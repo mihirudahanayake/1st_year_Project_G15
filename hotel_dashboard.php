@@ -300,6 +300,7 @@ $stmt->close();
 </head>
 <body>
     <div class="bg"></div>
+    <?php include('header.php');?>
     <div class="dashboard-container">
     <h2><?php echo htmlspecialchars($hotel_name); ?></h2>
 

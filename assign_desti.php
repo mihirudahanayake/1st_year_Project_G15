@@ -116,9 +116,8 @@ if (isset($_POST['assign_destination'])) {
           <link rel="stylesheet" href="asign-desti.css">
      </head>
      <body>
+     <?php include('header.php');?>
 
-          <button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
-        <!-- Select or Add City -->
         <h3>Select City</h3>
         <form method="POST" action="assign_desti.php">
             <label for="city">Select City:</label>

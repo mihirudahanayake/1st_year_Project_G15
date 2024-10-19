@@ -82,37 +82,43 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
             <p><?php echo htmlspecialchars($destination['desti_description']); ?></p>
             <br><hr><br>
             <h2>Available Hotels near <?php echo htmlspecialchars($destination['desti_name']); ?></h2>
-            <div class="hotel-container">
-            <?php
-                if ($hotels_result->num_rows > 0) {
-                    while ($hotel = $hotels_result->fetch_assoc()) {
-                        echo '<a href="room_list.php?id=' . htmlspecialchars($hotel['hotel_id']) . '" class="details-link">';
-                        echo "<div class='hotel-box'>";
-                        
-                        // Query to get the hotel image from the hotel_images table
-                        $hotel_id = $hotel['hotel_id'];
-                        $image_query = "SELECT image_path FROM hotel_images WHERE hotel_id = '$hotel_id' LIMIT 1";
-                        $image_result = $conn->query($image_query);
-                        
-                        if ($image_result && $image_result->num_rows > 0) {
-                            $image = $image_result->fetch_assoc();
-                            echo "<img src='" . htmlspecialchars($image['image_path']) . "' alt='Image of " . htmlspecialchars($hotel['hotel_name']) . "' class='hotel-image'>";
-                        } else {
-                            // Fallback if no image is found
-                            echo "<img src='default-hotel.jpg' alt='Default Hotel Image' class='hotel-image'>";
-                        }
-                        
-                        
-                        echo "<h3 class='hotel-name'>" . htmlspecialchars($hotel['hotel_name']) . "</h3>";
-                        echo '</a>';
-                        echo "</div>";
-                    }
-                } else {
-                    echo "<p>No available hotels near this destination.</p>";
-                }
-            ?>
 
-        </div>
+<div class="hotel-container">
+<?php 
+// Check if the user is logged in and has user_type = 'user'
+if (isset($_SESSION['user_type']) && $_SESSION['user_type'] == 'hotel_admin' ) { 
+    echo "<p>Hotel listings are not available to hotel admins.</p>";
+} else {
+    if ($hotels_result->num_rows > 0) {
+        while ($hotel = $hotels_result->fetch_assoc()) {
+            echo '<a href="room_list.php?id=' . htmlspecialchars($hotel['hotel_id']) . '" class="details-link">';
+            echo "<div class='hotel-box'>";
+            
+            // Query to get the hotel image from the hotel_images table
+            $hotel_id = $hotel['hotel_id'];
+            $image_query = "SELECT image_path FROM hotel_images WHERE hotel_id = '$hotel_id' LIMIT 1";
+            $image_result = $conn->query($image_query);
+            
+            if ($image_result && $image_result->num_rows > 0) {
+                $image = $image_result->fetch_assoc();
+                echo "<img src='" . htmlspecialchars($image['image_path']) . "' alt='Image of " . htmlspecialchars($hotel['hotel_name']) . "' class='hotel-image'>";
+            } else {
+                // Fallback if no image is found
+                echo "<img src='default-hotel.jpg' alt='Default Hotel Image' class='hotel-image'>";
+            }
+            
+            echo "<h3 class='hotel-name'>" . htmlspecialchars($hotel['hotel_name']) . "</h3>";
+            echo '</a>';
+            echo "</div>";
+        }
+    } else {
+        echo "<p>No available hotels near this destination.</p>";
+    }
+
+}
+?>
+</div>
+
     </div>
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>

@@ -56,6 +56,10 @@ header {
     align-items: center;
     z-index: 100;
 }
+
+.nav-menu{
+    text-align: center;
+}
  
  .menu-btn {
      font-size: 28px;
@@ -66,6 +70,8 @@ header {
  }
  
 .header ul {
+    text-decoration: none;
+    font-family: Arial, sans-serif;
      display: flex;
      align-items: center;
      gap: 10px;

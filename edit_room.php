@@ -3,7 +3,7 @@
 include('config.php');
 
 // Check if the user is logged in and is a hotel admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'hotel_admin') {
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] == 'user') {
     header("Location: login.html");
     exit();
 }
@@ -176,9 +176,9 @@ $imageStmt->close();
 </head>
 <body>
     <div class="bg"></div>
+    <?php include('header.php');?>
     <div class="div1">
-        <!-- Back to Dashboard Button -->
-        <button onclick="location.href='hotel_dashboard.php'">Back to Dashboard</button>
+        
         <h2>Booking Details</h2>
         <p><?php
             // Fetch all booking date ranges for this room

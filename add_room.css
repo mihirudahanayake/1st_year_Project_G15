@@ -40,7 +40,7 @@
  }
  
  /* Headings */
- h3 {
+ .dashboard-container h3 {
      text-align: center;
      color: #4a4a4a;
      margin-bottom: 20px;
@@ -74,7 +74,7 @@
  }
  
  /* Button Styles */
- button {
+ .dashboard-container button {
      background-color: #28a745;
      color: white;
      border: none;
@@ -85,7 +85,7 @@
      transition: background-color 0.3s ease;
  }
  
- button:hover {
+ .dashboard-container button:hover {
      background-color: #218838;
  }
 
@@ -100,7 +100,7 @@
      flex: 1; /* Ensure both fields take equal width */
  }
 
- label {
+ .dashboard-container label {
      margin-bottom: 5px;
      font-weight: bold;
      text-align: left;
@@ -112,7 +112,7 @@
          padding: 10px;
      }
  
-     button {
+     .dashboard-container button {
          width: 100%;
      }
  }

@@ -82,7 +82,9 @@ if (isset($_POST['add_room'])) {
     <link rel="stylesheet" href="add_room.css">
 </head>
 <body>
+<?php include('header.php');?>
     <div class="bg"></div>
+
     <div class="dashboard-container">
         <!-- Add a New Room Section -->
         <h3>Add a New Room</h3>
