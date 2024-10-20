@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- දායකයා: 127.0.0.1
--- උත්පාදන වේලාව: ඔක්තෝම්බර් 19, 2024 දින 06:55 PM ට
+-- උත්පාදන වේලාව: ඔක්තෝම්බර් 20, 2024 දින 07:28 PM ට
 -- සේවාදායකයේ අනුවාදය: 10.4.32-MariaDB
 -- PHP අනුවාදය: 8.2.12
 
@@ -54,13 +54,69 @@ CREATE TABLE `cities` (
 INSERT INTO `cities` (`city_id`, `city_name`) VALUES
 (10, 'Beliatta'),
 (11, 'matara'),
-(12, 'a'),
-(13, 'tan'),
-(999, 'New City Name'),
-(1000, 'rjt'),
 (1001, 'Tangalle'),
 (1002, 'Anuradhapuraya'),
-(1003, 'Dambulla');
+(1003, 'Dambulla'),
+(1004, 'Galle'),
+(1005, 'Badulla'),
+(1006, 'Mihintalaya'),
+(1007, 'Polonnaruwa'),
+(1009, 'Kandy'),
+(1010, 'Colombo'),
+(1011, 'Mount Lavinia'),
+(1012, 'Kesbewa'),
+(1013, 'Maharagama'),
+(1014, 'Moratuwa'),
+(1015, 'Ratnapura'),
+(1016, 'Negombo'),
+(1017, 'Sri Jayewardenepura Kotte'),
+(1018, 'Mawanella'),
+(1019, 'Kotmale'),
+(1020, 'Kalmunai'),
+(1021, 'Kilinochchi'),
+(1022, 'Hikkaduwa'),
+(1023, 'Trincomalee'),
+(1024, 'Jaffna'),
+(1025, 'Kalpitiya'),
+(1026, 'Batticaloa'),
+(1027, 'Athurugiriya'),
+(1028, 'Tissamaharama'),
+(1029, 'Mawatagama'),
+(1030, 'Weligama'),
+(1031, 'Tangalla'),
+(1032, 'Kolonnawa'),
+(1033, 'Akurana'),
+(1034, 'Galgamuwa'),
+(1035, 'Anuradhapura'),
+(1036, 'Gampaha'),
+(1037, 'Narammala'),
+(1038, 'Dikwella South'),
+(1039, 'Kalawana'),
+(1040, 'Nikaweratiya'),
+(1041, 'Puttalam'),
+(1042, 'Bakamune'),
+(1043, 'Sevanagala'),
+(1044, 'Matale'),
+(1045, 'Vavuniya'),
+(1046, 'Gampola'),
+(1047, 'Mullaittivu'),
+(1048, 'Kalutara'),
+(1049, 'Bentota'),
+(1050, 'Mannar'),
+(1051, 'Bandarawela'),
+(1052, 'Point Pedro'),
+(1053, 'Pothuhera'),
+(1054, 'Kurunegala'),
+(1055, 'Mabole'),
+(1056, 'Hakmana'),
+(1057, 'Nuwara Eliya'),
+(1058, 'Galhinna'),
+(1059, 'Kegalle'),
+(1060, 'Hatton'),
+(1061, 'Gandara West'),
+(1062, 'Hambantota'),
+(1063, 'Abasingammedda'),
+(1064, 'Monaragala');
 
 -- --------------------------------------------------------
 
@@ -82,11 +138,16 @@ CREATE TABLE `destinations` (
 
 INSERT INTO `destinations` (`destination_id`, `desti_name`, `desti_description`, `image_url`, `city`) VALUES
 (3, 'Ruwanweli Seya', 'Ruwanweli Maha Seya (Ruwanweliseya) is one of the most venerated Buddhist sites in Sri Lanka built by the great king Dutugamunu who reigned from 137 BCE to 119 BCE from Anuradhapura. Ruwanweli Maha Seya is not the largest nor the oldest of the stupas erected in Anuradhapura, but this is the most venerated by the Buddhists surpassing all other great stupas. It has the most imposing collection of relics of Gautama Buddha than was ever enshrined in any other dagoba on the island.\r\n\r\nere3e ', './uploads/4092564-about-mobile-ui-profile-ui-user-website_114033.png', 'Anuradhapuraya'),
+(8, 'Avukana Buddha statue', 'The Avukana Buddha statue is a renowned ancient sculpture located in Sri Lanka, specifically in the district of Anuradhapura the cradle of our ancient civilization. It stands near the small town of Avukana, hence the name. It is carved out of a rock boulder and lies close to the serene Kala Weva reservoir built by King Dhatusena in the 5th century AD.', '', 'Anuradhapuraya'),
 (17, 'Sri maha bodiya', 'After the introduction of Buddhism to Sri Lanka by Mahinda Thero in 250 BC Emperor Asoka in India sent his daughter Theri Sanghamitta to the island with a branch of the Sacred Bodhi obtained from the main stem of the bodhi tree in Bodh Gaya under which Buddha attained enlightenment. King Devanampiyatissa received this sapling and planted it at the present site in Mahameghavana Garden in 249 BC. Taking this information into account today (in 2023) the Sri Maha Bodhi tree is exactly 2273 years old. Thus this tree is considered the oldest living tree in world in the recorded history.', './uploads/search (2).png', 'Anuradhapuraya'),
 (19, 'Mirisawetiya Dagaba', 'Mirisawetiya Dagaba was built by King Dutugamunu (161-137 BCE) and this belongs to the Mahavihara Complex. King Dutugamunu was the great king who defeated the Tamil invaders who ruled the country for 30 years and brought the country under one ruler in the 1st century BCE.', './uploads/search_locate_find_icon-icons.com_67287.png', 'Anuradhapuraya'),
 (43, 'Beach', 'sea view \r\nnice for day out', '', 'matara'),
 (44, 'Sigiriya', 'Sigiriya or Sinhagiri is an ancient rock fortress located in the northern Matale District near the town of Dambulla in the Central Province, Sri Lanka. It is a site of historical and archaeological significance that is dominated by a massive column of granite approximately 180 m high.', '', 'Dambulla'),
-(45, 'Pidurangala', 'Pidurangala is a massive rock formation located a few kilometers north of Sigiriya in Sri Lanka. It has an interesting history closely related to that of the Sigiriya Rock Fortress. Climbing to the top of Pidurangala Rock is more strenuous than climbing Sigiriya. If you are fit and adventurous it is a climb worth making. It will take you about two hours. There is far less to see on this site than Sigiriya.', '', 'Dambulla');
+(45, 'Pidurangala', 'Pidurangala is a massive rock formation located a few kilometers north of Sigiriya in Sri Lanka. It has an interesting history closely related to that of the Sigiriya Rock Fortress. Climbing to the top of Pidurangala Rock is more strenuous than climbing Sigiriya. If you are fit and adventurous it is a climb worth making. It will take you about two hours. There is far less to see on this site than Sigiriya.', '', 'Dambulla'),
+(53, 'Jethawanarama Sthupa', 'Although very similar to the Abhayagiri Stupa, the Jetavanarama Stupa in Anuradhapura was built in the 3rd century AD. It is considered to be the largest stupa in the country and the world, and was once the foremost place of worship for Mahayana Buddhists (a branch of Buddhism). In fact, King Mahasen’s reason to build the stupa was to propagate Mahayana Buddhism over Theravada Buddhism.', '', 'Anuradhapuraya'),
+(54, 'Dambulla Royal Cave Temple and Golden Temple', 'Dambulla cave temple, also known as the Golden Temple of Dambulla, is a World Heritage Site in Sri Lanka, situated in the central part of the country. This site is situated 148 kilometres east of Colombo, 72 kilometres north of Kandy and 43 kilometres north of Matale.', '', 'Dambulla'),
+(55, 'Unawatuna Beach', 'Unawatuna is one of the biggest tourist destinations in Sri Lanka and is the most “famous” beach in the country. It is a lovely banana-shaped beach of golden sand and turquoise water, surrounded by green palm trees! It was the first beach we visited in Sri Lanka. We chose not to stay at one of the fancy and expensive hotels along the beach of Unawatuna, but a few Kilometers away at a guesthouse. We walked to the Unawatuna Beach on two separate day trips.', '', 'Galle'),
+(56, 'Ella Nine Arch Bridge', 'Ella is a small town in the Badulla District of Uva Province, Sri Lanka governed by an Urban Council. It is approximately 200 kilometres east of Colombo and is situated at an elevation of 1,041 metres above sea level. The area has a rich bio-diversity, dense with numerous varieties of flora and fauna.', '', 'Badulla');
 
 -- --------------------------------------------------------
 
@@ -107,7 +168,6 @@ CREATE TABLE `destination_images` (
 INSERT INTO `destination_images` (`id`, `destination_id`, `image_url`) VALUES
 (11, 43, './uploads/roomd.jpg'),
 (19, 44, './uploads/R (7).jpeg'),
-(20, 3, 'uploads/WhatsApp Image 2024-10-18 at 17.08.33_5fb359a2.jpg'),
 (22, 17, 'uploads/Sri-Maha-Bodiya.jpg'),
 (23, 19, 'uploads/OIP (7).jpeg'),
 (24, 45, './uploads/R (8).jpeg'),
@@ -134,7 +194,7 @@ CREATE TABLE `hotels` (
 --
 
 INSERT INTO `hotels` (`hotel_id`, `hotel_name`, `total_rooms`, `user_id`, `description`, `location`, `city_id`) VALUES
-(31, 'New Hotel', 6, 11, 'hi', 'matara', 11),
+(31, 'New Hotel', 5, 11, 'hi', 'matara', 11),
 (35, 'Sigiriya Kingdom Resort ', 3, 18, 'swimming pools, Free', 'Dambulla', 1003),
 (36, 'Gold Crown Residence', 3, 19, 'good', 'Dambulla', 1003),
 (37, 'Eden Grand ', 3, 20, ' ', 'Dambulla', 1003);
@@ -156,7 +216,8 @@ CREATE TABLE `hotel_destinations` (
 --
 
 INSERT INTO `hotel_destinations` (`id`, `hotel_id`, `destination_id`) VALUES
-(9, 31, 43);
+(9, 31, 43),
+(10, 31, 54);
 
 -- --------------------------------------------------------
 
@@ -178,7 +239,7 @@ INSERT INTO `hotel_images` (`image_id`, `hotel_id`, `image_path`) VALUES
 (12, 35, 'uploads/2.jpg'),
 (13, 36, 'uploads/trh.jpg'),
 (14, 37, 'uploads/dfs.jpg'),
-(15, 31, 'uploads/Horizon_Club_Ocean_View_Room-1.jpg');
+(16, 31, 'uploads/ac725cf3a09c452978e89844b0cccc76263c8c70.jpg');
 
 -- --------------------------------------------------------
 
@@ -221,7 +282,6 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`room_id`, `hotel_id`, `room_name`, `room_number`, `price_per_night`, `max_adults`, `max_children`, `availability`, `hotel_name`, `facilities`) VALUES
-(14, 31, 'nn', 7, 10.00, 2, 4, 'available', NULL, 'ac\r\nsea view'),
 (15, 31, 'we', 27, 20.00, 2, 2, 'available', NULL, '0'),
 (27, 31, 'no', 3, 3000.00, 2, 1, 'available', NULL, 'ac'),
 (28, 31, '', 45, 4.00, 2, 1, 'Available', NULL, 'no'),
@@ -296,10 +356,6 @@ INSERT INTO `room_images` (`image_id`, `room_id`, `image_path`) VALUES
 (2, NULL, 'uploads/Screenshot 2024-08-13 152159.png'),
 (3, NULL, 'uploads/Screenshot 2024-08-13 152159.png'),
 (5, NULL, 'uploads/Screenshot 2024-08-16 220034.png'),
-(6, 14, 'uploads/r1iii.jpeg'),
-(7, 14, 'uploads/r1.jpg'),
-(28, 14, 'uploads/r1i.jpeg'),
-(30, 14, 'uploads/r1ii.jpeg'),
 (31, 27, 'room_27_66e514d86875f9.91549764.jpg'),
 (33, 15, 'uploads/R (2).jpeg'),
 (37, 15, 'uploads/room_27_image3.jpeg'),
@@ -359,9 +415,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `created_at`, `user_type`, `description`, `hotel_id`, `name`, `telephone`, `profile_picture`) VALUES
 (7, 'er', 'erer@d', '$2y$10$qPQFWjDYPAAOpKE.1.665ePJne03zdHARDK8MzOjmlVjjc2tXH1NO', '2024-08-12 07:15:18', 'hotel_admin', '', 16, NULL, NULL, NULL),
-(8, 'rr', 'rr@r', '$2y$10$aT6w3', '2024-08-12 07:22:13', 'user', '', 19, NULL, NULL, NULL),
 (9, 'Mihiru', 'mihiru09@gmail.com', '$2y$10$zHLJ7', '2024-08-12 08:06:15', 'admin', '', NULL, NULL, NULL, NULL),
-(10, 'testuser', 'testuser@gmail.com', '$2y$10$b5JXTAYnKnVOMJN6rstbt.oKb.vqtks4eS1fl38g71Ml5aK68kdcC', '2024-08-13 07:26:15', 'user', '', NULL, 'User 01', '0701234567', '1.png'),
+(10, 'testuser', 'testuser@gmail.com', '$2y$10$b5JXTAYnKnVOMJN6rstbt.oKb.vqtks4eS1fl38g71Ml5aK68kdcC', '2024-08-13 07:26:15', 'user', '', NULL, 'User 01', '0701234567', 'bg11.png'),
 (11, 'testhadmin', 'testhadmin@gmail.com', '$2y$10$azimQGMjUJrViRdmD/3z0ur8Hp5X0BZKy9hvLfhVZCPCVIIe6U0N2', '2024-08-13 07:27:26', 'hotel_admin', '', 31, 'hotel', '000000000000', 'travel-and-tourism-background-vector.jpg'),
 (12, 'testadmin', 'testadmin@gmail.com', '$2y$10$DByNtJngGCUTNKEV9itPaOQaPeMSbzpyFKVZHEbz.98CiDo9PP0R.', '2024-08-13 07:28:12', 'admin', '', 33, 'Admin', '0123456789', '4092564-about-mobile-ui-profile-ui-user-website_114033.png'),
 (14, 'ab', 'ab@a', '$2y$10$NEIrq', '2024-08-13 08:35:19', 'hotel_admin', '', 30, NULL, NULL, NULL),
@@ -369,7 +424,8 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `created_at`, `
 (16, 'mm', 'mm@m', '$2y$10$b5JXTAYnKnVOMJN6rstbt.oKb.vqtks4eS1fl38g71Ml5aK68kdcC', '2024-10-16 08:16:50', 'hotel_admin', '', 34, NULL, NULL, NULL),
 (18, 'hotel1', 'hotel1@gmail.com', '$2y$10$5mBzQD4d5c1RH3bsfUjdSOgwHxvVDU19ITZunOksBPm.bcaApM/Fa', '2024-10-18 12:19:45', 'hotel_admin', '', 35, 'Hotel1', '0123456789', NULL),
 (19, 'hotel2', 'hotel2@gmail.com', '$2y$10$b3lkMEsFn7mR1iDTTM9jx.W2FvAm.g3LTkMS3P22TIP7KWZDA.JLq', '2024-10-18 12:33:58', 'hotel_admin', '', 36, 'hotel2', '0123456789', NULL),
-(20, 'Hotel3', 'hotel3@gmail.com', '$2y$10$ycESjBgF.njATrxwRmng6OCS.xBx3srSL8sngcdhUyJ72y.Y0nzUW', '2024-10-18 13:33:51', 'hotel_admin', '', 37, 'hotel3', '0123456789', NULL);
+(20, 'Hotel3', 'hotel3@gmail.com', '$2y$10$ycESjBgF.njATrxwRmng6OCS.xBx3srSL8sngcdhUyJ72y.Y0nzUW', '2024-10-18 13:33:51', 'hotel_admin', '', 37, 'hotel3', '0123456789', NULL),
+(21, 'mihiru md', 'mihirudahanayaka@gmail.com', '$2y$10$7M7ViqwD4.1OZNZ.u8HypuYyHbittfoBPL5U940fbndXW5gdmwPPO', '2024-10-20 05:35:39', 'user', '', NULL, 'Mihiru', '0704868401', 'DALL·E 2024-10-20 03.22.01 - A clean black-and-white sequence diagram without graphics, illustrating the flow for a hotel booking system website. The diagram should involve two ac.webp');
 
 --
 -- Indexes for dumped tables
@@ -470,19 +526,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `cities`
 --
 ALTER TABLE `cities`
-  MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1004;
+  MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1071;
 
 --
 -- AUTO_INCREMENT for table `destinations`
 --
 ALTER TABLE `destinations`
-  MODIFY `destination_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `destination_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `destination_images`
@@ -494,25 +550,25 @@ ALTER TABLE `destination_images`
 -- AUTO_INCREMENT for table `hotels`
 --
 ALTER TABLE `hotels`
-  MODIFY `hotel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `hotel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `hotel_destinations`
 --
 ALTER TABLE `hotel_destinations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `hotel_images`
 --
 ALTER TABLE `hotel_images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -530,7 +586,7 @@ ALTER TABLE `room_images`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- නික්ෂේපනය කරන ලද වගු සඳහා සීමා බාධක
