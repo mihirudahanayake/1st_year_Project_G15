@@ -166,27 +166,28 @@ header {
          -1px 1px 0 #000,   /* Bottom-left shadow */
          3px 3px 0 #000;    /* Bottom-right shadow */
  }
- 
- /* Side Navigation */
- .side-nav {
-     position: fixed;
-     top: 0;
-     left: -100%;
-     width: 100%;
-     height: 100%;
-     background: rgba(0, 0, 0, 0.119);
-     backdrop-filter: blur(10px); /* Blur effect */
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     justify-content: center;
-     transition: left .3s ease;
-     z-index: 200;
- }
- 
- .side-nav.show {
-     left: 0;
- }
+
+/* Side Navigation */
+.side-nav {
+    position: fixed;
+    top: 0;
+    left: -100%; /* Hidden by default */
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.119);
+    backdrop-filter: blur(10px); /* Blur effect */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: left .3s ease;
+    z-index: 200;
+}
+
+.side-nav.show {
+    left: 0; /* Makes the side nav visible */
+}
+
  
  .side-nav ul {
      display: flex;

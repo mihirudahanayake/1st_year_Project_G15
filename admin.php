@@ -58,16 +58,18 @@ $cities = $conn->query("SELECT * FROM cities");
     <div class="button-container">
     <button style="font-size: 16px;" onclick="location.href='manage-city.php'" id="manage-city">Manage Cities</button>
         <button style="font-size: 16px;" onclick="location.href='admin_panel.php'">Manage Users & Hotels</button>
-        <button style="font-size: 16px;" onclick="location.href='profile.php'" id="profile">Profile</button>
+        <!-- <button style="font-size: 16px;" onclick="location.href='profile.php'" id="profile">Profile</button> -->
         
     </div>
+    <br>
 
     
         <h2>Travel Destinations</h2>
         <!-- Add New Destination Card -->
         <div class="add-destination-card">
+        
             <div class="actions">
-                <a href="add-destination.php">Add New</a>
+            <button class="add-desti" style="font-size: 16px;" onclick="location.href='add-destination.php'">Add New Destination</button>
             </div>
         </div>
         <br>

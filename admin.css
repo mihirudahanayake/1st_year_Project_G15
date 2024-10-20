@@ -121,6 +121,21 @@ h2, h3 {
     text-align: center; /* Center text in the card */
 }
 
+.add-desti{
+    background-color: #009e35;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none; /* Remove underline */
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.add-desti:hover{
+    background-color: #00d346;
+}
+
 /* Action Buttons */
 .actions {
     margin-top: 15px;
