@@ -302,9 +302,8 @@ $stmt->close();
     <div class="bg"></div>
     <?php include('header.php');?>
     <div class="dashboard-container">
-    <h2><?php echo htmlspecialchars($hotel_name); ?></h2>
+    <h1><?php echo htmlspecialchars($hotel_name); ?></h1>
 
-        <button onclick="location.href='profile.php'">Profile</button>
         <div class="notifications">
             <?php if ($notifications->num_rows > 0): ?>
                 <ul>
@@ -344,7 +343,7 @@ $stmt->close();
         <form action="hotel_dashboard.php" method="POST" enctype="multipart/form-data">
             <label for="hotel_image">Upload Hotel Image:</label>
             <input type="file" name="hotel_image" id="hotel_image" accept="image/*" required>
-            <button type="submit" name="upload_image">Upload Image</button>
+            <button type="submit" name="upload_image" id="img-upload">Upload Image</button>
         </form>
 
 
@@ -356,7 +355,7 @@ $stmt->close();
         <!-- Show Already Assigned Destinations -->
         <div class="box">
             <div class="destination-box">
-                <h3>Destinations Assigned to Your Hotel</h3>
+                <h2>Destinations Assigned to Your Hotel</h2>
                 <ul>
                     <?php if (empty($assigned_destinations)): ?>
                         <li>No destinations assigned to your hotel yet.</li>
@@ -394,11 +393,11 @@ $stmt->close();
                     <div class="actions">
                         <form action="delete_room.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this room?');">
                             <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room['room_id']); ?>">
-                            <button type="submit">Delete</button>
+                            <button type="submit" id="room-dlt">Delete</button>
                         </form>
                         <form action="edit_room.php" method="GET">
                             <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room['room_id']); ?>">
-                            <button type="submit">View & Edit</button>
+                            <button type="submit" id="view-edit">View & Edit</button>
                         </form>
                     </div>
                 </div>

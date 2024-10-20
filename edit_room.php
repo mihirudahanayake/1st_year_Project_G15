@@ -180,7 +180,7 @@ $imageStmt->close();
     <div class="div1">
         
         <h2>Booking Details</h2>
-        <p><?php
+        <p><b><?php
             // Fetch all booking date ranges for this room
             $stmt = $conn->prepare("SELECT booking_id, start_date, end_date FROM bookings WHERE room_id = ?");
             $stmt->bind_param("i", $room['room_id']);
@@ -192,12 +192,12 @@ $imageStmt->close();
                 while ($booking = $booking_result->fetch_assoc()) {
                     // Create a clickable link for each booking date range
                     echo "<a href='booking_details.php?booking_id=" . htmlspecialchars($booking['booking_id']) . "'>";
-                    echo "Booked from " . htmlspecialchars($booking['start_date']) . " to " . htmlspecialchars($booking['end_date']) . "</a><br>";
+                    echo "Booking ID ".htmlspecialchars($booking['booking_id']).": Booked from " . htmlspecialchars($booking['start_date']) . " to " . htmlspecialchars($booking['end_date']) . "</a><br>";
                 }
             } else {
                 echo "No bookings";
             }
-        ?></p>
+        ?></b></p>
         <h2>Edit Room</h2>
         <form method="POST" action="edit_room.php">
             <input type="hidden" name="room_id" value="<?php echo htmlspecialchars($room['room_id'] ?? ''); ?>">

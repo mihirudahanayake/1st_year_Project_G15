@@ -39,9 +39,6 @@ include_once "config.php";
                         echo '<li><a href="index.php">Home</a></li>';
                     }
                 ?>
-
-
-                    <li><a href="about.php">About</a></li>
                     <li><a href="travel_destination.php">Travel Destinations</a></li>
                     <?php 
                     // Check if the user is logged in
@@ -59,6 +56,7 @@ include_once "config.php";
                          echo '<li><a href="hotel_list.php">Hotels</a></li>';
                      }
                     ?>
+                    <li><a href="about.php">About</a></li>
                     
                     <li><a href="Contact.php">Contact Us</a></li>
                 </ul>
