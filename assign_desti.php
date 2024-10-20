@@ -117,6 +117,7 @@ if (isset($_POST['assign_destination'])) {
      </head>
      <body>
      <?php include('header.php');?>
+     <div class="bg"></div>
 
         <h3>Select City</h3>
         <form method="POST" action="assign_desti.php">
