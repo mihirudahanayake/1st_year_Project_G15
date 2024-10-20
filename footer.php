@@ -28,16 +28,13 @@
                                  echo '<li><a href="index.php">Home</a></li>';
                               }
                         } else {
-                              echo '<li><a href="admin.php">Home</a></li>';
+                              echo '<li><a href="index.php">Home</a></li>';
                         }
                      ?>
-                     <li><a href="about.php">About Us</a></li>
+                     <li><a href="about.php">About</a></li>
                      <?php 
-                    // Check if the user is logged in
                     if (isset($_SESSION['user_id'])) {
-                         // Check the user type and show relevant links
                          if ($_SESSION['user_type'] == 'hotel_admin') {
-                            // For hotel admins, hide 'Hotels' and show 'Add New Room'
                             echo '<li><a href="add_room.php">Add New Room</a></li>';
                          } elseif ($_SESSION['user_type'] == 'user') {
                               echo '<li><a href="hotel_list.php">Hotels</a></li>';
